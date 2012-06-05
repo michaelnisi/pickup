@@ -1,6 +1,6 @@
 var request = require('request')
 ,   opts = {}
-,   radio = require('../lib/radio.js')(opts)
+,   radio = require('../lib/radio.js')
 ,   test = require('tap').test
 ,   path = 'iTunes.xml'
 ,   fstream = require('fs').createReadStream(path)
