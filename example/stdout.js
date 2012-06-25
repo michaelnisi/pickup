@@ -1,7 +1,5 @@
 var path = './test/iTunes.xml'
 ,   fstream = require('fs').createReadStream(path)
-,   radio = require('../lib/radio.js')()
+,   pickup = require('../lib/radio.js')()
 
-fstream.pipe(radio).pipe(process.stdout)
-
-
+fstream.pipe(pickup).pipe(process.stdout)
