@@ -1,4 +1,1 @@
-radio
-=====
-
-radio converts iTunes RSS to JSON
+# pickup - stream podcast RSS to JSON
