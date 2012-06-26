@@ -1,32 +1,28 @@
-var request = require('request')
-,   opts = {}
-,   radio = require('../lib/radio.js')()
-,   test = require('tap').test
-,   path = 'iTunes.xml'
+var path = './test/iTunes.xml'
 ,   fstream = require('fs').createReadStream(path)
+,   pickup = require('../lib/pickup.js')()
+,   test = require('tap').test
+,   es = require('event-stream')
 
 test('iTunes', function (t) {
-  var json = ''
- 
-  fstream.pipe(radio)
-
-  radio.on('data', function (data) {
-    json += data
-  })
-
-  radio.on('end', function () {
-    var result = JSON.parse(json)
-   
-    t.equal(result.title, 'All About Everything')
-
-    // t.ok(result.items, 'should have items')
-    // t.equal(result.items.length, 3)
-    // t.equal(firstItem.title, 'Shake Shake Shake Your Spices')
-    // t.equal(firstItem.author, 'John Doe')
-    // t.equal(firstItem.subtitle, 'A short primer on table spices')
-    
-    // t.equal(enclosure.length, '8727310')
-    
-    t.end()
-  })
+  var expected = getExpected()
+  , stringified = ''
+  , called = 0
+  , count = 10
+  , ended = false
+  
+  es.connect(
+    fstream.pipe(pickup),
+    es.writeArray(function (err, lines) {
+      t.deepEqual(JSON.parse(lines.join('')), expected)
+      t.end()
+    })
+  )   
 })
+
+function getExpected () {
+  return [
+    { key: 'title', value: 'All About Everything' }
+  , { key: 'response', value: 200 }
+  ]
+}
