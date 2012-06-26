@@ -6,10 +6,6 @@ var path = './test/iTunes.xml'
 
 test('iTunes', function (t) {
   var expected = getExpected()
-  , stringified = ''
-  , called = 0
-  , count = 10
-  , ended = false
   
   es.connect(
     fstream.pipe(pickup),
