@@ -20,4 +20,4 @@ Pipe to stdout:
 Proxy server:
     
     node example/proxy.js
-    curl -sS http://127.0.0.1:8080/?uri=http://feeds.feedburner.com/back2work
+    curl -sS http://127.0.0.1:8080/?uri=http://feeds.feedburner.com/back2work | json
