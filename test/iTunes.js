@@ -4,8 +4,7 @@ var path = './test/iTunes.xml'
 ,   test = require('tap').test
 ,   es = require('event-stream')
 ,   fs = require('fs')
-
-var expected = JSON.parse(fs.readFileSync('./test/expected.json'))
+,   expected = JSON.parse(fs.readFileSync('./test/expected.json'))
 
 test('iTunes', function (t) {
   es.connect(
@@ -16,5 +15,3 @@ test('iTunes', function (t) {
     })
   )   
 })
-
-

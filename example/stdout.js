@@ -1,5 +1,4 @@
-var path = './test/iTunes.xml'
-,   fstream = require('fs').createReadStream(path)
+var readStream = require('fs').createReadStream('./test/iTunes.xml')
 ,   pickup = require('../lib/pickup.js')()
 
-fstream.pipe(pickup).pipe(process.stdout)
+readStream.pipe(pickup).pipe(process.stdout)
