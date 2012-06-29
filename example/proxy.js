@@ -3,7 +3,6 @@ var http = require('http')
 ,   request = require('request')
 ,   pickup = require('../lib/pickup.js')()
   
-
 pickup.on('error', function (err) {
   console.error(err)
 })
