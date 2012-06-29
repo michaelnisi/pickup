@@ -20,6 +20,9 @@ http.createServer(function (req, resp) {
 
   req.on('close', function () {
     pickup.end()
-    resp.end()
+  })
+
+  resp.on('close', function () {
+    pickup.end()
   })
 }).listen(8080, '127.0.0.1')
