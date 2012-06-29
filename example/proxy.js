@@ -3,6 +3,11 @@ var http = require('http')
 ,   request = require('request')
 ,   pickup = require('../lib/pickup.js')()
   
+
+pickup.on('error', function (err) {
+  console.error(err)
+})
+
 http.createServer(function (req, resp) {
   req.on('end', function () {
     var uri = url.parse(req.url, true).query.uri
@@ -12,5 +17,10 @@ http.createServer(function (req, resp) {
       return
     }  
     request(uri).pipe(pickup).pipe(resp)  
+  })
+
+  req.on('close', function () {
+    pickup.end()
+    resp.end()
   })
 }).listen(8080, '127.0.0.1')
