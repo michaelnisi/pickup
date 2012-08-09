@@ -2,8 +2,9 @@
   "name": "pickup",
   "version": "0.0.1",
   "description": "pipe podcast RSS to JSON",
-  "main": "index.js",
+  "main": "./lib/pickup.js",
   "directories": {
+    "lib": "lib",
     "example": "example",
     "test": "test"
   },

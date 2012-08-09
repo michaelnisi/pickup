@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 
-### Examples
+## Examples
 
 Preliminary:
   
