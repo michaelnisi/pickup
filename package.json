@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "pipe podcast RSS to JSON",
   "main": "./lib/pickup.js",
   "directories": {
