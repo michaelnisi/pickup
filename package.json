@@ -1,0 +1,41 @@
+{
+  "name": "pickup",
+  "version": "0.0.1",
+  "description": "pipe podcast RSS to JSON",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/michaelnisi/pickup.git"
+  },
+  "keywords": [
+    "podcast",
+    "itunes",
+    "rss",
+    "xml",
+    "json",
+    "stream"
+  ],
+  "dependencies": {
+    "sax": ">=0.4.x",
+    "event-stream": ">=2.1.x"
+  },
+  "devDependencies": {
+    "tap": "0.1.x"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Michael Nisi",
+    "email": "michael.nisi@gmail.com",
+    "url": "http://michaelnisi.com"
+  }
+}

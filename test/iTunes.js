@@ -1,10 +1,10 @@
-var path = './test/iTunes.xml'
+var path = './iTunes.xml'
 ,   fstream = require('fs').createReadStream(path)
 ,   pickup = require('../lib/pickup.js')()
 ,   test = require('tap').test
 ,   es = require('event-stream')
 ,   fs = require('fs')
-,   expected = JSON.parse(fs.readFileSync('./test/expected.json'))
+,   expected = JSON.parse(fs.readFileSync('./expected.json'))
 
 test('iTunes', function (t) {
   es.connect(
