@@ -2,10 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 
-## Examples
+## EXAMPLES
 
-Preliminary:
-  
     npm install -g jsontool
     git clone git://github.com/michaelnisi/pickup.git
     cd pickup
@@ -23,3 +21,15 @@ Proxy server:
     
     node example/proxy.js
     curl -sS http://127.0.0.1:8080/?uri=http://feeds.feedburner.com/back2work | json
+
+## INSTALLATION
+
+Install via [npm](http://npmjs.org/):
+
+    npm install pickup
+
+To install from source:
+
+    git clone git://github.com/michaelnisi/pickup.git 
+    cd pickup
+    npm link
