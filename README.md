@@ -2,9 +2,14 @@
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 
-## EXAMPLES
+## Examples
+    
+Install jsontool to format JSON in the command-line:
 
     npm install -g jsontool
+    
+Clone pickup to run examples:
+    
     git clone git://github.com/michaelnisi/pickup.git
     cd pickup
   
@@ -22,7 +27,7 @@ Proxy server:
     node example/proxy.js
     curl -sS http://127.0.0.1:8080/?uri=http://feeds.feedburner.com/back2work | json
 
-## INSTALLATION
+## Installation
 
 Install via [npm](http://npmjs.org/):
 
