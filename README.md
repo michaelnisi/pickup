@@ -4,7 +4,7 @@ Pickup streams podcast RSS feed [format](http://www.apple.com/itunes/podcasts/sp
 
 ## Examples
     
-Install jsontool to format JSON in the command-line:
+Install [jsontool](https://github.com/trentm/json) to format JSON in the command-line:
 
     npm install -g jsontool
     
