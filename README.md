@@ -1,12 +1,8 @@
-# pickup - pipe podcast RSS to JSON
-
-## DESCRIPTION
+# pickup - pipe podcast RSS to JSON [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 
 Pickup streams podcast RSS feed [format](http://www.apple.com/itunes/podcasts/specs.html) to JSON.
 
-[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
-
-## EXAMPLES
+## Examples
     
 Install jsontool to format JSON in the command-line:
 
@@ -31,9 +27,9 @@ Proxy server:
     node example/proxy.js
     curl -sS http://127.0.0.1:8080/?uri=http://feeds.feedburner.com/back2work | json
 
-## INSTALLATION
+## Installation
 
-Install via [npm](http://npmjs.org/):
+Install with [npm](http://npmjs.org/):
 
     npm install pickup
 
@@ -41,4 +37,4 @@ To install from source:
 
     git clone git://github.com/michaelnisi/pickup.git 
     cd pickup
-    npm link
+    npm install
