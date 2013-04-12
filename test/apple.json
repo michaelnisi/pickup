@@ -1,3 +1,16 @@
 {
-  "title": "All About Everything"
+  "show": {
+    "title": "All About Everything"
+  },
+  "items": [
+    {
+      "title": "Shake Shake Shake Your Spices"
+    },
+    {
+      "title": "Socket Wrench Shootout"
+    },
+    {
+      "title": "Red, Whine, & Blue"
+    }
+  ]
 }

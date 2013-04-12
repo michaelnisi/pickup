@@ -2,6 +2,7 @@
 // pickup - parse podcast RSS feed
 
 var sax = require('sax')
+  , JSONStream = require('JSONStream')
   , Transform = require('stream').Transform
 
 var state = {
@@ -10,6 +11,8 @@ var state = {
 , item:false
 , items:false
 }
+
+var events = ['show', 'episode']
 
 var episodes = []
 
@@ -27,17 +30,23 @@ module.exports = function () {
     if (state.item) {
       if (state.title && !episode.title) {
         episode.title = t
-        // stream.push(JSON.stringify(episode))
       }
     }
   }
 
   parser.onopentag = function (node) {
     if (node.name === 'channel') {
+      stream.push('{ "show":')
       state.show = true
     }
 
     if (node.name === 'item') {
+      if (!state.items) {
+        stream.push(',"items":[')
+        stream.emit(events[0], show)
+      } else {
+        stream.push(',')
+      }
       state.show = false
       state.items = true
       state.item = true
@@ -47,13 +56,19 @@ module.exports = function () {
     state.title = node.name === 'title'
   }
 
-  parser.onclosetag = function (node) {
-    if (node.name === 'title') state.title = false
-    if (node.name === 'item') {
+  parser.onclosetag = function (name) {
+    if (name === 'title') state.title = false
+    if (name === 'item') {
       state.item = false
+      episodes.push(episode)
+      stream.push(JSON.stringify(episode))
+      stream.emit(events[1], episode)
       episode = null
     }
-    if (node.name === 'channel') state.items = false
+    if (name === 'channel') {
+      stream.push(']}')
+      state.items = false
+    }
   }
 
   var stream = new Transform({
