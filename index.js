@@ -11,14 +11,24 @@ var state = {
 , items:false
 }
 
+var episodes = []
+
 module.exports = function () {
   var parser = sax.parser(true)
-    , show = {}
+    , show = new Show()
+    , episode = null
 
   parser.ontext = function (t) {
     if (state.title && !show.title) {
       show.title = t
       stream.push(JSON.stringify(show))
+    }
+
+    if (state.item) {
+      if (state.title && !episode.title) {
+        episode.title = t
+        // stream.push(JSON.stringify(episode))
+      }
     }
   }
 
@@ -29,17 +39,21 @@ module.exports = function () {
 
     if (node.name === 'item') {
       state.show = false
+      state.items = true
+      state.item = true
+      episode = new Episode()
     }
 
-    state.title = state.show && node.name === 'title'
+    state.title = node.name === 'title'
   }
 
   parser.onclosetag = function (node) {
-    switch (node.name) {
-      case 'title':
-        state.title = false
-        break
+    if (node.name === 'title') state.title = false
+    if (node.name === 'item') {
+      state.item = false
+      episode = null
     }
+    if (node.name === 'channel') state.items = false
   }
 
   var stream = new Transform({
@@ -52,4 +66,26 @@ module.exports = function () {
   }
 
   return stream
+}
+
+// Show - podcast show
+
+function Show () {
+  if (!(this instanceof Show)) return new Show()
+  return this
+}
+
+Show.prototype = {
+  title:''
+}
+
+// Episode - podcast episode
+
+function Episode () {
+  if (!(this instanceof Episode)) return new Episode()
+  return this
+}
+
+Episode.prototype = {
+  title:''
 }
