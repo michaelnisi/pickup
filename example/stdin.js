@@ -1,3 +1,7 @@
-var pickup = require('../lib/pickup.js')()
+var pickup = require('../')
+  , transformer = pickup()
+  , Readable = require('stream').Readable
+  , reader = new Readable().wrap(process.openStdin())
+  , writer = process.stdout
 
-process.openStdin().pipe(pickup).pipe(process.stdout)
+reader.pipe(transformer).pipe(writer)
