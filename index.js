@@ -88,6 +88,16 @@ module.exports = function () {
         item = null
         break
     }
+
+    name = null
+  }
+
+  parser.onattribute = function (attr) {
+    // attr seems to come before opentag
+  }
+
+  parser.onend = function () {
+    // ready for more
   }
 
   var stream = new Transform({
