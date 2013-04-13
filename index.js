@@ -18,22 +18,7 @@ module.exports = function () {
   var parser = sax.parser(true)
     , channel = Object.create(null)
     , item = null
-
-  parser.ontext = function (t) {
-    if (state.title && !channel.title) {
-      channel.title = t
-    } else if (state.description && !channel.description) {
-      channel.description = t
-    } else if (state.link && !channel.link) {
-      channel.link = t
-    } else if (state.subtitle && !channel.subtitle) {
-      channel.subtitle = t
-    } else if (state.item) {
-      if (state.title && !item.title) {
-        item.title = t
-      }
-    }
-  }
+    , name = null
 
   var CHANNEL = 'channel'
     , ITEM = 'item'
@@ -42,7 +27,32 @@ module.exports = function () {
     , LINK = 'link'
     , SUBTITLE = 'itunes:subtitle'
 
+  var channelMap = {
+    'title':'title'
+  , 'description':'description'
+  , 'link':'link'
+  }
+
+  var itemMap = {
+    'title':'title'
+  , 'itunes:subtitle':'subtitle'
+  , 'itunes:author':'author'
+  , 'itunes:summary':'summary'
+  }
+
+  parser.ontext = function (t) {
+    var pair = state.item ? [item, itemMap] : [channel, channelMap]
+      , key = pair[1][name]
+      , target = pair[0]
+
+    if (key && !target[key]) {
+      target[key] = t
+    }
+  }
+
   parser.onopentag = function (node) {
+    name = node.name
+
     if (node.name === CHANNEL) {
       stream.push('{ "channel":')
       state.channel = true
@@ -68,20 +78,24 @@ module.exports = function () {
   }
 
   parser.onclosetag = function (name) {
-    if (name === TITLE) state.title = false
-    if (name === ITEM) {
-      state.item = false
-      stream.push(JSON.stringify(item))
-      stream.emit(ITEM, item)
-      item = null
-    }
-    if (name === CHANNEL) {
-      stream.push(']}')
-      Object.keys(state).forEach(function (key) {
-        state[key] = false
-      })
-      channel = null
-      item = null
+    switch (name) {
+      case TITLE:
+        state.title = false
+        break
+      case ITEM:
+        state.item = false
+        stream.push(JSON.stringify(item))
+        stream.emit(ITEM, item)
+        item = null
+        break
+      case CHANNEL:
+        stream.push(']}')
+        Object.keys(state).forEach(function (key) {
+          state[key] = false
+        })
+        channel = null
+        item = null
+        break
     }
   }
 
