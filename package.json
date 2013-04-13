@@ -2,7 +2,7 @@
   "name": "pickup",
   "version": "0.1.0",
   "description": "transform podcast RSS feed to JSON",
-  "main": "./lib/pickup.js",
+  "main": "index.js",
   "directories": {
     "lib": "lib",
     "example": "example",
