@@ -1,11 +1,12 @@
-var path = 'itunes.xml'
-  , JSONStream = require('JSONStream')
-  , reader = require('fs').createReadStream(path)
-  , pickup = require('../')
-  , transformer = pickup()
-  , test = require('tap').test
+
+// itunes - test itunes example podcast feed
+
+var test = require('tap').test
   , es = require('event-stream')
   , fs = require('fs')
+  , reader = fs.createReadStream('itunes.xml')
+  , pickup = require('../')
+  , transformer = pickup()
   , expected = JSON.parse(fs.readFileSync('itunes.json'))
 
 test('itunes', function (t) {
