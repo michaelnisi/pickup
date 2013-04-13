@@ -7,12 +7,8 @@ var sax = require('sax')
 module.exports = function () {
   var state = {
     channel:false
-  , title:false
-  , subtitle:false
-  , link:false
-  , description:false
-  , item:false
   , items:false
+  , item:false
   }
 
   var parser = sax.parser(true)
@@ -57,7 +53,7 @@ module.exports = function () {
     name = node.name
 
     if (node.name === CHANNEL) {
-      stream.push('{ "channel":')
+      stream.push('{"channel":')
       state.channel = true
     }
 
