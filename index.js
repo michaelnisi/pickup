@@ -22,15 +22,14 @@ module.exports = function () {
 
   var CHANNEL = 'channel'
     , ITEM = 'item'
-    , TITLE = 'title'
-    , DESCRIPTION = 'description'
-    , LINK = 'link'
-    , SUBTITLE = 'itunes:subtitle'
 
   var channelMap = {
     'title':'title'
   , 'description':'description'
   , 'link':'link'
+  , 'itunes:author':'author'
+  , 'itunes:summary':'summary'
+  , 'itunes:subtitle':'subtitle'
   }
 
   var itemMap = {
@@ -38,6 +37,10 @@ module.exports = function () {
   , 'itunes:subtitle':'subtitle'
   , 'itunes:author':'author'
   , 'itunes:summary':'summary'
+  , 'guid':'guid'
+  , 'pubDate':'pubDate'
+  , 'itunes:duration':'duration'
+  , 'itunes:keywords':'keywords'
   }
 
   parser.ontext = function (t) {
@@ -70,18 +73,10 @@ module.exports = function () {
       state.item = true
       item = Object.create(null)
     }
-
-    state.title = node.name === TITLE
-    state.description = node.name === DESCRIPTION
-    state.link = node.name === LINK
-    state.subtitle = node.name === SUBTITLE
   }
 
   parser.onclosetag = function (name) {
     switch (name) {
-      case TITLE:
-        state.title = false
-        break
       case ITEM:
         state.item = false
         stream.push(JSON.stringify(item))
