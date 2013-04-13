@@ -4,7 +4,6 @@
   "description": "transform podcast RSS feed to JSON",
   "main": "index.js",
   "directories": {
-    "lib": "lib",
     "example": "example",
     "test": "test"
   },
