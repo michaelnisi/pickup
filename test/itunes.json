@@ -1,0 +1,42 @@
+{
+  "channel": {
+    "title": "All About Everything",
+    "link": "http://www.example.com/podcasts/everything/index.html",
+    "subtitle": "A show about everything",
+    "author": "John Doe",
+    "summary": "All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our Podcast in the iTunes Store",
+    "description": "All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our Podcast in the iTunes Store"
+  },
+  "items": [
+    {
+      "title": "Shake Shake Shake Your Spices",
+      "author": "John Doe",
+      "subtitle": "A short primer on table spices",
+      "summary": "This week we talk about salt and pepper shakers, comparing and contrasting pour rates, construction materials, and overall aesthetics. Come and join the party!",
+      "guid": "http://example.com/podcasts/archive/aae20050615.m4a",
+      "pubDate": "Wed, 15 Jun 2005 19:00:00 GMT",
+      "duration": "7:04",
+      "keywords": "salt, pepper, shaker, exciting"
+    },
+    {
+      "title": "Socket Wrench Shootout",
+      "author": "Jane Doe",
+      "subtitle": "Comparing socket wrenches is fun!",
+      "summary": "This week we talk about metric vs. old english socket wrenches. Which one is better? Do you really need both? Get all of your answers here.",
+      "guid": "http://example.com/podcasts/archive/aae20050608.mp3",
+      "pubDate": "Wed, 8 Jun 2005 19:00:00 GMT",
+      "duration": "4:34",
+      "keywords": "metric, socket, wrenches, tool"
+    },
+    {
+      "title": "Red, Whine, & Blue",
+      "author": "Various",
+      "subtitle": "Red + Blue != Purple",
+      "summary": "This week we talk about surviving in a Red state if you are a Blue person. Or vice versa.",
+      "guid": "http://example.com/podcasts/archive/aae20050601.mp3",
+      "pubDate": "Wed, 1 Jun 2005 19:00:00 GMT",
+      "duration": "3:59",
+      "keywords": "politics, red, blue, state"
+    }
+  ]
+}
