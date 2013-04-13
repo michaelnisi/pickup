@@ -1,6 +1,9 @@
 {
-  "show": {
-    "title": "All About Everything"
+  "channel": {
+    "title": "All About Everything",
+    "link": "http://www.example.com/podcasts/everything/index.html",
+    "subtitle": "A show about everything",
+    "description": "All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our Podcast in the iTunes Store"
   },
   "items": [
     {

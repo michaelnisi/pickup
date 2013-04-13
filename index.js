@@ -1,106 +1,99 @@
 
-// pickup - parse podcast RSS feed
+// pickup - transform RSS feed to JSON
 
 var sax = require('sax')
-  , JSONStream = require('JSONStream')
   , Transform = require('stream').Transform
 
-var state = {
-  show:false
-, title:false
-, item:false
-, items:false
-}
-
-var events = ['show', 'episode']
-
-var episodes = []
-
 module.exports = function () {
+  var state = {
+    channel:false
+  , title:false
+  , subtitle:false
+  , link:false
+  , description:false
+  , item:false
+  , items:false
+  }
+
   var parser = sax.parser(true)
-    , show = new Show()
-    , episode = null
+    , channel = Object.create(null)
+    , item = null
 
   parser.ontext = function (t) {
-    if (state.title && !show.title) {
-      show.title = t
-      stream.push(JSON.stringify(show))
-    }
-
-    if (state.item) {
-      if (state.title && !episode.title) {
-        episode.title = t
+    if (state.title && !channel.title) {
+      channel.title = t
+    } else if (state.description && !channel.description) {
+      channel.description = t
+    } else if (state.link && !channel.link) {
+      channel.link = t
+    } else if (state.subtitle && !channel.subtitle) {
+      channel.subtitle = t
+    } else if (state.item) {
+      if (state.title && !item.title) {
+        item.title = t
       }
     }
   }
 
+  var CHANNEL = 'channel'
+    , ITEM = 'item'
+    , TITLE = 'title'
+    , DESCRIPTION = 'description'
+    , LINK = 'link'
+    , SUBTITLE = 'itunes:subtitle'
+
   parser.onopentag = function (node) {
-    if (node.name === 'channel') {
-      stream.push('{ "show":')
-      state.show = true
+    if (node.name === CHANNEL) {
+      stream.push('{ "channel":')
+      state.channel = true
     }
 
-    if (node.name === 'item') {
+    if (node.name === ITEM) {
       if (!state.items) {
-        stream.push(',"items":[')
-        stream.emit(events[0], show)
+        stream.push(JSON.stringify(channel) + ',"items":[')
+        stream.emit(CHANNEL, channel)
       } else {
         stream.push(',')
       }
-      state.show = false
+      state.channel = false
       state.items = true
       state.item = true
-      episode = new Episode()
+      item = Object.create(null)
     }
 
-    state.title = node.name === 'title'
+    state.title = node.name === TITLE
+    state.description = node.name === DESCRIPTION
+    state.link = node.name === LINK
+    state.subtitle = node.name === SUBTITLE
   }
 
   parser.onclosetag = function (name) {
-    if (name === 'title') state.title = false
-    if (name === 'item') {
+    if (name === TITLE) state.title = false
+    if (name === ITEM) {
       state.item = false
-      episodes.push(episode)
-      stream.push(JSON.stringify(episode))
-      stream.emit(events[1], episode)
-      episode = null
+      stream.push(JSON.stringify(item))
+      stream.emit(ITEM, item)
+      item = null
     }
-    if (name === 'channel') {
+    if (name === CHANNEL) {
       stream.push(']}')
-      state.items = false
+      Object.keys(state).forEach(function (key) {
+        state[key] = false
+      })
+      channel = null
+      item = null
     }
   }
 
   var stream = new Transform({
     highWaterMark: 10
-  });
+  })
 
   stream._transform = function (chunk, encoding, callback) {
-    parser.write(chunk.toString())
-    callback()
+    if (parser.write(chunk.toString())) {
+      callback()
+    }
   }
 
   return stream
-}
-
-// Show - podcast show
-
-function Show () {
-  if (!(this instanceof Show)) return new Show()
-  return this
-}
-
-Show.prototype = {
-  title:''
-}
-
-// Episode - podcast episode
-
-function Episode () {
-  if (!(this instanceof Episode)) return new Episode()
-  return this
-}
-
-Episode.prototype = {
-  title:''
 }
