@@ -1,6 +1,6 @@
-# pickup - transform RSS or Atom XML to JSON 
+# pickup - ttansform RSS or Atom XML to JSON 
 
-Pickup streams podcast RSS feed [format](http://www.apple.com/itunes/podcasts/specs.html) to JSON.
+The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream that streams RSS or Atom formatted XML to JSON.
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 

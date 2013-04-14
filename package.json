@@ -1,7 +1,7 @@
 {
   "name": "pickup",
-  "version": "0.1.1",
-  "description": "transform podcast RSS feed to JSON",
+  "version": "0.1.2",
+  "description": "transform RSS or ATOM XMLto JSON",
   "main": "index.js",
   "directories": {
     "example": "example",
@@ -15,12 +15,16 @@
     "url": "git://github.com/michaelnisi/pickup.git"
   },
   "keywords": [
-    "podcast",
-    "itunes",
     "rss",
+    "atom",
     "xml",
     "json",
-    "stream"
+    "itunes",
+    "podcast",
+    "feed",
+    "transform",
+    "stream",
+    "through"
   ],
   "dependencies": {
     "sax": "0.5.x",
