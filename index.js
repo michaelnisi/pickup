@@ -4,8 +4,25 @@
 var sax = require('sax')
   , Transform = require('stream').Transform
   , maps = require('./lib/maps')()
+  , CHANNEL = 'channel'
+  , ITEM = 'item'
+  , FEED = 'feed'
+  , ENTRY = 'entry'
+  , elements = [CHANNEL, ITEM, FEED, ENTRY]
+
+function isElement(name) {
+  return elements.some(function (element) {
+    return name === element
+  })
+}
 
 module.exports = function () {
+  var state = {
+    feed:false
+  , entries:false
+  , entry:false
+  }
+
   var parser = sax.parser(true)
     , name = null
     , map = null
@@ -98,24 +115,6 @@ module.exports = function () {
     name = null
   }
 
-  var state = {
-    feed:false
-  , entries:false
-  , entry:false
-  }
-
-  var CHANNEL = 'channel'
-    , ITEM = 'item'
-    , FEED = 'feed'
-    , ENTRY = 'entry'
-
-  var elements = [CHANNEL, ITEM, FEED, ENTRY]
-
-  function isElement(name) {
-    return elements.some(function (element) {
-      return name === element
-    })
-  }
 
   return stream
 }
