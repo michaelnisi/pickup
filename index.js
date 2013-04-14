@@ -1,5 +1,5 @@
 
-// pickup - transform RSS feed to JSON
+// pickup - transform RSS or Atom feed to JSON
 
 var sax = require('sax')
   , Transform = require('stream').Transform
@@ -11,7 +11,6 @@ module.exports = function () {
   , entries:false
   , entry:false
   }
-
 
   var CHANNEL = 'channel'
     , ITEM = 'item'
