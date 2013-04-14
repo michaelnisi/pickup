@@ -12,35 +12,36 @@ module.exports = function () {
   , entry:false
   }
 
-  var CHANNEL = 'channel'
-    , ITEM = 'item'
-    , FEED = 'feed'
-    , ENTRY = 'entry'
+  var elements = ['channel', 'item', 'feed', 'entry']
+
+  var E = -1
+    , CHANNEL = elements[++E]
+    , ITEM = elements[++E]
+    , FEED = elements[++E]
+    , ENTRY = elements[++E]
 
   var parser = sax.parser(true)
-    , feed = Object.create(null)
-    , entry = null
     , name = null
     , map = null
+    , current = null
 
   parser.onerror = function (err) {
     stream.emit('error', err)
   }
 
   parser.ontext = function (t) {
-    var pair = state.entry ? [entry, maps.item] : [feed, maps.channel]
-      , key = pair[1][name]
-      , target = pair[0]
+    if (!current || !map) return
 
-    if (key && !target[key]) {
-      target[key] = t
+    var key = map[name]
+
+    if (key && !current[key]) {
+      current[key] = t
     }
   }
 
-  var elements = ['channel', 'item', 'feed', 'entry']
   function isElement(name) {
     return elements.some(function (element) {
-      name === element
+      return name === element
     })
   }
 
@@ -55,29 +56,30 @@ module.exports = function () {
       case CHANNEL:
       case FEED:
         stream.push('{"feed":')
+        current = Object.create(null)
         state.feed = true
         break;
       case ITEM:
       case ENTRY:
         if (!state.entries) {
-          stream.push(JSON.stringify(feed) + ',"entries":[')
-          stream.emit(FEED, feed)
+          stream.push(JSON.stringify(current) + ',"entries":[')
+          stream.emit(FEED, current)
         } else {
           stream.push(',')
         }
         state.feed = false
         state.entries = true
         state.entry = true
-        entry = Object.create(null)
+        current = Object.create(null)
         break
     }
 
-    if (entry) {
+    if (current) {
       var attributes = node.attributes
         , keys = Object.keys(attributes)
-        , key = maps.item[name]
+        , key = map[name]
       if (key && keys.length) {
-        entry[key] = attributes
+        current[key] = attributes
       }
     }
   }
@@ -87,9 +89,9 @@ module.exports = function () {
       case ITEM:
       case ENTRY:
         state.entry = false
-        stream.push(JSON.stringify(entry))
-        stream.emit(ENTRY, entry)
-        entry = null
+        stream.push(JSON.stringify(current))
+        stream.emit(ENTRY, current)
+        current = null
         break
       case CHANNEL:
       case FEED:
@@ -97,8 +99,7 @@ module.exports = function () {
         Object.keys(state).forEach(function (key) {
           state[key] = false
         })
-        feed = null
-        entry = null
+        current = null
         break
     }
 
