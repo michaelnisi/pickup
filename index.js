@@ -11,38 +11,52 @@ module.exports = function () {
   , item:false
   }
 
-  var parser = sax.parser(true)
-    , channel = Object.create(null)
-    , item = null
-    , name = null
-
   var CHANNEL = 'channel'
     , ITEM = 'item'
 
   var channelMap = {
+    // RSS
     'title':'title'
   , 'description':'description'
   , 'link':'link'
+  , 'language':'language'
+  , 'pubDate':'pubDate'
+  , 'lastBuildDate':'lastBuildDate'
+  , 'docs':'docs'
+  , 'generator':'generator'
+  , 'managingEditor':'managingEditor'
+  , 'webMaster':'webMaster'
+    // Atom
+    // ...
+    // itunes
   , 'itunes:author':'author'
   , 'itunes:summary':'summary'
   , 'itunes:subtitle':'subtitle'
   }
 
   var itemMap = {
+    // RSS
     'title':'title'
+  , 'link':'link'
+  , 'description':'description'
+  , 'pubDate':'pubDate'
+  , 'guid':'guid'
+    // Atom
+    // ...
+    // itunes
   , 'itunes:subtitle':'subtitle'
   , 'itunes:author':'author'
   , 'itunes:summary':'summary'
-  , 'guid':'guid'
-  , 'pubDate':'pubDate'
   , 'itunes:duration':'duration'
   , 'itunes:keywords':'keywords'
-  }
-
-  var attributesMap = {
-    'itunes:image':'image'
+  , 'itunes:image':'image'
   , 'enclosure':'enclosure'
   }
+
+  var parser = sax.parser(true)
+    , channel = Object.create(null)
+    , item = null
+    , name = null
 
   parser.onerror = function (err) {
     stream.emit('error', err)
@@ -77,13 +91,14 @@ module.exports = function () {
       state.items = true
       state.item = true
       item = Object.create(null)
-
     }
 
     if (item) {
-      var key = attributesMap[name]
-      if (key) {
-        item[key] = node.attributes
+      var attributes = node.attributes
+        , keys = Object.keys(attributes)
+        , key = itemMap[name]
+      if (key && keys.length) {
+        item[key] = attributes
       }
     }
   }
