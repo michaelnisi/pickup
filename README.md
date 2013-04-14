@@ -1,4 +1,4 @@
-# pickup - ttansform RSS or Atom XML to JSON 
+# pickup - transform RSS or Atom XML to JSON 
 
 The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream that streams RSS or Atom formatted XML to JSON.
 
