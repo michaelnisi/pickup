@@ -1,13 +1,13 @@
 
-// rss - test RSS example feed
+// atom - test Atom example feed
 
 var test = require('tap').test
   , es = require('event-stream')
   , fs = require('fs')
-  , reader = fs.createReadStream('rss.xml')
+  , reader = fs.createReadStream('atom.xml')
   , pickup = require('../')
   , transformer = pickup()
-  , expected = JSON.parse(fs.readFileSync('rss.json'))
+  , expected = JSON.parse(fs.readFileSync('atom.json'))
 
 test('rss', function (t) {
   var feeds = []
@@ -23,7 +23,7 @@ test('rss', function (t) {
 
   transformer.on('end', function () {
     t.equal(feeds.length, 1, 'should emit one feed')
-    t.equal(entries.length, 4, 'should emit four entries')
+    t.equal(entries.length, 1, 'should emit one entry')
   })
 
   reader.pipe(transformer).pipe(es.writeArray(function (err, lines) {
