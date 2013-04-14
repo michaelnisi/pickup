@@ -1,0 +1,16 @@
+{
+  "feed": {
+    "title": "Example Feed",
+    "link": "\n    "
+  },
+  "entries": [
+    {
+      "title": "Atom-Powered Robots Run Amok",
+      "link": {
+        "rel": "edit",
+        "href": "http://example.org/2003/12/13/atom03/edit"
+      },
+      "author": "\n            "
+    }
+  ]
+}

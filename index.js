@@ -3,73 +3,32 @@
 
 var sax = require('sax')
   , Transform = require('stream').Transform
+  , maps = require('./lib/maps')()
 
 module.exports = function () {
   var state = {
-    channel:false
-  , items:false
-  , item:false
+    feed:false
+  , entries:false
+  , entry:false
   }
 
   var CHANNEL = 'channel'
     , ITEM = 'item'
-
-  var channelMap = {
-    // RSS
-    'title':'title'
-  , 'description':'description'
-  , 'link':'link'
-  , 'language':'language'
-  , 'pubDate':'pubDate'
-  , 'lastBuildDate':'lastBuildDate'
-  , 'docs':'docs'
-  , 'generator':'generator'
-  , 'managingEditor':'managingEditor'
-  , 'webMaster':'webMaster'
-  , 'ttl':'ttl'
-  , 'image':'image'
-  , 'rating':'rating'
-  , 'textInput':'textInput'
-  , 'skipHours':'skipHours'
-  , 'skipDays':'skipDays'
-    // itunes
-  , 'itunes:author':'author'
-  , 'itunes:summary':'summary'
-  , 'itunes:subtitle':'subtitle'
-  }
-
-  var itemMap = {
-    // RSS
-    'title':'title'
-  , 'link':'link'
-  , 'description':'description'
-  , 'pubDate':'pubDate'
-  , 'guid':'guid'
-  , 'enclosure':'enclosure'
-  , 'author':'author'
-  , 'category':'category'
-  , 'comments':'comments'
-  , 'source':'source'
-    // itunes
-  , 'itunes:subtitle':'subtitle'
-  , 'itunes:author':'author'
-  , 'itunes:summary':'summary'
-  , 'itunes:duration':'duration'
-  , 'itunes:keywords':'keywords'
-  , 'itunes:image':'image'
-  }
+    , FEED = 'feed'
+    , ENTRY = 'entry'
 
   var parser = sax.parser(true)
-    , channel = Object.create(null)
-    , item = null
+    , feed = Object.create(null)
+    , entry = null
     , name = null
+    , map = null
 
   parser.onerror = function (err) {
     stream.emit('error', err)
   }
 
   parser.ontext = function (t) {
-    var pair = state.item ? [item, itemMap] : [channel, channelMap]
+    var pair = state.entry ? [entry, maps.item] : [feed, maps.channel]
       , key = pair[1][name]
       , target = pair[0]
 
@@ -78,33 +37,47 @@ module.exports = function () {
     }
   }
 
+  var elements = ['channel', 'item', 'feed', 'entry']
+  function isElement(name) {
+    return elements.some(function (element) {
+      name === element
+    })
+  }
+
   parser.onopentag = function (node) {
     name = node.name
 
-    if (node.name === CHANNEL) {
-      stream.push('{"channel":')
-      state.channel = true
+    if (isElement(name)) {
+      map = maps[name]
     }
 
-    if (node.name === ITEM) {
-      if (!state.items) {
-        stream.push(JSON.stringify(channel) + ',"items":[')
-        stream.emit(CHANNEL, channel)
-      } else {
-        stream.push(',')
-      }
-      state.channel = false
-      state.items = true
-      state.item = true
-      item = Object.create(null)
+    switch (name) {
+      case CHANNEL:
+      case FEED:
+        stream.push('{"feed":')
+        state.feed = true
+        break;
+      case ITEM:
+      case ENTRY:
+        if (!state.entries) {
+          stream.push(JSON.stringify(feed) + ',"entries":[')
+          stream.emit(FEED, feed)
+        } else {
+          stream.push(',')
+        }
+        state.feed = false
+        state.entries = true
+        state.entry = true
+        entry = Object.create(null)
+        break
     }
 
-    if (item) {
+    if (entry) {
       var attributes = node.attributes
         , keys = Object.keys(attributes)
-        , key = itemMap[name]
+        , key = maps.item[name]
       if (key && keys.length) {
-        item[key] = attributes
+        entry[key] = attributes
       }
     }
   }
@@ -112,18 +85,20 @@ module.exports = function () {
   parser.onclosetag = function (name) {
     switch (name) {
       case ITEM:
-        state.item = false
-        stream.push(JSON.stringify(item))
-        stream.emit(ITEM, item)
-        item = null
+      case ENTRY:
+        state.entry = false
+        stream.push(JSON.stringify(entry))
+        stream.emit(ENTRY, entry)
+        entry = null
         break
       case CHANNEL:
+      case FEED:
         stream.push(']}')
         Object.keys(state).forEach(function (key) {
           state[key] = false
         })
-        channel = null
-        item = null
+        feed = null
+        entry = null
         break
     }
 
