@@ -11,6 +11,16 @@ module.exports = function () {
     , map = null
     , current = null
 
+  var stream = new Transform({
+    highWaterMark: 10
+  })
+
+  stream._transform = function (chunk, encoding, callback) {
+    if (parser.write(chunk.toString())) {
+      callback()
+    }
+  }
+
   parser.onerror = function (err) {
     stream.emit('error', err)
   }
@@ -56,10 +66,12 @@ module.exports = function () {
 
     if (current) {
       var attributes = node.attributes
-        , keys = Object.keys(attributes)
         , key = map[name]
-      if (key && keys.length) {
-        current[key] = attributes
+
+      if (key && !current[key]) {
+        if (Object.keys(attributes).length) {
+          current[key] = attributes
+        }
       }
     }
   }
@@ -84,16 +96,6 @@ module.exports = function () {
     }
 
     name = null
-  }
-
-  var stream = new Transform({
-    highWaterMark: 10
-  })
-
-  stream._transform = function (chunk, encoding, callback) {
-    if (parser.write(chunk.toString())) {
-      callback()
-    }
   }
 
   var state = {
