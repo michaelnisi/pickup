@@ -26,8 +26,12 @@ module.exports = function () {
   , 'generator':'generator'
   , 'managingEditor':'managingEditor'
   , 'webMaster':'webMaster'
-    // Atom
-    // ...
+  , 'ttl':'ttl'
+  , 'image':'image'
+  , 'rating':'rating'
+  , 'textInput':'textInput'
+  , 'skipHours':'skipHours'
+  , 'skipDays':'skipDays'
     // itunes
   , 'itunes:author':'author'
   , 'itunes:summary':'summary'
@@ -41,8 +45,11 @@ module.exports = function () {
   , 'description':'description'
   , 'pubDate':'pubDate'
   , 'guid':'guid'
-    // Atom
-    // ...
+  , 'enclosure':'enclosure'
+  , 'author':'author'
+  , 'category':'category'
+  , 'comments':'comments'
+  , 'source':'source'
     // itunes
   , 'itunes:subtitle':'subtitle'
   , 'itunes:author':'author'
@@ -50,7 +57,6 @@ module.exports = function () {
   , 'itunes:duration':'duration'
   , 'itunes:keywords':'keywords'
   , 'itunes:image':'image'
-  , 'enclosure':'enclosure'
   }
 
   var parser = sax.parser(true)

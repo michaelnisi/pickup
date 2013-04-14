@@ -9,7 +9,7 @@ var test = require('tap').test
   , transformer = pickup()
   , expected = JSON.parse(fs.readFileSync('rss.json'))
 
-test('itunes', function (t) {
+test('rss', function (t) {
   var channels = []
     , items = []
 
