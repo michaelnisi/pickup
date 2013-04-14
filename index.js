@@ -93,7 +93,7 @@ module.exports = function () {
   }
 
   parser.onattribute = function (attr) {
-    // attr seems to come before opentag
+    // TODO: Why do we receive attribute before opentag?
   }
 
   parser.onend = function () {
