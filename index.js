@@ -12,13 +12,13 @@ module.exports = function () {
   , entry:false
   }
 
-  var elements = ['channel', 'item', 'feed', 'entry']
 
-  var E = -1
-    , CHANNEL = elements[++E]
-    , ITEM = elements[++E]
-    , FEED = elements[++E]
-    , ENTRY = elements[++E]
+  var CHANNEL = 'channel'
+    , ITEM = 'item'
+    , FEED = 'feed'
+    , ENTRY = 'entry'
+
+  var elements = [CHANNEL, ITEM, FEED, ENTRY]
 
   var parser = sax.parser(true)
     , name = null
