@@ -39,6 +39,15 @@ module.exports = function () {
   , 'itunes:keywords':'keywords'
   }
 
+  var attributesMap = {
+    'itunes:image':'image'
+  , 'enclosure':'enclosure'
+  }
+
+  parser.onerror = function (err) {
+    stream.emit('error', err)
+  }
+
   parser.ontext = function (t) {
     var pair = state.item ? [item, itemMap] : [channel, channelMap]
       , key = pair[1][name]
@@ -68,6 +77,14 @@ module.exports = function () {
       state.items = true
       state.item = true
       item = Object.create(null)
+
+    }
+
+    if (item) {
+      var key = attributesMap[name]
+      if (key) {
+        item[key] = node.attributes
+      }
     }
   }
 
@@ -90,14 +107,6 @@ module.exports = function () {
     }
 
     name = null
-  }
-
-  parser.onattribute = function (attr) {
-    // TODO: Why do we receive attribute before opentag?
-  }
-
-  parser.onend = function () {
-    // ready for more
   }
 
   var stream = new Transform({

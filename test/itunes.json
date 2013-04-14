@@ -13,6 +13,13 @@
       "author": "John Doe",
       "subtitle": "A short primer on table spices",
       "summary": "This week we talk about salt and pepper shakers, comparing and contrasting pour rates, construction materials, and overall aesthetics. Come and join the party!",
+      "image": {
+        "href": "http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg"
+      },
+      "enclosure": {
+        "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode3.m4a",
+        "type": "audio/x-m4a"
+      },
       "guid": "http://example.com/podcasts/archive/aae20050615.m4a",
       "pubDate": "Wed, 15 Jun 2005 19:00:00 GMT",
       "duration": "7:04",
@@ -23,6 +30,13 @@
       "author": "Jane Doe",
       "subtitle": "Comparing socket wrenches is fun!",
       "summary": "This week we talk about metric vs. old english socket wrenches. Which one is better? Do you really need both? Get all of your answers here.",
+      "image": {
+        "href": "http://example.com/podcasts/everything/AllAboutEverything/Episode2.jpg"
+      },
+      "enclosure": {
+        "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode2.mp3",
+        "type": "audio/mpeg"
+      },
       "guid": "http://example.com/podcasts/archive/aae20050608.mp3",
       "pubDate": "Wed, 8 Jun 2005 19:00:00 GMT",
       "duration": "4:34",
@@ -33,6 +47,13 @@
       "author": "Various",
       "subtitle": "Red + Blue != Purple",
       "summary": "This week we talk about surviving in a Red state if you are a Blue person. Or vice versa.",
+      "image": {
+        "href": "http://example.com/podcasts/everything/AllAboutEverything/Episode3.jpg"
+      },
+      "enclosure": {
+        "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode1.mp3",
+        "type": "audio/mpeg"
+      },
       "guid": "http://example.com/podcasts/archive/aae20050601.mp3",
       "pubDate": "Wed, 1 Jun 2005 19:00:00 GMT",
       "duration": "3:59",
