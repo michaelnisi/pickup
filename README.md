@@ -1,4 +1,4 @@
-# pickup - transform podcast RSS feed to JSON 
+# pickup - transform RSS or Atom XML to JSON 
 
 Pickup streams podcast RSS feed [format](http://www.apple.com/itunes/podcasts/specs.html) to JSON.
 

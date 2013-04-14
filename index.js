@@ -6,19 +6,6 @@ var sax = require('sax')
   , maps = require('./lib/maps')()
 
 module.exports = function () {
-  var state = {
-    feed:false
-  , entries:false
-  , entry:false
-  }
-
-  var CHANNEL = 'channel'
-    , ITEM = 'item'
-    , FEED = 'feed'
-    , ENTRY = 'entry'
-
-  var elements = [CHANNEL, ITEM, FEED, ENTRY]
-
   var parser = sax.parser(true)
     , name = null
     , map = null
@@ -36,12 +23,6 @@ module.exports = function () {
     if (key && !current[key]) {
       current[key] = t
     }
-  }
-
-  function isElement(name) {
-    return elements.some(function (element) {
-      return name === element
-    })
   }
 
   parser.onopentag = function (node) {
@@ -115,5 +96,25 @@ module.exports = function () {
     }
   }
 
+  var state = {
+    feed:false
+  , entries:false
+  , entry:false
+  }
+
+  var CHANNEL = 'channel'
+    , ITEM = 'item'
+    , FEED = 'feed'
+    , ENTRY = 'entry'
+
+  var elements = [CHANNEL, ITEM, FEED, ENTRY]
+
+  function isElement(name) {
+    return elements.some(function (element) {
+      return name === element
+    })
+  }
+
   return stream
 }
+
