@@ -5,16 +5,16 @@ The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.o
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup)
 
 ## Usage
-    
+
 ### Library
 
 To transform from stdin to stdout:
-    
+
     var pickup = require('pickup')
-    , transformer = pickup()
-    , Readable = require('stream').Readable
-    , reader = new Readable().wrap(process.openStdin())
-    , writer = process.stdout
+      , transformer = pickup()
+      , Readable = require('stream').Readable
+      , reader = new Readable().wrap(process.openStdin())
+      , writer = process.stdout
 
     reader.pipe(transformer).pipe(writer)
 
@@ -22,7 +22,7 @@ To transform from stdin to stdout:
 
 Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to pickup:
 
-    curl -sS http://feeds.feedburner.com/the_talk_show | pickup 
+    curl -sS http://feeds.feedburner.com/the_talk_show | pickup
 
 If you haven't already, I suggest you install [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
 
