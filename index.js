@@ -1,9 +1,9 @@
 
-// pickup - transform RSS or Atom feed to JSON
+// pickup - transform RSS or Atom XML to JSON
 
 var sax = require('sax')
   , Transform = require('stream').Transform
-  , maps = require('./lib/maps')()
+  , mappings = require('./lib/mappings')()
   , CHANNEL = 'channel'
   , ITEM = 'item'
   , FEED = 'feed'
@@ -56,7 +56,7 @@ module.exports = function () {
     name = node.name
 
     if (isElement(name)) {
-      map = maps[name]
+      map = mappings[name]
     }
 
     switch (name) {
@@ -114,7 +114,6 @@ module.exports = function () {
 
     name = null
   }
-
 
   return stream
 }

@@ -6,24 +6,29 @@ The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.o
 
 ## Usage
     
-Install [jsontool](https://github.com/trentm/json) to format JSON in the command-line:
+To transform from stdin to stdout:
+    
+    var pickup = require('pickup')
+    , transformer = pickup()
+    , Readable = require('stream').Readable
+    , reader = new Readable().wrap(process.openStdin())
+    , writer = process.stdout
+
+    reader.pipe(transformer).pipe(writer)
+
+If you haven't already, I suggest you intall [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
 
     npm install -g jsontool
-    
-Clone pickup to run examples:
-    
-    git clone git://github.com/michaelnisi/pickup.git
-    cd pickup
-  
-Pipe stdin to stdout:
-  
-    cat test/itunes.xml | node example/stdin.js | json
 
+Now you can transform RSS to JSON on the command-line like so:
+
+    curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
+   
 ## Installation
 
 Install with [npm](https://npmjs.org):
 
-    npm install pickup
+    npm install -g pickup
 
 ## License
 
