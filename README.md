@@ -28,12 +28,10 @@ If you haven't already, I suggest you install [jsontool](https://github.com/tren
 
     npm install -g jsontool
 
-Pipe `pickup` to `json` and voilà:
+So, now you may pipe `pickup` to `json` like so:
 
     curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
 
-—looks much nicer.
-   
 ## Installation
 
 Install with [npm](https://npmjs.org):
