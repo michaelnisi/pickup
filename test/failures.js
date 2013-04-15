@@ -22,3 +22,10 @@ test('empty string', function (t) {
   transformer.write('')
   t.end()
 })
+
+test('empty feed', function (t) {
+  var transformer = pickup()
+  transformer.write('<feed>')
+  transformer.write('</feed>')
+  t.end()
+})

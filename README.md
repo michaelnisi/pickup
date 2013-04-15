@@ -6,6 +6,8 @@ The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.o
 
 ## Usage
     
+### Library
+
 To transform from stdin to stdout:
     
     var pickup = require('pickup')
@@ -16,11 +18,17 @@ To transform from stdin to stdout:
 
     reader.pipe(transformer).pipe(writer)
 
-If you haven't already, I suggest you intall [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
+### Command-line
+
+Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to pickup:
+
+    curl -sS http://feeds.feedburner.com/the_talk_show | pickup 
+
+If you haven't already, I suggest you install [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
 
     npm install -g jsontool
 
-Now you can transform RSS to JSON on the command-line like so:
+Piped to json it looks much nicer:
 
     curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
    
