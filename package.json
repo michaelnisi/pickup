@@ -31,8 +31,7 @@
     "through"
   ],
   "dependencies": {
-    "sax": "0.5.x",
-    "JSONStream": "0.6.x"
+    "sax": "0.5.x"
   },
   "devDependencies": {
     "tap": "0.4.x",
