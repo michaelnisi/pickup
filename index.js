@@ -23,14 +23,11 @@ module.exports = function () {
   , entry:false
   }
 
-  var parser = sax.parser(true)
+  var stream = new Transform()
+    , parser = sax.parser(true)
     , name = null
     , map = null
     , current = null
-
-  var stream = new Transform({
-    highWaterMark: 10
-  })
 
   stream._transform = function (chunk, encoding, callback) {
     if (parser.write(chunk.toString())) {

@@ -28,9 +28,11 @@ If you haven't already, I suggest you install [jsontool](https://github.com/tren
 
     npm install -g jsontool
 
-Piped to json it looks much nicer:
+Pipe `pickup` to `json` and voilà:
 
     curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
+
+—looks much nicer.
    
 ## Installation
 

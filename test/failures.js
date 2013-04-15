@@ -25,7 +25,7 @@ test('empty string', function (t) {
 
 test('empty feed', function (t) {
   var transformer = pickup()
-  transformer.write('<feed>')
-  transformer.write('</feed>')
+  transformer.write('<xml></xml>')
+  transformer.end()
   t.end()
 })
