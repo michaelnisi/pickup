@@ -102,7 +102,11 @@ module.exports = function () {
         break
       case CHANNEL:
       case FEED:
-        stream.push(']}')
+        if (state.entries) {
+          stream.push(']}')
+        } else {
+          stream.push(JSON.stringify(current) + '}')
+        }
         Object.keys(state).forEach(function (key) {
           state[key] = false
         })
