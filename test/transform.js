@@ -1,5 +1,5 @@
 
-// ab - ab test
+// transform - transform and test
 
 var es = require('event-stream')
   , path = require('path')
