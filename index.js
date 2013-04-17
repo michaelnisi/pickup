@@ -23,20 +23,21 @@ module.exports = function () {
   , entry:false
   }
 
-  var stream = new Transform()
-    , parser = sax.parser(true)
+  var parser = sax.parser(true)
     , name = null
     , map = null
     , current = null
 
+  var stream = new Transform({ decodeStrings:false })
+
   stream._transform = function (chunk, encoding, callback) {
-    if (parser.write(chunk.toString())) {
-      callback()
-    }
+    parser.write(chunk.toString())
+    callback()
   }
 
   parser.onerror = function (err) {
     stream.emit('error', err)
+    stream.push(null)
   }
 
   parser.ontext = function (t) {

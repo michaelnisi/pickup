@@ -2,6 +2,7 @@
 // failures - test failures
 
 var test = require('tap').test
+  , fs = require('fs')
   , es = require('event-stream')
   , pickup = require('../')
 
@@ -23,7 +24,7 @@ test('empty string', function (t) {
   t.end()
 })
 
-test('empty feed', function (t) {
+test('empty xml', function (t) {
   var transformer = pickup()
   transformer.write('<xml></xml>')
   transformer.end()

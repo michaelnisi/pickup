@@ -2,16 +2,12 @@
 // rss - test RSS example feed
 
 var test = require('tap').test
-  , es = require('event-stream')
-  , fs = require('fs')
-  , reader = fs.createReadStream('rss.xml')
-  , pickup = require('../')
-  , transformer = pickup()
-  , expected = JSON.parse(fs.readFileSync('rss.json'))
+  , transform = require('./transform')
 
 test('rss', function (t) {
   var feeds = []
     , entries = []
+    , transformer = transform(t, './rss.xml', 'rss.json')
 
   transformer.on('entry', function (entry) {
     entries.push(entry)
@@ -25,9 +21,4 @@ test('rss', function (t) {
     t.equal(feeds.length, 1, 'should emit one feed')
     t.equal(entries.length, 4, 'should emit four entries')
   })
-
-  reader.pipe(transformer).pipe(es.writeArray(function (err, lines) {
-    t.deepEqual(JSON.parse(lines.join('')), expected)
-    t.end()
-  }))
 })
