@@ -6,7 +6,7 @@ var path = require('path')
   , pickup = require('../')
 
 module.exports = function (t, xml, json) {
-  var options = !!Math.round(Math.random()) ? { encoding:'utf8' } : null
+  var options = !Math.round(Math.random()) ? { encoding:'utf8' } : null
     , reader = fs.createReadStream(xml, options)
     , transformer = pickup()
     , expected = JSON.parse(fs.readFileSync(json))

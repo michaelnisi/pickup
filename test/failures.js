@@ -3,7 +3,6 @@
 
 var test = require('tap').test
   , fs = require('fs')
-  , es = require('event-stream')
   , pickup = require('../')
 
 test('null', function (t) {
