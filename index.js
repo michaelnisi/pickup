@@ -10,12 +10,6 @@ var sax = require('sax')
   , ENTRY = 'entry'
   , elements = [CHANNEL, ITEM, FEED, ENTRY]
 
-function isElement(name) {
-  return elements.some(function (element) {
-    return name === element
-  })
-}
-
 module.exports = function () {
   var state = {
     feed:false
@@ -120,6 +114,12 @@ module.exports = function () {
   }
 
   return stream
+}
+
+function isElement(name) {
+  return elements.some(function (element) {
+    return name === element
+  })
 }
 
 function Entry (author
