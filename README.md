@@ -59,6 +59,7 @@ The `entry` event emits an `Entry` for each parsed item in the feed. Its propert
 - `entry`
     - `author`
     - `enclosure`
+    - `duration`
     - `id`
     - `link`
     - `subtitle`
