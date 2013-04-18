@@ -54,7 +54,7 @@ The `feed` event emits a feed `Object` with following properties which can be `u
 
 ### Event:'entry'
 
-The `entry` event emits an `Entry` for each parsed item in the feed. Its properties can be `null`.
+The `entry` event emits an `Entry` for each parsed item in the feed. Its properties can be `undefined`.
 
 - `entry`
     - `author`
