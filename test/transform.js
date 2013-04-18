@@ -1,23 +1,25 @@
 
 // transform - transform and test
 
-var es = require('event-stream')
-  , path = require('path')
+var path = require('path')
   , fs = require('fs')
   , pickup = require('../')
 
-module.exports = function (t, a, b) {
+module.exports = function (t, xml, json) {
   var options = !!Math.round(Math.random()) ? { encoding:'utf8' } : null
-    , reader = fs.createReadStream(a, options)
+    , reader = fs.createReadStream(xml, options)
     , transformer = pickup()
-    , expected = JSON.parse(fs.readFileSync(b))
+    , expected = JSON.parse(fs.readFileSync(json))
+    , actual = ''
 
-  reader
-    .pipe(transformer)
-    .pipe(es.writeArray(function (err, lines) {
-      t.deepEqual(JSON.parse(lines.join('')), expected)
-      t.end()
-    }))
+  reader.pipe(transformer).on('end', function () {
+    t.deepEqual(JSON.parse(actual), expected)
+    t.end()
+  })
+
+  transformer.on('readable', function () {
+    actual += transformer.read()
+  })
 
   return transformer
 }
