@@ -2,24 +2,18 @@
   "feed": {
     "title": "Example Feed",
     "subtitle": "A subtitle.",
-    "link": {
-      "href": "http://example.org/feed/",
-      "rel": "self"
-    },
+    "link": "http://example.org/feed/",
     "id": "urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6",
     "updated": "2003-12-13T18:30:02Z"
   },
   "entries": [
     {
-      "title": "Atom-Powered Robots Run Amok",
-      "link": {
-        "href": "http://example.org/2003/12/13/atom03"
-      },
+      "author": "johndoe@example.com",
       "id": "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a",
-      "summary":"Some text.", 
-      "updated":"2003-12-13T18:30:02Z",
-      "author": "John Doe",
-      "email": "johndoe@example.com"
+      "link": "http://example.org/2003/12/13/atom03",
+      "summary": "Some text.",
+      "title": "Atom-Powered Robots Run Amok",
+      "updated": "2003-12-13T18:30:02Z"
     }
   ]
 }

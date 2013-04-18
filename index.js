@@ -75,7 +75,7 @@ module.exports = function () {
         state.feed = false
         state.entries = true
         state.entry = true
-        current = Object.create(null)
+        current = new Entry()
         break
     }
 
@@ -85,7 +85,9 @@ module.exports = function () {
 
       if (key && !current[key]) {
         if (Object.keys(attributes).length) {
-          current[key] = attributes
+          var href = key === 'link' || key === 'image'
+          var value = href ? attributes.href : attributes
+          current[key] = value
         }
       }
     }
@@ -120,3 +122,23 @@ module.exports = function () {
   return stream
 }
 
+function Entry (author
+              , enclosure
+              , duration
+              , id
+              , link
+              , subtitle
+              , summary
+              , title
+              , updated) {
+
+  this.author = author
+  this.enclosure = enclosure
+  this.duration = duration
+  this.id = id
+  this.link = link
+  this.subtitle = subtitle
+  this.summary = summary
+  this.title = title
+  this.updated = updated
+}

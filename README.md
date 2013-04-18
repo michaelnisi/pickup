@@ -38,15 +38,33 @@ The `pickup` module exports one function that returns a [Transform](http://nodej
 
 ### Event:'feed'
 
-    function (feed) {}
+The `feed` event emits a feed `Object` with following properties which can be `undefined`.
 
-Emitted when the feed meta data is parsed.
+- `feed`
+    - `copyright`
+    - `id`
+    - `image`
+    - `language`
+    - `link`
+    - `subtitle`
+    - `summary` 
+    - `title`
+    - `ttl`
+    - `updated`
 
 ### Event:'entry'
 
-    function (entry) {}
+The `entry` event emits an `Entry` for each parsed item in the feed. Its properties can be `null`.
 
-Emitted when an entry is parsed.
+- `entry`
+    - `author`
+    - `enclosure`
+    - `id`
+    - `link`
+    - `subtitle`
+    - `summary`
+    - `title`
+    - `updated`
 
 ## Installation
 
