@@ -34,7 +34,7 @@ To transform from stdin to stdout:
 
 ### pickup()
 
-The `pickup` module exports one function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which—additionally to `Stream` events—emits following events:
+The `pickup` module exports one function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which—additionally to [Stream](http://nodejs.org/api/stream.html) events—emits following events:
 
 ### Event:'feed'
 
