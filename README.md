@@ -6,18 +6,6 @@ The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.o
 
 ## Usage
 
-### Library
-
-To transform from stdin to stdout:
-
-    var pickup = require('pickup')
-      , transformer = pickup()
-      , Readable = require('stream').Readable
-      , reader = new Readable().wrap(process.openStdin())
-      , writer = process.stdout
-
-    reader.pipe(transformer).pipe(writer)
-
 ### Command-line
 
 Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to pickup:
@@ -31,6 +19,34 @@ If you haven't already, I suggest you install [jsontool](https://github.com/tren
 So, now you may pipe `pickup` to `json` like so:
 
     curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
+
+### Library
+
+To transform from stdin to stdout:
+
+    var pickup = require('pickup')
+      , transformer = pickup()
+      , Readable = require('stream').Readable
+      , reader = new Readable().wrap(process.openStdin())
+      , writer = process.stdout
+
+    reader.pipe(transformer).pipe(writer)
+
+### pickup()
+
+The `pickup' module exports one function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which—additionally to `Stream` events—emits following events:
+
+### Event:'feed'
+
+    function (feed) {}
+
+Emitted when the feed meta data is parsed.
+
+### Event:'entry'
+
+    function (entry) {}
+
+Emitted when an entry is parsed.
 
 ## Installation
 
