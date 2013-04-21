@@ -1,5 +1,5 @@
 
-// atom - test Atom
+// atom-podlove - test podlove Atom extensions
 
 var test = require('tap').test
   , pickup = require('../')
@@ -8,7 +8,7 @@ var test = require('tap').test
 test('valid atom', function (t) {
   var feeds = []
     , entries = []
-    , transformer = transform(t, 'atom.xml', 'atom.json')
+    , transformer = transform(t, 'atom-podlove.xml', 'atom-podlove.json')
 
   transformer.on('entry', function (entry) {
     entries.push(entry)

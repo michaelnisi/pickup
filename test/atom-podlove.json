@@ -1,0 +1,21 @@
+{
+  "feed": {
+    "title": "Podlove Podcast",
+    "link": "http://podlove.org/",
+    "updated": "2012-03-26T23:25:19Z",
+    "id": "urn:uuid:8d5261ba-bf62-ac81-946c-9276ea617917c"
+  },
+  "entries": [
+    {
+      "enclosure": {
+        "type": "audio/mpeg",
+        "href": "http://podlove.org/files/fiatlux.mp3"
+      },
+      "id": "urn:uuid:3241ace2-ca21-dd12-2341-1412ce31fad2",
+      "link": "http://podlove.org/podcast/1",
+      "summary": "First episode",
+      "title": "Fiat Lux",
+      "updated": "2012-03-26T23:25:19Z"
+    }
+  ]
+}

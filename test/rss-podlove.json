@@ -1,0 +1,20 @@
+{
+  "feed": {
+    "title": "Podlove Podcast"
+  },
+  "entries": [
+    {
+      "enclosure": {
+        "type": "audio/mpeg",
+        "href": "http://podlove.org/files/fiatlux.mp3"
+      },
+      "id": {
+        "isPermaLink": "false"
+      },
+      "link": "http://podlove.org/podcast/1",
+      "summary": "First episode",
+      "title": "Fiat Lux",
+      "updated": "Fri, 23 Mar 2012 23:25:19 +0000"
+    }
+  ]
+}

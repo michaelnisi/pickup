@@ -77,10 +77,30 @@ module.exports = function () {
       var attributes = node.attributes
         , key = map[name]
 
-      if (key && !current[key]) {
+      if (key) {
         if (Object.keys(attributes).length) {
-          var href = key === 'link' || key === 'image'
-          var value = href ? attributes.href : attributes
+          switch (key) {
+            case 'link':
+              var rel = attributes.rel
+              if (rel === 'alternate' || rel === 'edit') return
+              if (rel === 'enclosure') {
+                key = rel
+                value = {
+                  type:attributes.type
+                , href:attributes.href
+                , length:attributes.length
+                }
+              } else {
+                value = attributes.href
+              }
+              break
+            case 'image':
+              value = attributes.href
+              break
+            default:
+              value = attributes
+          }
+
           current[key] = value
         }
       }

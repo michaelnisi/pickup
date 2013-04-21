@@ -1,14 +1,14 @@
 
-// atom - test Atom
+// rss - test podlove RSS extensions
 
 var test = require('tap').test
-  , pickup = require('../')
   , transform = require('./transform')
+  , pickup = require('../')
 
-test('valid atom', function (t) {
+test('rss', function (t) {
   var feeds = []
     , entries = []
-    , transformer = transform(t, 'atom.xml', 'atom.json')
+    , transformer = transform(t, './rss-podlove.xml', 'rss-podlove.json')
 
   transformer.on('entry', function (entry) {
     entries.push(entry)
