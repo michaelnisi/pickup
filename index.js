@@ -79,7 +79,7 @@ module.exports = function () {
         , keys = Object.keys(attributes)
 
       if (key) {
-        if (keys.length) {
+        if (keys.length && name !== 'guid') {
           switch (key) {
             case 'link':
               var rel = attributes.rel
