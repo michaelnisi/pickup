@@ -3,6 +3,7 @@
     "title": "All About Everything",
     "link": "http://www.example.com/podcasts/everything/index.html",
     "language": "en-us",
+    "copyright": "℗ & © 2005 John Doe & Family",
     "subtitle": "A show about everything",
     "author": "John Doe",
     "summary": "All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our Podcast in the iTunes Store"
@@ -12,8 +13,8 @@
       "author": "John Doe",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode3.m4a",
-        "type": "audio/x-m4a",
-        "length": "8727310"
+        "length": "8727310",
+        "type": "audio/x-m4a"
       },
       "duration": "7:04",
       "id": "http://example.com/podcasts/archive/aae20050615.m4a",
@@ -27,8 +28,8 @@
       "author": "Jane Doe",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode2.mp3",
-        "type": "audio/mpeg",
-        "length": "5650889"
+        "length": "5650889",
+        "type": "audio/mpeg"
       },
       "duration": "4:34",
       "id": "http://example.com/podcasts/archive/aae20050608.mp3",
@@ -42,8 +43,8 @@
       "author": "Various",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode1.mp3",
-        "type": "audio/mpeg",
-        "length": "4989537"
+        "length": "4989537",
+        "type": "audio/mpeg"
       },
       "duration": "3:59",
       "id": "http://example.com/podcasts/archive/aae20050601.mp3",
