@@ -12,7 +12,8 @@
       "author": "John Doe",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode3.m4a",
-        "type": "audio/x-m4a"
+        "type": "audio/x-m4a",
+        "length": "8727310"
       },
       "duration": "7:04",
       "id": "http://example.com/podcasts/archive/aae20050615.m4a",
@@ -26,7 +27,8 @@
       "author": "Jane Doe",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode2.mp3",
-        "type": "audio/mpeg"
+        "type": "audio/mpeg",
+        "length": "5650889"
       },
       "duration": "4:34",
       "id": "http://example.com/podcasts/archive/aae20050608.mp3",
@@ -40,7 +42,8 @@
       "author": "Various",
       "enclosure": {
         "url": "http://example.com/podcasts/everything/AllAboutEverythingEpisode1.mp3",
-        "type": "audio/mpeg"
+        "type": "audio/mpeg",
+        "length": "4989537"
       },
       "duration": "3:59",
       "id": "http://example.com/podcasts/archive/aae20050601.mp3",

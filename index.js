@@ -47,7 +47,7 @@ module.exports = function () {
   parser.onopentag = function (node) {
     name = node.name
 
-    if (isElement(name)) {
+    if (elements.indexOf(name) !== -1) {
       map = mappings[name]
     }
 
@@ -76,9 +76,10 @@ module.exports = function () {
     if (current) {
       var attributes = node.attributes
         , key = map[name]
+        , keys = Object.keys(attributes)
 
       if (key) {
-        if (Object.keys(attributes).length) {
+        if (keys.length) {
           switch (key) {
             case 'link':
               var rel = attributes.rel
@@ -134,12 +135,6 @@ module.exports = function () {
   }
 
   return stream
-}
-
-function isElement(name) {
-  return elements.some(function (element) {
-    return name === element
-  })
 }
 
 function Entry (author

@@ -9,7 +9,8 @@
     {
       "enclosure": {
         "type": "audio/mpeg",
-        "href": "http://podlove.org/files/fiatlux.mp3"
+        "href": "http://podlove.org/files/fiatlux.mp3",
+        "length": "12345"
       },
       "id": "urn:uuid:3241ace2-ca21-dd12-2341-1412ce31fad2",
       "link": "http://podlove.org/podcast/1",

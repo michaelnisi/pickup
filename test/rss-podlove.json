@@ -6,7 +6,8 @@
     {
       "enclosure": {
         "type": "audio/mpeg",
-        "href": "http://podlove.org/files/fiatlux.mp3"
+        "href": "http://podlove.org/files/fiatlux.mp3",
+        "length": "12345"
       },
       "id": {
         "isPermaLink": "false"
