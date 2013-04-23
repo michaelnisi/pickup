@@ -41,6 +41,7 @@ The `pickup` module exports a single function that returns a [Transform](http://
 The `feed` event emits a feed `Object` with following properties which can be `undefined`.
 
 - `feed`
+    - `author`
     - `copyright`
     - `id`
     - `image`
@@ -59,6 +60,9 @@ The `entry` event emits an `Entry` for each parsed item in the feed. Its propert
 - `entry`
     - `author`
     - `enclosure`
+        - `href`
+        - `length`
+        - `type`
     - `duration`
     - `id`
     - `link`
