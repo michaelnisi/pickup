@@ -11,18 +11,13 @@ var sax = require('sax')
   , elements = [CHANNEL, ITEM, FEED, ENTRY]
 
 module.exports = function () {
-  var state = {
-    feed:false
-  , entries:false
-  , entry:false
-  }
-
-  var parser = sax.parser(true)
+  var opt = { trim:true, normalize:true, position:false }
+    , parser = sax.parser(true, opt)
+    , stream = new Transform({ decodeStrings:false })
+    , state = { feed:false, entries:false, entry:false }
     , name = null
     , map = null
     , current = null
-
-  var stream = new Transform({ decodeStrings:false })
 
   stream._transform = function (chunk, encoding, callback) {
     parser.write(chunk.toString())
@@ -39,7 +34,7 @@ module.exports = function () {
 
     var key = map[name]
 
-    if (key && !current[key]) {
+    if (key) {
       current[key] = t
     }
   }
@@ -83,7 +78,6 @@ module.exports = function () {
           switch (key) {
             case 'link':
               var rel = attributes.rel
-              if (rel === 'alternate' || rel === 'edit') return
               if (rel === 'enclosure') {
                 key = rel
                 value = {
