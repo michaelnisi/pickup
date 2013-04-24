@@ -91,6 +91,9 @@ module.exports = function () {
           switch (key) {
             case 'link':
               var rel = attributes.rel
+              if (rel === 'payment') {
+                key = rel
+              }
               if (rel === 'enclosure') {
                 key = rel
                 value = attributes
