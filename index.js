@@ -14,10 +14,16 @@ module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
     , parser = sax.parser(true, opt)
     , stream = new Transform({ decodeStrings:false })
-    , state = { feed:false, entries:false, entry:false }
     , name = null
     , map = null
     , current = null
+
+  var state = {
+    feed:false
+  , entries:false
+  , entry:false
+  , image:false
+  }
 
   stream._transform = function (chunk, encoding, callback) {
     parser.write(chunk.toString())
@@ -33,6 +39,10 @@ module.exports = function () {
     if (!current || !map) return
 
     var key = map[name]
+
+    if (state.image && name === 'url') {
+      key = 'image'
+    }
 
     if (key) {
       current[key] = t
@@ -65,6 +75,9 @@ module.exports = function () {
         state.entries = true
         state.entry = true
         current = new Entry()
+        break
+      case 'image':
+        state.image = true
         break
     }
 
@@ -119,6 +132,9 @@ module.exports = function () {
           state[key] = false
         })
         current = null
+        break
+      case 'image':
+        state.image = false
         break
     }
 
