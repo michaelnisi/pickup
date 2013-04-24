@@ -45,8 +45,19 @@ module.exports = function () {
     }
 
     if (key) {
-      current[key] = t
+      var prop = current[key]
+      if (prop && typeof prop === 'string'
+               && typeof t === 'string'
+               && t !== prop) {
+        current[key] += t
+      } else {
+        current[key] = t
+      }
     }
+  }
+
+  parser.oncdata = function (d) {
+    parser.ontext(d)
   }
 
   parser.onopentag = function (node) {
