@@ -74,17 +74,14 @@ module.exports = function () {
         , keys = Object.keys(attributes)
 
       if (key) {
-        if (keys.length && name !== 'guid') {
+        if (keys.length) {
           switch (key) {
             case 'link':
               var rel = attributes.rel
               if (rel === 'enclosure') {
                 key = rel
-                value = {
-                  type:attributes.type
-                , href:attributes.href
-                , length:attributes.length
-                }
+                value = attributes
+                delete value.rel
               } else {
                 value = attributes.href
               }
