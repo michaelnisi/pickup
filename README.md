@@ -47,6 +47,7 @@ The `feed` event emits a feed `Object` with following properties which can be `u
     - `image`
     - `language`
     - `link`
+    - `payment`
     - `subtitle`
     - `summary` 
     - `title`
