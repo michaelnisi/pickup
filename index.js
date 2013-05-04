@@ -10,7 +10,6 @@ module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
     , parser = sax.parser(true, opt)
     , stream = new Transform({ decodeStrings:false })
-    , elements = ['channel', 'feed', 'item', 'entry']
     , name = null
     , map = null
     , current = null
@@ -60,12 +59,13 @@ module.exports = function () {
   parser.onopentag = function (node) {
     name = node.name
 
-    if (elements.indexOf(name) !== -1) {
+    if (mappings.hasOwnProperty(name)) {
       map = mappings[name]
     }
 
-    var handler = openHandlers[name]
-    if (handler) handler()
+    if (openHandlers.hasOwnProperty(name)) {
+      openHandlers[name]()
+    }
 
     if (current) {
       var attributes = node.attributes
@@ -82,8 +82,9 @@ module.exports = function () {
   }
 
   parser.onclosetag = function (name) {
-    var handler = closeHandlers[name]
-    if (handler) handler()
+    if (closeHandlers.hasOwnProperty(name)) {
+      closeHandlers[name]()
+    }
     name = null
   }
 
