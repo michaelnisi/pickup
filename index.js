@@ -5,12 +5,12 @@ var sax = require('sax')
   , Transform = require('stream').Transform
   , mappings = require('./lib/mappings')()
   , attribute = require('./lib/attribute')
-  , elements = ['channel', 'feed', 'item', 'entry']
 
 module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
     , parser = sax.parser(true, opt)
     , stream = new Transform({ decodeStrings:false })
+    , elements = ['channel', 'feed', 'item', 'entry']
     , name = null
     , map = null
     , current = null
@@ -152,7 +152,6 @@ module.exports = function () {
   return stream
 }
 
-// I ♥ V8
 function Entry (author
               , enclosure
               , duration
