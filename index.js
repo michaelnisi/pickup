@@ -152,6 +152,7 @@ module.exports = function () {
   return stream
 }
 
+// I ♥ V8
 function Entry (author
               , enclosure
               , duration
