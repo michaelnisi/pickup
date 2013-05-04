@@ -4,11 +4,8 @@
 var sax = require('sax')
   , Transform = require('stream').Transform
   , mappings = require('./lib/mappings')()
-  , CHANNEL = 'channel'
-  , ITEM = 'item'
-  , FEED = 'feed'
-  , ENTRY = 'entry'
-  , elements = [CHANNEL, ITEM, FEED, ENTRY]
+  , attribute = require('./lib/attribute')
+  , elements = ['channel', 'feed', 'item', 'entry']
 
 module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
@@ -67,30 +64,8 @@ module.exports = function () {
       map = mappings[name]
     }
 
-    switch (name) {
-      case CHANNEL:
-      case FEED:
-        stream.push('{"feed":')
-        current = Object.create(null)
-        state.feed = true
-        break;
-      case ITEM:
-      case ENTRY:
-        if (!state.entries) {
-          stream.push(JSON.stringify(current) + ',"entries":[')
-          stream.emit(FEED, current)
-        } else {
-          stream.push(',')
-        }
-        state.feed = false
-        state.entries = true
-        state.entry = true
-        current = new Entry()
-        break
-      case 'image':
-        state.image = true
-        break
-    }
+    var handler = openHandlers[name]
+    if (handler) handler()
 
     if (current) {
       var attributes = node.attributes
@@ -99,60 +74,79 @@ module.exports = function () {
 
       if (key) {
         if (keys.length) {
-          switch (key) {
-            case 'link':
-              var rel = attributes.rel
-              if (rel === 'payment') {
-                key = rel
-              }
-              if (rel === 'enclosure') {
-                key = rel
-                value = attributes
-                delete value.rel
-              } else {
-                value = attributes.href
-              }
-              break
-            case 'image':
-              value = attributes.href
-              break
-            default:
-              value = attributes
-          }
-
-          current[key] = value
+          var kv = attribute(key, attributes)
+          current[kv[0]] = kv[1]
         }
       }
     }
   }
 
   parser.onclosetag = function (name) {
-    switch (name) {
-      case ITEM:
-      case ENTRY:
-        state.entry = false
-        stream.push(JSON.stringify(current))
-        stream.emit(ENTRY, current)
-        current = null
-        break
-      case CHANNEL:
-      case FEED:
-        if (state.entries) {
-          stream.push(']}')
-        } else {
-          stream.push(JSON.stringify(current) + '}')
-        }
-        Object.keys(state).forEach(function (key) {
-          state[key] = false
-        })
-        current = null
-        break
-      case 'image':
-        state.image = false
-        break
-    }
-
+    var handler = closeHandlers[name]
+    if (handler) handler()
     name = null
+  }
+
+  function feedopen () {
+    stream.push('{"feed":')
+    current = Object.create(null)
+    state.feed = true
+  }
+
+  function entryopen () {
+    if (!state.entries) {
+      stream.push(JSON.stringify(current) + ',"entries":[')
+      stream.emit('feed', current)
+    } else {
+      stream.push(',')
+    }
+    state.feed = false
+    state.entries = true
+    state.entry = true
+    current = new Entry()
+  }
+
+  function imageopen () {
+    state.image = true
+  }
+
+  var openHandlers = {
+    'channel':feedopen
+  , 'feed':feedopen
+  , 'item':entryopen
+  , 'entry':entryopen
+  , 'image':imageopen
+  }
+
+  function entryclose () {
+    state.entry = false
+    stream.push(JSON.stringify(current))
+    stream.emit('entry', current)
+    current = null
+  }
+
+  function feedclose () {
+    if (state.entries) {
+      stream.push(']}')
+    } else {
+      stream.push(JSON.stringify(current) + '}')
+    }
+    Object.keys(state).forEach(function (key) {
+      state[key] = false
+    })
+    current = null
+  }
+
+  function imageclose () {
+    state.image = false
+  }
+
+  var closeHandlers = {
+    'item':entryclose
+  , 'entry':entryclose
+  , 'channel':feedclose
+  , 'feed':feedclose
+  , 'image':imageclose
   }
 
   return stream
