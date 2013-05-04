@@ -43,9 +43,9 @@ module.exports = function () {
 
     if (key) {
       var prop = current[key]
-      if (prop && typeof prop === 'string'
-               && typeof t === 'string'
-               && t !== prop) {
+        , add = isString(prop) && isString(t) && t !== prop
+
+      if (prop && add) {
         current[key] += t
       } else {
         current[key] = t
@@ -150,6 +150,10 @@ module.exports = function () {
   }
 
   return stream
+}
+
+function isString(obj) {
+  return typeof obj === 'string'
 }
 
 function Entry (author
