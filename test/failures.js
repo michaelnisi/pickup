@@ -6,30 +6,31 @@ var test = require('tap').test
   , pickup = require('../')
 
 test('null', function (t) {
-  var transformer = pickup()
-  t.throws(function () { transformer.write(null) })
-  t.notok(transformer.read(), 'should be null')
+  t.throws(function () { pickup().write(null) })
   t.end()
 })
 
 test('crap', function (t) {
-  var transformer = pickup()
-  t.throws(function () { transformer.write('crap') })
-  t.notok(transformer.read(), 'should be null')
+  t.throws(function () { pickup().write('crap') })
   t.end()
 })
 
 test('empty string', function (t) {
-  var transformer = pickup()
-  transformer.write('')
-  t.notok(transformer.read(), 'should be null')
+  var p = pickup()
+  p.write('')
   t.end()
+  p.on('readable', function () {
+    t.equals(p.read(), null)
+    t.end()
+  })
 })
 
 test('empty xml', function (t) {
-  var transformer = pickup()
-  transformer.write('<xml></xml>')
-  transformer.end()
-  t.notok(transformer.read(), 'should be null')
-  t.end()
+  var p = pickup()
+  p.write('<xml></xml>')
+  p.end()
+  p.on('readable', function () {
+    t.equals(p.read(), null)
+    t.end()
+  })
 })
