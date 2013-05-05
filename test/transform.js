@@ -12,10 +12,12 @@ module.exports = function (t, xml, json) {
     , expected = JSON.parse(fs.readFileSync(json))
     , actual = ''
 
-  reader.pipe(transformer).on('end', function () {
-    t.deepEqual(JSON.parse(actual), expected)
-    t.end()
-  })
+  reader
+    .pipe(transformer)
+    .on('finish', function () {
+      t.deepEqual(JSON.parse(actual), expected)
+      t.end()
+    })
 
   transformer.on('readable', function () {
     actual += transformer.read()
