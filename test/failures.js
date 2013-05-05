@@ -15,6 +15,11 @@ test('crap', function (t) {
   t.end()
 })
 
+test('invalid xml', function (t) {
+  t.throws(function () { pickup().write('<xml><feed></xml>') })
+  t.end()
+})
+
 test('empty string', function (t) {
   var p = pickup()
   p.write('')
