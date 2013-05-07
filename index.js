@@ -59,13 +59,8 @@ module.exports = function () {
   parser.onopentag = function (node) {
     name = node.name
 
-    if (mappings.hasOwnProperty(name)) {
-      map = mappings[name]
-    }
-
-    if (openHandlers.hasOwnProperty(name)) {
-      openHandlers[name]()
-    }
+    map = mappings[name] || map
+    name in openHandlers ? openHandlers[name]() : null
 
     if (current) {
       var attributes = node.attributes
@@ -82,9 +77,7 @@ module.exports = function () {
   }
 
   parser.onclosetag = function (name) {
-    if (closeHandlers.hasOwnProperty(name)) {
-      closeHandlers[name]()
-    }
+    name in closeHandlers ? closeHandlers[name]() : null
     name = null
   }
 
