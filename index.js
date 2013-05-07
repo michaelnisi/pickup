@@ -60,7 +60,7 @@ module.exports = function () {
     name = node.name
 
     map = mappings[name] || map
-    name in openHandlers ? openHandlers[name]() : null
+    if (name in openHandlers) openHandlers[name]()
 
     if (current) {
       var attributes = node.attributes
