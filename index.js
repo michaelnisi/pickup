@@ -77,7 +77,7 @@ module.exports = function () {
   }
 
   parser.onclosetag = function (name) {
-    name in closeHandlers ? closeHandlers[name]() : null
+    if (name in closeHandlers) closeHandlers[name]()
     name = null
   }
 
