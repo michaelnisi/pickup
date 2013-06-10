@@ -10,16 +10,10 @@ module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
     , parser = sax.parser(true, opt)
     , stream = new Transform({ decodeStrings:false })
+    , state = new State(false, false, false, false)
     , name = null
     , map = null
     , current = null
-
-  var state = {
-    feed:false
-  , entries:false
-  , entry:false
-  , image:false
-  }
 
   stream._transform = function (chunk, encoding, callback) {
     parser.write(chunk.toString())
@@ -125,9 +119,7 @@ module.exports = function () {
     } else {
       stream.push(JSON.stringify(current) + '}')
     }
-    Object.keys(state).forEach(function (key) {
-      state[key] = false
-    })
+    state.reset()
     current = null
   }
 
@@ -169,4 +161,18 @@ function Entry (author
   this.summary = summary
   this.title = title
   this.updated = updated
+}
+
+function State (feed, entries, entry, image) {
+  this.feed = feed
+  this.entries = entries
+  this.entry = entry
+  this.image = image
+}
+
+State.prototype.reset = function () {
+  this.feed = false
+  this.entries = false
+  this.entry = false
+  this.image = false
 }
