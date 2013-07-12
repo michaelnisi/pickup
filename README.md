@@ -18,11 +18,11 @@ If you haven't already, I suggest you install [jsontool](https://github.com/tren
 
 So, now you may pipe `pickup` to `json` like so:
 
-    curl -sS http://feeds.feedburner.com/the_talk_show | pickup | json
+    curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
 
 ### Library
 
-To transform from stdin to stdout:
+#### Transform from stdin to stdout
 
     var pickup = require('pickup')
       , transformer = pickup()
@@ -31,6 +31,22 @@ To transform from stdin to stdout:
       , writer = process.stdout
 
     reader.pipe(transformer).pipe(writer)
+
+#### Proxy server
+
+    var http = require('http')
+      , url = require('url')
+      , pickup = require('../')
+
+    http.createServer(function (req, res) {
+      http.get(url.parse('http:/' + req.url), function (feed) {
+        feed.pipe(pickup()).pipe(res)
+      }).end()
+    }).listen(8080)
+
+To try the proxy server from the command-line:
+
+    curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
 
 ### pickup()
 
