@@ -36,7 +36,7 @@ So, now you may pipe `pickup` to `json` like so:
 
     var http = require('http')
       , url = require('url')
-      , pickup = require('../')
+      , pickup = require('pickup')
 
     http.createServer(function (req, res) {
       http.get(url.parse('http:/' + req.url), function (feed) {
