@@ -41,7 +41,7 @@ So, now you may pipe `pickup` to `json` like so:
     http.createServer(function (req, res) {
       http.get(url.parse('http:/' + req.url), function (feed) {
         feed.pipe(pickup()).pipe(res)
-      }).end()
+      })
     }).listen(8080)
 
 To try the proxy server from the command-line:

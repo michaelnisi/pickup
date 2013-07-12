@@ -5,5 +5,5 @@ var http = require('http')
 http.createServer(function (req, res) {
   http.get(url.parse('http:/' + req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)
-  }).end()
+  })
 }).listen(8080)
