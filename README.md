@@ -18,7 +18,7 @@ npm install -g jsontool
 ```
 So, now you may pipe `pickup` to `json` like so:
 ```
-    curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
+curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
 ```
 ### Library
 
