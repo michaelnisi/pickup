@@ -90,7 +90,9 @@ The `entry` event emits an `Entry` for each parsed item in the feed. Its propert
 
 ## Installation
 
-Install with [npm](https://npmjs.org):
+[![NPM](https://nodei.co/npm/pickup.png?stars&downloads)](https://npmjs.org/package/pickup) [![NPM](https://nodei.co/npm-dl/pickup.png)](https://nodei.co/npm/pickup/)
+
+For CLI usage do:
 
     npm install -g pickup
 

@@ -5,23 +5,30 @@ var sax = require('sax')
   , Transform = require('stream').Transform
   , mappings = require('./lib/mappings')()
   , attribute = require('./lib/attribute')
+  , StringDecoder = require('string_decoder').StringDecoder
 
 module.exports = function () {
   var opt = { trim:true, normalize:true, position:false }
     , parser = sax.parser(true, opt)
-    , stream = new Transform({ decodeStrings:false })
+    , stream = new Transform()
+    , decoder = new StringDecoder('utf8')
     , state = new State(false, false, false, false)
     , name = null
     , map = null
     , current = null
 
-  stream._transform = function (chunk, encoding, callback) {
-    parser.write(chunk.toString())
-    callback()
+  stream._transform = function (chunk, enc, cb) {
+    try {
+      parser.write(decoder.write(chunk))
+    } catch (er) {
+      stream.emit('error', er)
+    } finally {
+      cb()
+    }
   }
 
-  parser.onerror = function (err) {
-    stream.emit('error', err)
+  parser.onerror = function (er) {
+    stream.emit('error', er)
     stream.push(null)
   }
 
