@@ -35,11 +35,10 @@ reader.pipe(transformer).pipe(writer)
 #### Proxy server
 ```js
 var http = require('http')
-  , url = require('url')
   , pickup = require('pickup')
 
 http.createServer(function (req, res) {
-  http.get(url.parse('http:/' + req.url), function (feed) {
+  http.get('http:/'.concat(req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)
