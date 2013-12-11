@@ -47,6 +47,8 @@ To try the proxy server from the command-line:
 ```
 curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
 ```
+## API
+
 ### pickup()
 
 The `pickup` module exports a single function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream. Additionally to its [Stream](http://nodejs.org/api/stream.html) events (usually all you need) it emits `entry` events and one `feed` event which is emitted when information about the feed gets available. For each item in the input feed an `entry` event with the parsed data is emitted.

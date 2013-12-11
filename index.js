@@ -8,8 +8,8 @@ var sax = require('sax')
   , StringDecoder = require('string_decoder').StringDecoder
 
 module.exports = function () {
-  var opt = { trim:true, normalize:true, position:false }
-    , parser = sax.parser(true, opt)
+  var opts = { trim:true, normalize:true, position:false }
+    , parser = sax.parser(true, opts)
     , stream = new Transform()
     , decoder = new StringDecoder('utf8')
     , state = new State(false, false, false, false)

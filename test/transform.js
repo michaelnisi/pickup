@@ -19,8 +19,11 @@ module.exports = function (t, xml, json) {
       t.end()
     })
 
+  var chunk
   transformer.on('readable', function () {
-    actual += transformer.read()
+    while (null !== (chunk = transformer.read())) {
+      actual += chunk
+    }
   })
 
   return transformer
