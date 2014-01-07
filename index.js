@@ -8,7 +8,7 @@ var sax = require('sax')
   , StringDecoder = require('string_decoder').StringDecoder
 
 module.exports = function () {
-  var opts = { trim:true, normalize:true, position:false }
+  var opts = new Opts(true, true, false)
     , parser = sax.parser(true, opts)
     , stream = new Transform()
     , decoder = new StringDecoder('utf8')
@@ -147,6 +147,12 @@ module.exports = function () {
 
 function isString(obj) {
   return typeof obj === 'string'
+}
+
+function Opts (trim, normalize, position) {
+  this.trim = trim
+  this.normalize = normalize
+  this.position = position
 }
 
 function Entry (author
