@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<rss version="2.0">
-  <channel>
-    <title>Liftoff News</title>
-    <!-- as seen in the wild -->
-    <atom:link rel="via" href="http://liftoff.msfc.nasa.gov/"/>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~files/feed-premium.xsl"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+  <channel><atom:link rel="via" href="http://liftoff.msfc.nasa.gov/"/>
     <atom:link href="http://liftoff.msfc.nasa.gov/" rel="self" type="application/rss+xml"/>
+
+    <title>Liftoff News</title>
+
     <link>http://liftoff.msfc.nasa.gov/</link>
     <!-- -->
     <description>Liftoff to Space Exploration.</description>
