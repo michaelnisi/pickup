@@ -6,6 +6,7 @@ var sax = require('sax')
   , mappings = require('./lib/mappings')
   , attribute = require('./lib/attribute')
   , StringDecoder = require('string_decoder').StringDecoder
+  , assert = require('assert')
 
 module.exports = function () {
   var opts = new Opts(true, true, false)

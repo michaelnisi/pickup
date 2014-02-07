@@ -1,11 +1,12 @@
 
 var test = require('tap').test
-  , transform = require('./transform')
   , pickup = require('../')
   , stread = require('stread')
   , Writable = require('stream').Writable
 
 test('rss', function (t) {
+  t.plan(1)
+
   var found = ''
     , writer = new Writable()
 
@@ -24,9 +25,15 @@ test('rss', function (t) {
 })
 
 function xml () {
-  return '<rss><channel><atom:link rel="via" href="http://feeds.muleradio.net/thetalkshow"/><atom:link href="http://feeds.muleradio.net/thetalkshow" rel="self" type="application/rss+xml"/><title>The Talk Show With John Gruber</title><link>http://muleradio.net/thetalkshow</link></channel></rss>'
+  return '<rss><channel><atom:link rel="via" \
+    href="http://feeds.muleradio.net/thetalkshow"/><atom:link \
+    href="http://feeds.muleradio.net/thetalkshow" rel="self" \
+    type="application/rss+xml"/><title>The Talk Show With John \
+    Gruber</title><link>http://muleradio.net/thetalkshow</link> \
+    </channel></rss>'
 }
 
 function wanted () {
-  return '{"feed":{"link":"http://feeds.muleradio.net/thetalkshow","title":"The Talk Show With John Gruber"}}'
+  return '{"feed":{"link":"http://feeds.muleradio.net/thetalkshow",' +
+    '"title":"The Talk Show With John Gruber"}}'
 }
