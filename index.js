@@ -129,10 +129,10 @@ module.exports = function () {
 
   var closeHandlers = {
     'item':entryclose
-    , 'entry':entryclose
-    , 'channel':feedclose
-    , 'feed':feedclose
-    , 'image':imageclose
+  , 'entry':entryclose
+  , 'channel':feedclose
+  , 'feed':feedclose
+  , 'image':imageclose
   }
 
   return stream
@@ -153,6 +153,7 @@ function Entry (
 , enclosure
 , duration
 , id
+, image
 , link
 , subtitle
 , summary
@@ -162,6 +163,7 @@ function Entry (
   this.enclosure = enclosure
   this.duration = duration
   this.id = id
+  this.image = image
   this.link = link
   this.subtitle = subtitle
   this.summary = summary
