@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -39,8 +39,7 @@
     "stread": "0.0.x"
   },
   "engines": {
-    "node": "0.11.x"
-  , "node": "0.10.x"
+    "node": ">= 0.10"
   },
   "license": "MIT",
   "author": {

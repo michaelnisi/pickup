@@ -1,14 +1,25 @@
 
 // pickup - transform RSS or Atom XML to JSON
 
+module.exports = pickup
+module.exports.entry = Entry
+
 var sax = require('sax')
   , Transform = require('stream').Transform
   , mappings = require('./lib/mappings')
   , attribute = require('./lib/attribute')
   , StringDecoder = require('string_decoder').StringDecoder
-  , assert = require('assert')
+  ;
 
-module.exports = function () {
+function free (parser) {
+  parser.onerror = null
+  parser.ontext = null
+  parser.oncdata = null
+  parser.onopentag = null
+  parser.onclosetag = null
+}
+
+function pickup () {
   var opts = new Opts(true, true, false)
     , parser = sax.parser(true, opts)
     , stream = new Transform()
@@ -17,7 +28,7 @@ module.exports = function () {
     , name = null
     , map = null
     , current = null
-
+    ;
   stream._transform = function (chunk, enc, cb) {
     try {
       parser.write(decoder.write(chunk))
@@ -27,12 +38,11 @@ module.exports = function () {
       cb()
     }
   }
-
   parser.onerror = function (er) {
+    free(parser)
     stream.emit('error', er)
     stream.push(null)
   }
-
   parser.ontext = function (t) {
     if (!current || !map) return
     var key = state.image && name === 'url' ? 'image' : map[name]
@@ -42,17 +52,16 @@ module.exports = function () {
     // ***
     var prop = current[key]
       , add = isString(prop) && isString(t) && t !== prop
+      ;
     if (prop && add) {
       current[key] += t
     } else {
       current[key] = t
     }
   }
-
   parser.oncdata = function (d) {
     parser.ontext(d)
   }
-
   parser.onopentag = function (node) {
     name = node.name
     map = mappings[name] || map
@@ -61,6 +70,7 @@ module.exports = function () {
       var attributes = node.attributes
         , key = map[name]
         , keys = Object.keys(attributes)
+        ;
       if (key) {
         if (keys.length) {
           var kv = attribute(key, attributes)
@@ -69,18 +79,15 @@ module.exports = function () {
       }
     }
   }
-
   parser.onclosetag = function (name) {
     if (name in closeHandlers) closeHandlers[name]()
     name = null
   }
-
   function feedopen () {
     stream.push('{"feed":')
     current = Object.create(null)
     state.feed = true
   }
-
   function entryopen () {
     if (!state.entries) {
       stream.push(JSON.stringify(current) + ',"entries":[')
@@ -93,11 +100,9 @@ module.exports = function () {
     state.entry = true
     current = new Entry()
   }
-
   function imageopen () {
     state.image = true
   }
-
   var openHandlers = {
     'channel':feedopen
   , 'feed':feedopen
@@ -105,14 +110,12 @@ module.exports = function () {
   , 'entry':entryopen
   , 'image':imageopen
   }
-
   function entryclose () {
     state.entry = false
     stream.push(JSON.stringify(current))
     stream.emit('entry', current)
     current = null
   }
-
   function feedclose () {
     if (state.entries) {
       stream.push(']}')
@@ -122,11 +125,9 @@ module.exports = function () {
     state.reset()
     current = null
   }
-
   function imageclose () {
     state.image = false
   }
-
   var closeHandlers = {
     'item':entryclose
   , 'entry':entryclose
@@ -134,7 +135,6 @@ module.exports = function () {
   , 'feed':feedclose
   , 'image':imageclose
   }
-
   return stream
 }
 

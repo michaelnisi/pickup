@@ -3,5 +3,5 @@ var pickup = require('../')
   , Readable = require('stream').Readable
   , reader = new Readable().wrap(process.openStdin())
   , writer = process.stdout
-
+  ;
 reader.pipe(transformer).pipe(writer)

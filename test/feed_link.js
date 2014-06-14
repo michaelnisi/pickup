@@ -3,13 +3,14 @@ var test = require('tap').test
   , pickup = require('../')
   , stread = require('stread')
   , Writable = require('stream').Writable
+  ;
 
 test('rss', function (t) {
   t.plan(1)
 
   var found = ''
     , writer = new Writable()
-
+    ;
   stread(xml())
     .pipe(pickup())
     .pipe(writer)
@@ -17,7 +18,6 @@ test('rss', function (t) {
       t.is(found, wanted())
       t.end()
     })
-
   writer._write = function (chunk, enc, cb) {
     found += chunk
     cb()

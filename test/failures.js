@@ -4,6 +4,7 @@
 var test = require('tap').test
   , fs = require('fs')
   , pickup = require('../')
+  ;
 
 test('null', function (t) {
   t.throws(function () { pickup().write(null) })

@@ -4,6 +4,7 @@
 var test = require('tap').test
   , parse = require('./parse')
   , pickup = require('../')
+  ;
 
 test('media-thumbnail', function (t) {
   parse(
@@ -25,4 +26,5 @@ test('media-thumbnail', function (t) {
       }]
     ]
   )
+  t.end()
 })
