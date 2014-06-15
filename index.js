@@ -2,7 +2,6 @@
 // pickup - transform RSS or Atom XML to JSON
 
 module.exports = pickup
-module.exports.entry = Entry
 
 var sax = require('sax')
   , Transform = require('stream').Transform
@@ -12,11 +11,10 @@ var sax = require('sax')
   ;
 
 function free (parser) {
-  parser.onerror = null
-  parser.ontext = null
-  parser.oncdata = null
-  parser.onopentag = null
-  parser.onclosetag = null
+  ['onerror', 'ontext', 'oncdata', 'onopentag', 'onclosetag']
+  .forEach(function (p) {
+    delete parser[p]
+  })
 }
 
 function pickup () {
@@ -183,4 +181,8 @@ State.prototype.reset = function () {
   this.entries = false
   this.entry = false
   this.image = false
+}
+
+if (process.env.NODE_TEST) {
+  module.exports.entry = Entry
 }

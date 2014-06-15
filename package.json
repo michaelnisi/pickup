@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "test/test.sh"
+    "test": "export NODE_TEST=1 ; tap --tap test/*.js"
   },
   "bin": {
     "pickup": "bin/cli.js"
@@ -35,8 +35,7 @@
     "sax": "0.6.x"
   },
   "devDependencies": {
-    "tap": "0.4.x",
-    "stread": "0.0.x"
+    "tap": "0.4.x"
   },
   "engines": {
     "node": ">= 0.10"

@@ -1,28 +1,36 @@
-# pickup - transform RSS or Atom XML to JSON 
 
-The pickup [Node.js](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream to transform RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to JSON.
+# pickup - transform feeds to JSON 
 
-[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.png)](http://travis-ci.org/michaelnisi/pickup) [![David DM](https://david-dm.org/michaelnisi/pickup.png)](http://david-dm.org/michaelnisi/pickup)
+The pickup [Node](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream to transform RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to JSON.
+
+[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup) [![David DM](https://david-dm.org/michaelnisi/pickup.svg)](http://david-dm.org/michaelnisi/pickup)
 
 ## Usage
 
 ### Command-line
 
 Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to pickup:
+
 ```
-curl -sS http://feeds.feedburner.com/the_talk_show | pickup
+curl -sS http://feeds.muleradio.net/thetalkshow | pickup
 ```
-If you haven't already, I suggest you install [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
+
+If you haven't yet, I suggest you install [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
+
 ```
 npm install -g jsontool
 ```
+
 So, now you may pipe `pickup` to `json` like so:
+
 ```
 curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
 ```
+
 ### Library
 
 #### Transform from stdin to stdout
+
 ```js
 var pickup = require('pickup')
   , transformer = pickup()
@@ -32,21 +40,28 @@ var pickup = require('pickup')
 
 reader.pipe(transformer).pipe(writer)
 ```
+
 #### Proxy server
+
 ```js
 var http = require('http')
   , pickup = require('pickup')
+  ;
 
 http.createServer(function (req, res) {
   http.get('http:/'.concat(req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)
+
 ```
+
 To try the proxy server from the command-line:
+
 ```
 curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
 ```
+
 ## API
 
 ### pickup()
@@ -92,12 +107,14 @@ The `entry` event emits an `Entry` for each parsed item in the feed. Its propert
 
 ## Installation
 
-[![npm](https://nodei.co/npm/pickup.png?compact=true)](https://npmjs.org/package/pickup) 
+[![npm](https://nodei.co/npm/pickup.svg?compact=true)](https://npmjs.org/package/pickup) 
 
-To use the CLI (as in the above examples):
+To use the CLI (as above):
+
 ```
 npm install -g pickup
 ```
+
 ## License
 
 [MIT License](https://raw.github.com/michaelnisi/pickup/master/LICENSE)
