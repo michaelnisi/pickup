@@ -33,12 +33,16 @@ curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
 
 ```js
 var pickup = require('pickup')
-  , transformer = pickup()
-  , Readable = require('stream').Readable
-  , reader = new Readable().wrap(process.openStdin())
-  , writer = process.stdout
 
-reader.pipe(transformer).pipe(writer)
+process.stdin
+  .pipe(pickup())
+  .pipe(process.stdout)
+```
+
+To run this from the command-line:
+
+```
+curl -sS http://feeds.muleradio.net/thetalkshow | node example/stdin.js | json
 ```
 
 #### Proxy server
@@ -47,16 +51,14 @@ reader.pipe(transformer).pipe(writer)
 var http = require('http')
   , pickup = require('pickup')
   ;
-
 http.createServer(function (req, res) {
   http.get('http:/'.concat(req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)
-
 ```
 
-To try the proxy server from the command-line:
+To try the proxy server:
 
 ```
 curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
