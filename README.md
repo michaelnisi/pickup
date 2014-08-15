@@ -1,5 +1,5 @@
 
-# pickup - transform feeds to JSON 
+# pickup - transform feeds to JSON
 
 The pickup [Node](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream to transform RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to JSON.
 
@@ -83,7 +83,7 @@ The `feed` event emits a feed `Object` with following properties which can be `u
     - `link`
     - `payment`
     - `subtitle`
-    - `summary` 
+    - `summary`
     - `title`
     - `ttl`
     - `updated`
@@ -109,7 +109,11 @@ The `entry` event emits an `Entry` for each parsed item in the feed. Its propert
 
 ## Installation
 
-[![npm](https://nodei.co/npm/pickup.svg?compact=true)](https://npmjs.org/package/pickup) 
+With [npm](https://npmjs.org/package/pickup) do:
+
+```
+$ npm install pickup
+```
 
 To use the CLI (as above):
 
