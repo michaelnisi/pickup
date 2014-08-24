@@ -18,7 +18,7 @@ $ curl -sS http://feeds.muleradio.net/thetalkshow | pickup
 If you haven't yet, I recommend to install **[json](https://github.com/trentm/json)**, a command for working with JSON on the command-line:
 
 ```
-$ npm install -g jsontool
+$ npm install -g json
 ```
 
 Now you can pipe **pickup** to **json** to see nicely formatted JSON:
