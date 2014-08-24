@@ -1,30 +1,30 @@
 
 # pickup - transform feeds to JSON
 
-The pickup [Node](http://nodejs.org/) module is a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream to transform RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to JSON.
+The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream to transform RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to JSON.
 
-[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup) [![David DM](https://david-dm.org/michaelnisi/pickup.svg)](http://david-dm.org/michaelnisi/pickup)
+[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup)
 
 ## Usage
 
 ### Command-line
 
-Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to pickup:
+Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to **pickup**:
 
 ```
-curl -sS http://feeds.muleradio.net/thetalkshow | pickup
+$ curl -sS http://feeds.muleradio.net/thetalkshow | pickup
 ```
 
-If you haven't yet, I suggest you install [jsontool](https://github.com/trentm/json), a `json` command for working with JSON on the command-line:
+If you haven't yet, I recommend to install **[json](https://github.com/trentm/json)**, a command for working with JSON on the command-line:
 
 ```
-npm install -g jsontool
+$ npm install -g jsontool
 ```
 
-So, now you may pipe `pickup` to `json` like so:
+Now you can pipe **pickup** to **json** to see nicely formatted JSON:
 
 ```
-curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
+$ curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
 ```
 
 ### Library
@@ -39,10 +39,10 @@ process.stdin
   .pipe(process.stdout)
 ```
 
-To run this from the command-line:
+You can run this example from the command-line:
 
 ```
-curl -sS http://feeds.muleradio.net/thetalkshow | node example/stdin.js | json
+$ curl -sSS http://feeds.muleradio.net/thetalkshow | node example/stdin.js | json
 ```
 
 #### Proxy server
@@ -61,51 +61,67 @@ http.createServer(function (req, res) {
 To try the proxy server:
 
 ```
-curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
+$ node example/proxy.js &
+$ curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
 ```
 
-## API
+## types
 
-### pickup()
+### feed()
 
-The `pickup` module exports a single function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream. Additionally to its [Stream](http://nodejs.org/api/stream.html) events (usually all you need) it emits `entry` events and one `feed` event which is emitted when information about the feed gets available. For each item in the input feed an `entry` event with the parsed data is emitted.
+```js
+- author String() | undefined
+- copyright String() | undefined
+- id String() | undefined
+- image String() | undefined
+- language String() | undefined
+- link String() | undefined
+- payment String() | undefined
+- subtitle String() | undefined
+- summary String() | undefined
+- title String() | undefined
+- ttl String() | undefined
+- updated String() | undefined
+```
+
+### enclosure()
+
+```js
+- href String() | undefined
+- length String() | undefined
+- type String() | undefined
+```
+
+### entry()
+
+```js
+- author String() | undefined
+- enclosure enclosure() | undefined
+- duration String() | undefined
+- id String() | undefined
+- image String() | undefined
+- link String() | undefined
+- subtitle String() | undefined
+- summary String() | undefined
+- title String() | undefined
+- updated String() | undefined
+```
 
 ### Event:'feed'
-
-The `feed` event emits a feed `Object` with following properties which can be `undefined`.
-
-- `feed`
-    - `author`
-    - `copyright`
-    - `id`
-    - `image`
-    - `language`
-    - `link`
-    - `payment`
-    - `subtitle`
-    - `summary`
-    - `title`
-    - `ttl`
-    - `updated`
+```js
+feed()
+```
+Emitted when the meta information of the feed gets available.
 
 ### Event:'entry'
+```js
+entry()
+```
+Emitted for each entry.
 
-The `entry` event emits an `Entry` for each parsed item in the feed. Its properties can be `undefined`.
+## exports
 
-- `entry`
-    - `author`
-    - `enclosure`
-        - `href`
-        - `length`
-        - `type`
-    - `duration`
-    - `id`
-    - `image`
-    - `link`
-    - `subtitle`
-    - `summary`
-    - `title`
-    - `updated`
+**pickup** exports a single function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream. Additionally to its [Stream](http://nodejs.org/api/stream.html) events (usually all you need) it emits `entry` events and a `feed` event which is emitted when information about the feed gets available. For each item in the input feed an `entry` event with the parsed data is emitted.
 
 ## Installation
 
@@ -118,7 +134,7 @@ $ npm install pickup
 To use the CLI (as above):
 
 ```
-npm install -g pickup
+$ npm install -g pickup
 ```
 
 ## License
