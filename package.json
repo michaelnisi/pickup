@@ -41,7 +41,7 @@
     "tap": "^0.4.12"
   },
   "engines": {
-  , "node": ">=0.10"
+    "node": ">=0.10"
   },
   "author": "Michael Nisi <michael.nisi@gmail.com> (http://michaelnisi.com/)",
   "license": "MIT"
