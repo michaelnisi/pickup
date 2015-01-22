@@ -1,56 +1,65 @@
 
 // pickup - transform RSS or Atom XML to JSON
 
-module.exports = pickup
+module.exports = Pickup
 
+var StringDecoder = require('string_decoder').StringDecoder
+var Transform = require('stream').Transform
+var attribute = require('./lib/attribute')
+var mappings = require('./lib/mappings')
 var sax = require('sax')
-  , Transform = require('stream').Transform
-  , mappings = require('./lib/mappings')
-  , attribute = require('./lib/attribute')
-  , StringDecoder = require('string_decoder').StringDecoder
-  ;
+var util = require('util')
 
-function free (parser) {
-  ['onerror', 'ontext', 'oncdata', 'onopentag', 'onclosetag']
-  .forEach(function (p) {
-    delete parser[p]
-  })
+function OpenHandlers (t) {
+  this.channel = t.feedopen
+  this.feed = t.feedopen
+  this.item = t.entryopen
+  this.entry = t.entryopen
+  this.image = t.imageopen
 }
 
-function pickup () {
-  var opts = new Opts(true, true, false)
-    , parser = sax.parser(true, opts)
-    , stream = new Transform()
-    , decoder = new StringDecoder('utf8')
-    , state = new State(false, false, false, false)
-    , name = null
-    , map = null
-    , current = null
-    ;
-  stream._transform = function (chunk, enc, cb) {
-    try {
-      parser.write(decoder.write(chunk))
-    } catch (er) {
-      stream.emit('error', er)
-    } finally {
-      cb()
-    }
-  }
+function CloseHandlers (t) {
+  this.channel = t.feedclose
+  this.feed = t.feedclose
+  this.item = t.entryclose
+  this.entry = t.entryclose
+  this.image = t.imageclose
+}
+
+util.inherits(Pickup, Transform)
+function Pickup (opts) {
+  if (!(this instanceof Pickup)) return new Pickup(opts)
+  Transform.call(this, opts)
+
+  this.parser = sax.parser(true, new Opts(true, true, false))
+  this.decoder = new StringDecoder('utf8')
+
+  this.openHandlers = new OpenHandlers(this)
+  this.closeHandlers = new CloseHandlers(this)
+
+  this.current = null
+  this.map = null
+  this.state = new State(false, false, false, false)
+
+  var me = this
+  var parser = this.parser
   parser.onerror = function (er) {
-    free(parser)
-    stream.emit('error', er)
-    stream.push(null)
+    me.emit('error', er)
+    me.push(null)
   }
   parser.ontext = function (t) {
+    var current = me.current
+    var map = me.map
+    var state = me.state
+    var name = me.state.name
     if (!current || !map) return
     var key = state.image && name === 'url' ? 'image' : map[name]
     if (!key) return
-    // TODO: *** this will probably bite us
+    // TODO: *** me will probably bite us
     if (state.feed && key === 'link' && !!current.link) return
     // ***
     var prop = current[key]
-      , add = isString(prop) && isString(t) && t !== prop
-      ;
+    var add = isString(prop) && isString(t) && t !== prop
     if (prop && add) {
       current[key] += t
     } else {
@@ -61,79 +70,98 @@ function pickup () {
     parser.ontext(d)
   }
   parser.onopentag = function (node) {
-    name = node.name
-    map = mappings[name] || map
-    if (name in openHandlers) openHandlers[name]()
-    if (current) {
+    var name = node.name
+    me.state.name = name
+    me.map = mappings[name] || me.map
+    if (name in me.openHandlers) {
+      me.openHandlers[name].apply(me)
+    }
+    if (me.current) {
       var attributes = node.attributes
-        , key = map[name]
-        , keys = Object.keys(attributes)
-        ;
+      var key = me.map[name]
+      var keys = Object.keys(attributes)
       if (key) {
         if (keys.length) {
           var kv = attribute(key, attributes)
-          current[kv[0]] = kv[1]
+          me.current[kv[0]] = kv[1]
         }
       }
     }
   }
   parser.onclosetag = function (name) {
-    if (name in closeHandlers) closeHandlers[name]()
-    name = null
-  }
-  function feedopen () {
-    stream.push('{"feed":')
-    current = Object.create(null)
-    state.feed = true
-  }
-  function entryopen () {
-    if (!state.entries) {
-      stream.push(JSON.stringify(current) + ',"entries":[')
-      stream.emit('feed', current)
-    } else {
-      stream.push(',')
+    if (name in me.closeHandlers) {
+      me.closeHandlers[name].apply(me)
     }
-    state.feed = false
-    state.entries = true
-    state.entry = true
-    current = new Entry()
+    me.state.name = null
   }
-  function imageopen () {
-    state.image = true
+}
+
+Pickup.prototype.feedopen = function () {
+  this.push('{"feed":')
+  this.current = Object.create(null)
+  this.state.feed = true
+}
+
+Pickup.prototype.entryopen = function () {
+  if (!this.state.entries) {
+    this.push(JSON.stringify(this.current) + ',"entries":[')
+    this.emit('feed', this.current)
+  } else {
+    this.push(',')
   }
-  var openHandlers = {
-    'channel':feedopen
-  , 'feed':feedopen
-  , 'item':entryopen
-  , 'entry':entryopen
-  , 'image':imageopen
+  this.state.feed = false
+  this.state.entries = true
+  this.state.entry = true
+  this.current = new Entry()
+}
+
+Pickup.prototype.imageopen = function () {
+  this.state.image = true
+}
+
+Pickup.prototype.entryclose = function () {
+  this.state.entry = false
+  this.push(JSON.stringify(this.current))
+  this.emit('entry', this.current)
+  this.current = null
+}
+
+Pickup.prototype.feedclose = function () {
+  if (this.state.entries) {
+    this.push(']}')
+  } else {
+    this.push(JSON.stringify(this.current) + '}')
   }
-  function entryclose () {
-    state.entry = false
-    stream.push(JSON.stringify(current))
-    stream.emit('entry', current)
-    current = null
+  this.state.reset()
+  this.current = null
+}
+
+Pickup.prototype.imageclose = function () {
+  this.state.image = false
+}
+
+function free (parser) {
+  ['onerror', 'ontext', 'oncdata', 'onopentag', 'onclosetag']
+  .forEach(function (p) {
+    delete parser[p]
+  })
+}
+
+Pickup.prototype._flush = function (cb) {
+  free(this.parser)
+  this.decoder = null
+  this.parser = null
+  cb()
+}
+
+Pickup.prototype._transform = function (chunk, enc, cb) {
+  try {
+    this.parser.write(this.decoder.write(chunk))
+  } catch (er) {
+    this.emit('error', er)
+  } finally {
+    cb()
   }
-  function feedclose () {
-    if (state.entries) {
-      stream.push(']}')
-    } else {
-      stream.push(JSON.stringify(current) + '}')
-    }
-    state.reset()
-    current = null
-  }
-  function imageclose () {
-    state.image = false
-  }
-  var closeHandlers = {
-    'item':entryclose
-  , 'entry':entryclose
-  , 'channel':feedclose
-  , 'feed':feedclose
-  , 'image':imageclose
-  }
-  return stream
 }
 
 function isString(obj) {
@@ -169,11 +197,12 @@ function Entry (
   this.updated = updated
 }
 
-function State (feed, entries, entry, image) {
+function State (feed, entries, entry, image, name) {
   this.feed = feed
   this.entries = entries
   this.entry = entry
   this.image = image
+  this.name = name
 }
 
 State.prototype.reset = function () {
@@ -181,6 +210,7 @@ State.prototype.reset = function () {
   this.entries = false
   this.entry = false
   this.image = false
+  this.name = null
 }
 
 if (process.env.NODE_TEST) {
