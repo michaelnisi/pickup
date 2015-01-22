@@ -31,15 +31,14 @@ function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
   Transform.call(this, opts)
 
-  this.parser = sax.parser(true, new Opts(true, true, false))
-  this.decoder = new StringDecoder('utf8')
-
-  this.openHandlers = new OpenHandlers(this)
-  this.closeHandlers = new CloseHandlers(this)
-
   this.current = null
+  this.decoder = new StringDecoder('utf8')
   this.map = null
+  this.parser = sax.parser(true, new Opts(true, true, false))
   this.state = new State(false, false, false, false)
+
+  var openHandlers = new OpenHandlers(Pickup.prototype)
+  var closeHandlers = new CloseHandlers(Pickup.prototype)
 
   var me = this
   var parser = this.parser
@@ -73,8 +72,8 @@ function Pickup (opts) {
     var name = node.name
     me.state.name = name
     me.map = mappings[name] || me.map
-    if (name in me.openHandlers) {
-      me.openHandlers[name].apply(me)
+    if (name in openHandlers) {
+      openHandlers[name].apply(me)
     }
     if (me.current) {
       var attributes = node.attributes
@@ -89,8 +88,8 @@ function Pickup (opts) {
     }
   }
   parser.onclosetag = function (name) {
-    if (name in me.closeHandlers) {
-      me.closeHandlers[name].apply(me)
+    if (name in closeHandlers) {
+      closeHandlers[name].apply(me)
     }
     me.state.name = null
   }
@@ -149,8 +148,11 @@ function free (parser) {
 
 Pickup.prototype._flush = function (cb) {
   free(this.parser)
+  this.current = null
   this.decoder = null
+  this.map = null
   this.parser = null
+  this.state = null
   cb()
 }
 
