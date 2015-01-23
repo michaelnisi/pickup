@@ -9,10 +9,10 @@ The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://
 
 ### Command-line
 
-Pipe [Gruber's](http://daringfireball.net/) podcast RSS feed to **pickup**:
+To pipe Benjamen Walker's [Theory of Everything](http://toe.prx.org/) to **pickup** do:
 
 ```
-$ curl -sS http://feeds.muleradio.net/thetalkshow | pickup
+$ curl -sS http://feeds.prx.org/toe | pickup
 ```
 
 If you haven't yet, I recommend to install **[json](https://github.com/trentm/json)**, a command for working with JSON on the command-line:
@@ -24,7 +24,14 @@ $ npm install -g json
 Now you can pipe **pickup** to **json** to see nicely formatted JSON:
 
 ```
-$ curl -sS http://feeds.muleradio.net/thetalkshow | pickup | json
+$ curl -sS http://feeds.prx.org/toe | pickup | json
+```
+
+**json** lets you massage the data. Let's check Apple's latest PR:
+
+```
+$ curl -sS https://www.apple.com/pr/feeds/pr.rss | pickup \
+    | json -ga entries | json -ga title | head -n 5
 ```
 
 ### Library
@@ -42,15 +49,15 @@ process.stdin
 You can run this example from the command-line:
 
 ```
-$ curl -sSS http://feeds.muleradio.net/thetalkshow | node example/stdin.js | json
+$ curl -sS http://feeds.prx.org/toe | node example/stdin.js | json
 ```
 
 #### Proxy server
 
 ```js
 var http = require('http')
-  , pickup = require('pickup')
-  ;
+var pickup = require('pickup')
+
 http.createServer(function (req, res) {
   http.get('http:/'.concat(req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)
@@ -62,7 +69,7 @@ To try the proxy server:
 
 ```
 $ node example/proxy.js &
-$ curl -sS http://localhost:8080/feeds.muleradio.net/thetalkshow | json
+$ curl -sS http://localhost:8080/feeds.prx.org/toe | json
 ```
 
 ## types
@@ -136,6 +143,10 @@ To use the CLI (as above):
 ```
 $ npm install -g pickup
 ```
+
+## Contribute
+
+Please create an issue if you encounter a feed that **pickup** fails to parse.
 
 ## License
 

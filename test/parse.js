@@ -7,9 +7,15 @@ var util = require('util')
   ;
 
 function entry (it) {
-  var entry = new pickup.entry()
+  var entry = new pickup.Entry()
   for (p in it) entry[p] = it[p]
   return entry
+}
+
+function feed (it) {
+  var feed = new pickup.Feed()
+  for (p in it) feed[p] = it[p]
+  return feed
 }
 
 module.exports = function (t, xml, wanted) {
@@ -33,6 +39,8 @@ module.exports = function (t, xml, wanted) {
         t.is(n.message, wanted[e][1])
       } else if (ev === 'entry') {
         t.deepEqual(n, entry(wanted[e][1]))
+      } else if (ev === 'feed') {
+        t.deepEqual(n, feed(wanted[e][1]))
       } else {
         t.deepEqual(n, wanted[e][1])
       }

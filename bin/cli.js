@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var pickup = require('../');
+var pickup = require('../')
 
 process.stdin
   .pipe(pickup())

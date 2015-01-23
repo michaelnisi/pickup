@@ -2,6 +2,8 @@
 // pickup - transform RSS or Atom XML to JSON
 
 module.exports = Pickup
+module.exports.Entry = Entry
+module.exports.Feed = Feed
 
 var StringDecoder = require('string_decoder').StringDecoder
 var Transform = require('stream').Transform
@@ -35,7 +37,7 @@ function Pickup (opts) {
   this.decoder = new StringDecoder('utf8')
   this.map = null
   this.parser = sax.parser(true, new Opts(true, true, false))
-  this.state = new State(false, false, false, false)
+  this.state = new State()
 
   var openHandlers = new OpenHandlers(Pickup.prototype)
   var closeHandlers = new CloseHandlers(Pickup.prototype)
@@ -54,9 +56,7 @@ function Pickup (opts) {
     if (!current || !map) return
     var key = state.image && name === 'url' ? 'image' : map[name]
     if (!key) return
-    // TODO: *** me will probably bite us
     if (state.feed && key === 'link' && !!current.link) return
-    // ***
     var prop = current[key]
     var add = isString(prop) && isString(t) && t !== prop
     if (prop && add) {
@@ -68,13 +68,16 @@ function Pickup (opts) {
   parser.oncdata = function (d) {
     parser.ontext(d)
   }
+  function handle (name, handlers) {
+    if (handlers.hasOwnProperty(name)) {
+      handlers[name].apply(me)
+    }
+  }
   parser.onopentag = function (node) {
     var name = node.name
     me.state.name = name
     me.map = mappings[name] || me.map
-    if (name in openHandlers) {
-      openHandlers[name].apply(me)
-    }
+    handle(name, openHandlers)
     if (me.current) {
       var attributes = node.attributes
       var key = me.map[name]
@@ -88,16 +91,14 @@ function Pickup (opts) {
     }
   }
   parser.onclosetag = function (name) {
-    if (name in closeHandlers) {
-      closeHandlers[name].apply(me)
-    }
+    handle(name, closeHandlers)
     me.state.name = null
   }
 }
 
 Pickup.prototype.feedopen = function () {
   this.push('{"feed":')
-  this.current = Object.create(null)
+  this.current = new Feed()
   this.state.feed = true
 }
 
@@ -176,6 +177,13 @@ function Opts (trim, normalize, position) {
   this.position = position
 }
 
+// TODO: Add this
+function Enclosure (length, type, url) {
+  this.length = length
+  this.type = type
+  this.url = url
+}
+
 function Entry (
   author
 , enclosure
@@ -199,6 +207,33 @@ function Entry (
   this.updated = updated
 }
 
+function Feed (
+  author
+, copyright
+, id
+, image
+, language
+, link
+, payment
+, subtitle
+, summary
+, title
+, ttl
+, updated) {
+  this.author = author
+  this.copyright = copyright
+  this.id = id
+  this.image = image
+  this.language = language
+  this.link = link
+  this.payment = payment
+  this.subtitle = subtitle
+  this.summary = summary
+  this.title = title
+  this.ttl = ttl
+  this.updated = updated
+}
+
 function State (feed, entries, entry, image, name) {
   this.feed = feed
   this.entries = entries
@@ -213,8 +248,4 @@ State.prototype.reset = function () {
   this.entry = false
   this.image = false
   this.name = null
-}
-
-if (process.env.NODE_TEST) {
-  module.exports.entry = Entry
 }
