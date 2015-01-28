@@ -10,7 +10,7 @@
     {
       "author": "johndoe@example.com",
       "id": "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a",
-      "link": "http://example.org/2003/12/13/atom03/edit",
+      "link": "http://example.org/2003/12/13/atom03",
       "summary": "Some text.",
       "title": "Atom-Powered Robots Run Amok",
       "updated": "2003-12-13T18:30:02Z"

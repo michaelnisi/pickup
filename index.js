@@ -1,16 +1,20 @@
 
 // pickup - transform RSS or Atom XML to JSON
 
-module.exports = Pickup
-module.exports.Entry = Entry
-module.exports.Feed = Feed
+exports = module.exports = Pickup
 
 var StringDecoder = require('string_decoder').StringDecoder
-var Transform = require('stream').Transform
+var assert = require('assert')
 var attribute = require('./lib/attribute')
 var mappings = require('./lib/mappings')
+var os = require('os')
 var sax = require('sax')
+var stream = require('readable-stream')
 var util = require('util')
+
+function isString(obj) {
+  return typeof obj === 'string'
+}
 
 function OpenHandlers (t) {
   this.channel = t.feedopen
@@ -28,13 +32,19 @@ function CloseHandlers (t) {
   this.image = t.imageclose
 }
 
-util.inherits(Pickup, Transform)
+function Opts (trim, normalize, position) {
+  this.trim = trim
+  this.normalize = normalize
+  this.position = position
+}
+
+util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
-  Transform.call(this, opts)
+  stream.Transform.call(this, opts)
 
-  this.current = null
   this.decoder = new StringDecoder('utf8')
+  this.eventMode = opts && opts.eventMode
   this.map = null
   this.parser = sax.parser(true, new Opts(true, true, false))
   this.state = new State()
@@ -49,7 +59,7 @@ function Pickup (opts) {
     me.push(null)
   }
   parser.ontext = function (t) {
-    var current = me.current
+    var current = me.current()
     var map = me.map
     var state = me.state
     var name = me.state.name
@@ -78,14 +88,15 @@ function Pickup (opts) {
     me.state.name = name
     me.map = mappings[name] || me.map
     handle(name, openHandlers)
-    if (me.current) {
-      var attributes = node.attributes
+    var current = me.current()
+    if (current) {
       var key = me.map[name]
-      var keys = Object.keys(attributes)
       if (key) {
+        var attributes = node.attributes
+        var keys = Object.keys(attributes)
         if (keys.length) {
           var kv = attribute(key, attributes)
-          me.current[kv[0]] = kv[1]
+          if (kv) current[kv[0]] = kv[1]
         }
       }
     }
@@ -96,23 +107,20 @@ function Pickup (opts) {
   }
 }
 
+Pickup.prototype.current = function () {
+  return this.state.entry || this.state.feed
+}
+
+Pickup.prototype.objectMode = function () {
+  return this._readableState.objectMode
+}
+
 Pickup.prototype.feedopen = function () {
-  this.push('{"feed":')
-  this.current = new Feed()
-  this.state.feed = true
+  this.state.feed = new Feed()
 }
 
 Pickup.prototype.entryopen = function () {
-  if (!this.state.entries) {
-    this.push(JSON.stringify(this.current) + ',"entries":[')
-    this.emit('feed', this.current)
-  } else {
-    this.push(',')
-  }
-  this.state.feed = false
-  this.state.entries = true
-  this.state.entry = true
-  this.current = new Entry()
+  this.state.entry = new Entry()
 }
 
 Pickup.prototype.imageopen = function () {
@@ -120,20 +128,31 @@ Pickup.prototype.imageopen = function () {
 }
 
 Pickup.prototype.entryclose = function () {
-  this.state.entry = false
-  this.push(JSON.stringify(this.current))
-  this.emit('entry', this.current)
-  this.current = null
+  var entry = this.state.entry
+  if (!this.eventMode) {
+    if (this.objectMode()) {
+      this.push(entry)
+    } else {
+      this.push(JSON.stringify(entry) + os.EOL)
+    }
+  } else {
+    this.emit('entry', entry)
+  }
+  this.state.entry = null
 }
 
 Pickup.prototype.feedclose = function () {
-  if (this.state.entries) {
-    this.push(']}')
+  var feed = this.state.feed
+  if (!this.eventMode) {
+    if (this.objectMode()) {
+      this.push(feed)
+    } else {
+      this.push(JSON.stringify(feed) + os.EOL)
+    }
   } else {
-    this.push(JSON.stringify(this.current) + '}')
+    this.emit('feed', feed)
   }
-  this.state.reset()
-  this.current = null
+  this.state.feed = null
 }
 
 Pickup.prototype.imageclose = function () {
@@ -147,41 +166,33 @@ function free (parser) {
   })
 }
 
-Pickup.prototype._flush = function (cb) {
+Pickup.prototype.deinit = function () {
   free(this.parser)
-  this.current = null
   this.decoder = null
   this.map = null
   this.parser = null
+  this.state.deinit()
   this.state = null
+}
+
+Pickup.prototype._flush = function (cb) {
+  this.deinit()
   cb()
 }
 
+Pickup.prototype.parse = function (chunk) {
+  return this.parser.write(this.decoder.write(chunk))
+}
+
 Pickup.prototype._transform = function (chunk, enc, cb) {
+  var er
   try {
-    this.parser.write(this.decoder.write(chunk))
-  } catch (er) {
-    this.emit('error', er)
+    er = this.parse(chunk).error
+  } catch (error) {
+    er = error
   } finally {
-    cb()
+    cb(er)
   }
-}
-
-function isString(obj) {
-  return typeof obj === 'string'
-}
-
-function Opts (trim, normalize, position) {
-  this.trim = trim
-  this.normalize = normalize
-  this.position = position
-}
-
-// TODO: Add this
-function Enclosure (length, type, url) {
-  this.length = length
-  this.type = type
-  this.url = url
 }
 
 function Entry (
@@ -234,18 +245,38 @@ function Feed (
   this.updated = updated
 }
 
-function State (feed, entries, entry, image, name) {
-  this.feed = feed
-  this.entries = entries
+function State (entry, feed, image, name) {
   this.entry = entry
+  this.feed = feed
   this.image = image
   this.name = name
 }
 
-State.prototype.reset = function () {
-  this.feed = false
-  this.entries = false
-  this.entry = false
+State.prototype.deinit = function () {
+  this.entry = null
+  this.feed = null
   this.image = false
-  this.name = null
+  this.name = undefined // String()
+}
+
+function extend (origin, add) {
+  return util._extend(origin, add || Object.create(null)) }
+function entry (obj) {
+  return extend(new Entry(), obj) }
+function feed (obj) {
+  return extend(new Feed(), obj) }
+
+if (process.env.NODE_TEST) {
+  exports.entry = entry
+  exports.feed = feed
+  exports.EVENTS = [
+    'data'
+  , 'drain'
+  , 'readable'
+  , 'end'
+  , 'entry'
+  , 'error'
+  , 'feed'
+  , 'finish'
+  ]
 }

@@ -2,6 +2,5 @@
 
 var pickup = require('../')
 
-process.stdin
-  .pipe(pickup())
-  .pipe(process.stdout)
+process.stdout.on('error', function () {})
+process.stdin.pipe(pickup()).pipe(process.stdout)

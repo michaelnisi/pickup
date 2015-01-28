@@ -1,41 +1,35 @@
 
 // parse <atom:link/>
 
+var parse = require('./lib/parse')
+var pickup = require('../')
 var test = require('tap').test
-  , parse = require('./parse')
-  , pickup = require('../')
-  ;
 
-// TODO: Validate! Probably not correct.
-// Link generally means the site not the feed.
+function wanted () {
+  return [
+    ['feed', {
+      link: 'http://feeds.muleradio.net/thetalkshow'
+    , title: 'The Talk Show With John Gruber'
+    }]
+  , ['finish']
+  , ['end']
+  ]
+}
 
 test('feed-link', function (t) {
-  parse(
-    t
-  , '<rss><channel><atom:link rel="via" \
-    href="http://feeds.muleradio.net/thetalkshow"/><atom:link \
-    href="http://feeds.muleradio.net/thetalkshow" rel="self" \
-    type="application/rss+xml"/><title>The Talk Show With John \
-    Gruber</title><link>http://muleradio.net/thetalkshow</link> \
-    </channel></rss>'
-  , [
-      ['feed', {
-        link:'http://feeds.muleradio.net/thetalkshow'
-      , title:'The Talk Show With John Gruber'
-      }]
-    , ['entry', {
-        author:undefined
-      , enclosure:undefined
-      , duration:undefined
-      , id:undefined
-      , image:'abc'
-      , link:undefined
-      , subtitle:undefined
-      , summary:undefined
-      , title:undefined
-      , updated:undefined
-      }]
-    ]
+  parse({
+    t: t
+  , xml:
+      '<rss><channel><atom:link rel="via" '
+    + 'href="http://feeds.muleradio.net/thetalkshow"/><atom:link '
+    + 'href="http://feeds.muleradio.net/thetalkshow" rel="self" '
+    + 'type="application/rss+xml"/><title>The Talk Show With John '
+    + 'Gruber</title><link>http://muleradio.net/thetalkshow</link>'
+    + '</channel></rss>'
+  , wanted: wanted() }
+  , function (er) {
+      t.ok(!er)
+      t.end()
+    }
   )
-  t.end()
 })

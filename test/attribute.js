@@ -1,13 +1,9 @@
 
+var attribute = require('../lib/attribute')
 var test = require('tap').test
-  , attribute = require('../lib/attribute')
-  ;
 
 test('default', function (t) {
-  var key = 'thing'
-    , value = {}
-    ;
-  t.deepEquals(attribute(key, value), [key, value])
+  t.is(attribute('unwanted', {}), undefined)
   t.end()
 })
 
@@ -16,7 +12,7 @@ test('link enclosure', function (t) {
     , rel = 'enclosure'
     , href = 'http://somewhere'
     , attr = { rel:rel, href:href }
-    , expected = { href:href }
+    , expected = { url:href, type:undefined, length:undefined }
     , kv = attribute(key, attr)
     ;
   t.equals(kv[0], rel)
