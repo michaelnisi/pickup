@@ -70,41 +70,41 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 ### str()
 
-Either [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) or `undefined`.
+[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | `undefined`
 
 ### feed()
 
-- `author str()`
-- `copyright str()`
-- `id str()`
-- `image str()`
-- `language str()`
-- `link str()`
-- `payment str()`
-- `subtitle str()`
-- `summary str()`
-- `title str()`
-- `ttl str()`
-- `updated str()`
+- `author` `str()`
+- `copyright` `str()`
+- `id` `str()`
+- `image` `str()`
+- `language` `str()`
+- `link` `str()`
+- `payment` `str()`
+- `subtitle` `str()`
+- `summary` `str()`
+- `title` `str()`
+- `ttl` `str()`
+- `updated` `str()`
 
 ### enclosure()
 
-- `href str()`
-- `length str()`
-- `type str()`
+- `href` `str()`
+- `length` `str()`
+- `type` `str()`
 
 ### entry()
 
-- `author str()`
+- `author` `str()`
 - `enclosure enclosure() | undefined`
-- `duration str()`
-- `id str()`
-- `image str()`
-- `link str()`
-- `subtitle str()`
-- `summary str()`
-- `title str()`
-- `updated str()`
+- `duration` `str()`
+- `id` `str()`
+- `image` `str()`
+- `link` `str()`
+- `subtitle` `str()`
+- `summary` `str()`
+- `title` `str()`
+- `updated` `str()`
 
 ### Event:'feed'
 

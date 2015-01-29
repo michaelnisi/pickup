@@ -163,7 +163,7 @@ function free (parser) {
   })
 }
 
-Pickup.prototype.deinit = function () {
+Pickup.prototype._flush = function (cb) {
   free(this.parser)
   this.parser.close()
   this.parser = null
@@ -171,18 +171,14 @@ Pickup.prototype.deinit = function () {
   this.map = null
   this.state.deinit()
   this.state = null
-}
-
-Pickup.prototype._flush = function (cb) {
-  this.deinit()
   cb()
 }
 
 Pickup.prototype._transform = function (chunk, enc, cb) {
   var str = this.decoder.write(chunk)
   var er = this.parser.write(str).error
-  cb(er)
   this.parser.error = null
+  cb(er)
 }
 
 function Entry (

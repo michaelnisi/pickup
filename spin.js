@@ -29,4 +29,4 @@ function parse (p) {
 var paths = setup()
 setInterval(function () {
   parse(rnd(paths))
-}, 10)
+}, 100)
