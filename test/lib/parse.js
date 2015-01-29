@@ -30,7 +30,7 @@ module.exports = function (opts, cb) {
       t.ok(e < wanted.length, 'should emit less')
       t.is(ev, wanted[e][0])
       if (ev === 'error') {
-        t.is(n.message, wanted[e][1])
+        t.same(n, wanted[e][1])
       } else if (ev === 'entry') {
         t.deepEqual(n, pickup.entry(wanted[e][1]))
       } else if (ev === 'feed') {
@@ -47,7 +47,8 @@ module.exports = function (opts, cb) {
   ;(function write () {
     var slice
     do {
-      end = start + Math.ceil(Math.random() * xml.length)
+      end = opts.size || start + Math.ceil(
+        Math.random() * xml.length)
       slice = xml.slice(start, Math.min(end, xml.length))
       ok = stream.write(slice)
       if (end >= xml.length) stream.end()

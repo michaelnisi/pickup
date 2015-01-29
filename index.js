@@ -42,6 +42,10 @@ util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
   stream.Transform.call(this, opts)
+  if (!Pickup.openHandlers) {
+    Pickup.openHandlers = new OpenHandlers(Pickup.prototype)
+    Pickup.closeHandlers = new CloseHandlers(Pickup.prototype)
+  }
 
   this.decoder = new StringDecoder('utf8')
   this.eventMode = opts && opts.eventMode
@@ -49,15 +53,8 @@ function Pickup (opts) {
   this.parser = sax.parser(true, new Opts(true, true, false))
   this.state = new State()
 
-  var openHandlers = new OpenHandlers(Pickup.prototype)
-  var closeHandlers = new CloseHandlers(Pickup.prototype)
-
   var me = this
   var parser = this.parser
-  parser.onerror = function (er) {
-    me.emit('error', er)
-    me.push(null)
-  }
   parser.ontext = function (t) {
     var current = me.current()
     var map = me.map
@@ -87,7 +84,7 @@ function Pickup (opts) {
     var name = node.name
     me.state.name = name
     me.map = mappings[name] || me.map
-    handle(name, openHandlers)
+    handle(name, Pickup.openHandlers)
     var current = me.current()
     if (current) {
       var key = me.map[name]
@@ -102,7 +99,7 @@ function Pickup (opts) {
     }
   }
   parser.onclosetag = function (name) {
-    handle(name, closeHandlers)
+    handle(name, Pickup.closeHandlers)
     me.state.name = null
   }
 }
@@ -160,7 +157,7 @@ Pickup.prototype.imageclose = function () {
 }
 
 function free (parser) {
-  ['onerror', 'ontext', 'oncdata', 'onopentag', 'onclosetag']
+  ['ontext', 'oncdata', 'onopentag', 'onclosetag']
   .forEach(function (p) {
     delete parser[p]
   })
@@ -168,9 +165,10 @@ function free (parser) {
 
 Pickup.prototype.deinit = function () {
   free(this.parser)
+  this.parser.close()
+  this.parser = null
   this.decoder = null
   this.map = null
-  this.parser = null
   this.state.deinit()
   this.state = null
 }
@@ -180,19 +178,11 @@ Pickup.prototype._flush = function (cb) {
   cb()
 }
 
-Pickup.prototype.parse = function (chunk) {
-  return this.parser.write(this.decoder.write(chunk))
-}
-
 Pickup.prototype._transform = function (chunk, enc, cb) {
-  var er
-  try {
-    er = this.parse(chunk).error
-  } catch (error) {
-    er = error
-  } finally {
-    cb(er)
-  }
+  var str = this.decoder.write(chunk)
+  var er = this.parser.write(str).error
+  cb(er)
+  this.parser.error = null
 }
 
 function Entry (

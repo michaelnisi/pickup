@@ -1,7 +1,7 @@
 
 # pickup - transform feeds
 
-The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from RSS 2.0 (including iTunes namespace extensions) and Atom 1.0 formatted XML to newline separated JSON strings or objects.
+The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html) (including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions) and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML to newline separated JSON strings or objects.
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup)
 
@@ -64,43 +64,47 @@ $ curl -sS http://localhost:8080/$URL | json -ga
 
 ### opts()
 
-The options `Object` is passed to the `Transform` stream constructor. **pickup** adds `eventMode` to the standard stream options, analogue to `objectMode` it configures the readable state of the stream. Consider using it in memory restricted situations.
+The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) is passed to the `Transform` stream constructor. **pickup** adds `eventMode` to the standard stream options, analogue to `objectMode` it configures the readable state of the stream. Consider using it in memory restricted situations.
 
-- `eventMode` `Boolean()` defaults to `false`, if `true` readable state buffers are not filled and no `'data'`, but `'feed'` and `'entry'` events are emitted.
+- `eventMode` [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) defaults to `false`, if `true` readable state buffers are not filled and no `'data'`, but `'feed'` and `'entry'` events are emitted.
+
+### str()
+
+Either [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) or `undefined`.
 
 ### feed()
 
-- `author String() | undefined`
-- `copyright String() | undefined`
-- `id String() | undefined`
-- `image String() | undefined`
-- `language String() | undefined`
-- `link String() | undefined`
-- `payment String() | undefined`
-- `subtitle String() | undefined`
-- `summary String() | undefined`
-- `title String() | undefined`
-- `ttl String() | undefined`
-- `updated String() | undefined`
+- `author str()`
+- `copyright str()`
+- `id str()`
+- `image str()`
+- `language str()`
+- `link str()`
+- `payment str()`
+- `subtitle str()`
+- `summary str()`
+- `title str()`
+- `ttl str()`
+- `updated str()`
 
 ### enclosure()
 
-- `href String() | undefined`
-- `length String() | undefined`
-- `type String() | undefined`
+- `href str()`
+- `length str()`
+- `type str()`
 
 ### entry()
 
-- `author String() | undefined`
+- `author str()`
 - `enclosure enclosure() | undefined`
-- `duration String() | undefined`
-- `id String() | undefined`
-- `image String() | undefined`
-- `link String() | undefined`
-- `subtitle String() | undefined`
-- `summary String() | undefined`
-- `title String() | undefined`
-- `updated String() | undefined`
+- `duration str()`
+- `id str()`
+- `image str()`
+- `link str()`
+- `subtitle str()`
+- `summary str()`
+- `title str()`
+- `updated str()`
 
 ### Event:'feed'
 
@@ -118,7 +122,7 @@ Emitted for each entry.
 
 ## exports
 
-**pickup** exports a function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which emits newline separated JSON strings, in `objectMode` the `'data'` event contains `entry()` or `feed()` objects. As per XML's structure the last `'data'` event contains the `feed()` object. In `eventMode` neither `'readable'` nor `'data'` events are emitted, instead `'feed'` and `'entry'` events are fired.
+**pickup** exports a function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which emits newline separated JSON strings, in `objectMode` the `'data'` event contains `entry()` or `feed()` objects. As per XML's structure the last `'data'` event usually contains the `feed()` object. In `eventMode` neither `'readable'` nor `'data'` events are emitted, instead `'feed'` and `'entry'` events are fired.
 
 ## Installation
 
