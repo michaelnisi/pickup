@@ -70,7 +70,7 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 ### str()
 
-[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | `undefined`
+[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) or `undefined`
 
 ### feed()
 
@@ -96,7 +96,7 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 ### entry()
 
 - `author` `str()`
-- `enclosure enclosure() | undefined`
+- `enclosure` `enclosure()` or `undefined`
 - `duration` `str()`
 - `id` `str()`
 - `image` `str()`

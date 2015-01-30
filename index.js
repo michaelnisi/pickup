@@ -37,6 +37,7 @@ function Opts (trim, normalize, position) {
   this.normalize = normalize
   this.position = position
 }
+var saxOpts = new Opts(true, true, false)
 
 util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
@@ -50,7 +51,7 @@ function Pickup (opts) {
   this.decoder = new StringDecoder('utf8')
   this.eventMode = opts && opts.eventMode
   this.map = null
-  this.parser = sax.parser(true, new Opts(true, true, false))
+  this.parser = sax.parser(true, saxOpts)
   this.state = new State()
 
   var me = this
