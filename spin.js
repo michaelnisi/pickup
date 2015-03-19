@@ -1,5 +1,4 @@
 
-// spin - kick the tires
 // $ node --trace-gc spin.js
 
 var fs = require('fs')
