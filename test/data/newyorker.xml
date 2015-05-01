@@ -1,0 +1,8 @@
+<rss>
+	<channel>
+		<title>The New Yorker: Blogs</title>
+		<link>http://www.newyorker.com/</link>
+		<atom:link href="http://www.newyorker.com/feed/posts" rel="self" type="application/rss+xml" />
+		<atom:link rel="hub" href="http://newyorker.superfeedr.com/" />
+	</channel>
+</rss>

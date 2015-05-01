@@ -18,7 +18,7 @@ $ npm install -g json
 Now you can pipe **pickup** to **json**:
 
 ```
-$ export URL=5by5.tv/rss
+$ export URL=www.newyorker.com/feed/posts
 $ curl -sS $URL | pickup | json -ga title | head -n 5
 ```
 
@@ -37,7 +37,7 @@ process.stdin
 You can run this example from the command-line:
 
 ```
-$ curl -sS $URL | node example/stdin.js | json -ga
+$ curl -sS $URL | node example/stdin.js | json -g
 ```
 
 #### Proxy server
@@ -57,7 +57,7 @@ To try the proxy server:
 
 ```
 $ node example/proxy.js &
-$ curl -sS http://localhost:8080/$URL | json -ga
+$ curl -sS http://localhost:8080/$URL | json -g
 ```
 
 ## types

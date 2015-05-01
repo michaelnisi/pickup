@@ -1,6 +1,8 @@
+// proxy - HTTP proxy server
+
 var http = require('http')
-  , pickup = require('../')
-  ;
+var pickup = require('../')
+
 http.createServer(function (req, res) {
   http.get('http:/'.concat(req.url), function (feed) {
     feed.pipe(pickup()).pipe(res)

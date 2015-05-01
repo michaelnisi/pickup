@@ -1,10 +1,8 @@
-
 // pickup - transform RSS or Atom XML to JSON
 
 exports = module.exports = Pickup
 
 var StringDecoder = require('string_decoder').StringDecoder
-var assert = require('assert')
 var attribute = require('./lib/attribute')
 var mappings = require('./lib/mappings')
 var os = require('os')
@@ -12,7 +10,7 @@ var sax = require('sax')
 var stream = require('readable-stream')
 var util = require('util')
 
-function isString(obj) {
+function isString (obj) {
   return typeof obj === 'string'
 }
 
@@ -88,13 +86,16 @@ function Pickup (opts) {
     handle(name, Pickup.openHandlers)
     var current = me.current()
     if (current) {
+      if (name === 'atom:link' && current.link) return
       var key = me.map[name]
       if (key) {
         var attributes = node.attributes
         var keys = Object.keys(attributes)
         if (keys.length) {
-          var kv = attribute(key, attributes)
-          if (kv) current[kv[0]] = kv[1]
+          var kv = attribute(key, attributes, current)
+          if (kv) {
+            current[kv[0]] = kv[1]
+          }
         }
       }
     }
@@ -247,23 +248,26 @@ State.prototype.deinit = function () {
 }
 
 function extend (origin, add) {
-  return util._extend(origin, add || Object.create(null)) }
+  return util._extend(origin, add || Object.create(null))
+}
 function entry (obj) {
-  return extend(new Entry(), obj) }
+  return extend(new Entry(), obj)
+}
 function feed (obj) {
-  return extend(new Feed(), obj) }
+  return extend(new Feed(), obj)
+}
 
 if (process.env.NODE_TEST) {
   exports.entry = entry
   exports.feed = feed
   exports.EVENTS = [
-    'data'
-  , 'drain'
-  , 'readable'
-  , 'end'
-  , 'entry'
-  , 'error'
-  , 'feed'
-  , 'finish'
+    'data',
+    'drain',
+    'readable',
+    'end',
+    'entry',
+    'error',
+    'feed',
+    'finish'
   ]
 }

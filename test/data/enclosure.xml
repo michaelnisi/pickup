@@ -1,0 +1,7 @@
+<rss>
+  <channel>
+    <item>
+      <enclosure url="abc" stowaway="huck" />
+    </item>
+  </channel>
+</rss>

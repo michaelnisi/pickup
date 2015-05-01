@@ -1,5 +1,4 @@
-
-// parse some files
+// files - parse some files
 
 var fs = require('fs')
 var parse = require('./lib/parse')
@@ -8,17 +7,18 @@ var pickup = require('../')
 var test = require('tap').test
 
 function it (name, num) {
-  return { name:name, num:num }
+  return { name: name, num: num }
 }
 
-test('files event mode', function (t) {
-  [
-    it('atom', 1)
-  , it('rss', 4)
-  , it('itunes', 3)
-  , it('rss-podlove', 1)
-  , it('atom-podlove', 1)
-  ].forEach(function (it, idx) {
+test('files in event mode', function (t) {
+  var files = [
+    it('atom', 1),
+    it('rss', 4),
+    it('itunes', 3),
+    it('rss-podlove', 1),
+    it('atom-podlove', 1)
+  ]
+  files.forEach(function (it, idx) {
     var cwd = process.cwd()
     var dir = 'data'
     var i = path.join(cwd, dir, it.name + '.xml')
@@ -36,24 +36,25 @@ test('files event mode', function (t) {
     wanted.push(['finish'])
     wanted.push(['end'])
     parse({
-      xml: fs.readFileSync(i)
-    , wanted: wanted
-    , t: t
+      xml: fs.readFileSync(i),
+      wanted: wanted,
+      t: t
     }, function (er) {
       t.ok(!er)
-      if (idx === 4) t.end()
+      if (idx === files.length - 1) t.end()
     })
   })
 })
 
 test('files in object mode', function (t) {
-  [
-    it('atom', 1)
-  , it('rss', 4)
-  , it('itunes', 3)
-  , it('rss-podlove', 1)
-  , it('atom-podlove', 1)
-  ].forEach(function (it, idx) {
+  var files = [
+    it('atom', 1),
+    it('rss', 4),
+    it('itunes', 3),
+    it('rss-podlove', 1),
+    it('atom-podlove', 1)
+  ]
+  files.forEach(function (it, idx) {
     var cwd = process.cwd()
     var dir = 'data'
     var i = path.join(cwd, dir, it.name + '.xml')
@@ -73,13 +74,14 @@ test('files in object mode', function (t) {
     wanted.push(['finish'])
     wanted.push(['end'])
     parse({
-      xml: fs.readFileSync(i)
-    , wanted: wanted
-    , eventMode: false
-    , t: t
+      xml: fs.readFileSync(i),
+      wanted: wanted,
+      eventMode: false,
+      objectMode: true,
+      t: t
     }, function (er) {
       t.ok(!er)
-      if (idx === 4) t.end()
+      if (idx === files.length - 1) t.end()
     })
   })
 })

@@ -1,18 +1,14 @@
-
 // parse - parse xml and test events
 
 var pickup = require('../../')
-var sax = require('sax')
-var util = require('util')
 
 module.exports = function (opts, cb) {
+  if (opts.eventMode === undefined) opts.eventMode = true
+  if (opts.objectMode === undefined) opts.objectMode = false
   var xml = opts.xml
   var wanted = opts.wanted
   var t = opts.t
-  var stream = pickup({
-    eventMode: opts.eventMode !== false ? true : false
-  , objectMode: opts.objectMode !== false ? true : false
-  , highWaterMark: Math.ceil(Math.random() * 32 * 1024)})
+  var stream = pickup(opts)
   var e = 0
   pickup.EVENTS.forEach(function (ev) {
     stream.on(ev, function (n) {
@@ -42,7 +38,8 @@ module.exports = function (opts, cb) {
     })
   })
   // Drive
-  var start = end = 0
+  var start = 0
+  var end = 0
   var ok = false
   ;(function write () {
     var slice

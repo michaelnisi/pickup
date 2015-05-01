@@ -1,7 +1,5 @@
-
 var test = require('tap').test
-  , pickup = require('../')
-  ;
+var pickup = require('../')
 
 test('throws', function (t) {
   t.throws(function () { pickup().write(null) })
