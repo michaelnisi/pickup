@@ -12,6 +12,7 @@ test('media-thumbnail', function (t) {
   var wanted = [
     ['entry', pickup.entry({ image: 'abc' })],
     ['feed', {}],
+    ['readable'],
     ['finish'],
     ['end']
   ]

@@ -86,7 +86,6 @@ function Pickup (opts) {
     handle(name, Pickup.openHandlers)
     var current = me.current()
     if (current) {
-      if (name === 'atom:link' && current.link) return
       var key = me.map[name]
       if (key) {
         var attributes = node.attributes

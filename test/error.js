@@ -4,11 +4,11 @@
 var test = require('tap').test
 var parse = require('./lib/parse')
 
-test('parse error', function (t) {
+test('whitespace', function (t) {
   var xml = 'wtf'
   var wanted = [
     ['error', new Error('Non-whitespace before first tag.')],
-    ['finish'],
+    ['readable'],
     ['end']
   ]
   parse({ t: t, xml: xml, wanted: wanted, size: Infinity }, function (er) {
@@ -17,9 +17,10 @@ test('parse error', function (t) {
   })
 })
 
-test('parse error', function (t) {
+test('gibberish', function (t) {
   var xml = '<wtf>'
   var wanted = [
+    ['readable'],
     ['finish'],
     ['end']
   ]

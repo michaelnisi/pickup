@@ -4,17 +4,18 @@ var parse = require('./lib/parse')
 var pickup = require('../')
 var test = require('tap').test
 var fs = require('fs')
+var path = require('path')
 
-var xml = fs.readFileSync('./data/rdf.xml')
+var p = path.join(__dirname, 'data', 'rdf.xml')
+var xml = fs.readFileSync(p)
 
-test('rdf in object mode', function (t) {
+test('object mode', function (t) {
   var wanted = [
     ['data', pickup.entry({ title: 'Space Invaders' })],
-    ['readable'],
     ['data', pickup.feed({ title: 'smartos-discuss' })],
     ['readable'],
     ['finish'],
-    ['end' ]
+    ['end']
   ]
   parse({
     t: t,
@@ -28,10 +29,11 @@ test('rdf in object mode', function (t) {
   })
 })
 
-test('rdf in event mode', function (t) {
+test('event mode', function (t) {
   var wanted = [
     ['entry', pickup.entry({ title: 'Space Invaders' })],
     ['feed', pickup.feed({ title: 'smartos-discuss' })],
+    ['readable'],
     ['finish'],
     ['end']
   ]

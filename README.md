@@ -9,7 +9,7 @@ The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://
 
 ### Command-line
 
-If you haven't yet, you should first install **[json](https://github.com/trentm/json)**—a command for working with JSON on the command-line:
+If you haven't yet, first install **[json](https://github.com/trentm/json)**—a command for working with JSON on the command-line:
 
 ```
 $ npm install -g json
@@ -19,7 +19,13 @@ Now you can pipe **pickup** to **json**:
 
 ```
 $ export URL=www.newyorker.com/feed/posts
-$ curl -sS $URL | pickup | json -ga title | head -n 5
+$ curl -sS $URL | pickup | json -g
+```
+
+Or, for example, to stream the titles only:
+
+```
+$ curl -sS $URL | pickup | json -ga title
 ```
 
 ### Library
@@ -70,7 +76,7 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 ### str()
 
-[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) or `undefined`
+[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | `undefined`
 
 ### feed()
 
