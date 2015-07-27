@@ -66,9 +66,9 @@ if (require.main === module) {
       z[name] = z[name].toFixed(2)
     })
     console.log(
-      'Range: %d - %d ms\n'
-    + 'Median: %d ms\n'
-    + 'Average: %d ms'
+      'Range: %d - %d ms\n' +
+      'Median: %d ms\n' +
+      'Average: %d ms'
     , z.min, z.max, z.med, z.avg)
   })
 }

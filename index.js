@@ -160,7 +160,7 @@ Pickup.prototype.imageclose = function () {
 function free (parser) {
   ['ontext', 'oncdata', 'onopentag', 'onclosetag']
   .forEach(function (p) {
-    delete parser[p]
+    parser[p] = null
   })
 }
 
