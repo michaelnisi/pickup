@@ -37,11 +37,11 @@
   "homepage": "https://github.com/michaelnisi/pickup",
   "dependencies": {
     "readable-stream": "^1.1.13",
-    "sax": "^1.1.0"
+    "sax": "^1.1.5"
   },
   "devDependencies": {
     "standard": "^6.0.7",
-    "tap": "^1.0.4"
+    "tap": "^5.6.0"
   },
   "engines": {
     "node": ">=0.10"
