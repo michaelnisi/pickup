@@ -11,7 +11,8 @@ test('enclosure', function (t) {
   var xml = fs.readFileSync(p)
   var wanted = [
     ['entry', pickup.entry({
-      enclosure: { url: 'abc', type: undefined, length: undefined}})],
+      enclosure: { url: 'abc', type: undefined, length: undefined }
+    })],
     ['feed'],
     ['readable'],
     ['finish'],

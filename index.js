@@ -10,10 +10,6 @@ var sax = require('sax')
 var stream = require('readable-stream')
 var util = require('util')
 
-function isString (obj) {
-  return typeof obj === 'string'
-}
-
 function OpenHandlers (t) {
   this.channel = t.feedopen
   this.feed = t.feedopen
@@ -60,16 +56,13 @@ function Pickup (opts) {
     var state = me.state
     var name = me.state.name
     if (!current || !map) return
-    var key = state.image && name === 'url' ? 'image' : map[name]
-    if (!key) return
-    if (state.feed && key === 'link' && !!current.link) return
-    var prop = current[key]
-    var add = isString(prop) && isString(t) && t !== prop
-    if (prop && add) {
-      current[key] += t
-    } else {
-      current[key] = t
-    }
+
+    var key = map[name]
+    if (state.image && name === 'url') key = 'image'
+
+    if (key === undefined || current[key] !== undefined) return
+
+    current[key] = t
   }
   parser.oncdata = function (d) {
     parser.ontext(d)
