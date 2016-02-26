@@ -18,7 +18,7 @@ $ npm install -g json
 Now you can pipe **pickup** to **json**:
 
 ```
-$ export URL=www.newyorker.com/feed/posts
+$ export URL=troubled.pro/rss.xml
 $ curl -sS $URL | pickup | json -g
 ```
 
@@ -70,13 +70,17 @@ $ curl -sS http://localhost:8080/$URL | json -g
 
 ### opts()
 
-The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) is passed to the `Transform` stream constructor. **pickup** adds `eventMode` to the standard stream options, analogue to `objectMode` it configures the readable state of the stream. Consider using it in memory restricted situations.
+The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) is passed to the `Transform` stream constructor.
+
+**pickup** uses following additional options:
 
 - `eventMode` [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) defaults to `false`, if `true` readable state buffers are not filled and no `'data'`, but `'feed'` and `'entry'` events are emitted.
 
+- `charset` `'UTF-8' | 'ISO-8859-1'` An optional string to specify the encoding of input data. In the common use case you received this string in the headers of your HTTP response before you began parsing. If you, not so commonly, cannot provide the encoding upfront, **pickup** tries to detect the encoding, and eventually defaults to `'UTF-8'`. Now you're wondering about this string's format, I hear you. The `charset` option is corresponding to the optional `charset` MIME type parameter found in  `Content-Type` HTTP headers. It's OK to pass any string, **pickup** will fall back on `'UTF-8'` when confused.
+
 ### str()
 
-[`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | `undefined`
+This can either be a `String()`, `null`, or `undefined`.
 
 ### feed()
 
@@ -127,6 +131,10 @@ entry()
 Emitted for each entry.
 
 ## exports
+
+```js
+pickup(opts, encoding)
+```
 
 **pickup** exports a function that returns a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream which emits newline separated JSON strings, in `objectMode` the `'data'` event contains `entry()` or `feed()` objects. As per XML's structure the last `'data'` event usually contains the `feed()` object. In `eventMode` neither `'readable'` nor `'data'` events are emitted, instead `'feed'` and `'entry'` events are fired.
 

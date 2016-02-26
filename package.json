@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -8,8 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "NODE_TEST=1 tap -b test/*.js",
-    "posttest": "standard test/*.js lib/*.js"
+    "pretest": "standard",
+    "test": "NODE_TEST=1 tap -b test/*.js"
   },
   "bin": {
     "pickup": "bin/cli.js"
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/michaelnisi/pickup",
   "dependencies": {
-    "readable-stream": "^1.1.13",
+    "readable-stream": "^2.0.5",
     "sax": "^1.1.5"
   },
   "devDependencies": {

@@ -4,25 +4,39 @@ var path = require('path')
 var pickup = require('../')
 var test = require('tap').test
 
-var names = ['atom', 'rss', 'itunes', 'rss-podlove', 'atom-podlove']
-var sets = names.map(function (name) {
-  var xmlfile = path.join(__dirname, 'data', name + '.xml')
-  var xml = fs.readFileSync(xmlfile)
-  var jsonfile = path.join(__dirname, 'data', name + '.json')
-  var json = JSON.parse(fs.readFileSync(jsonfile))
-  return { name: name, xml: xml, data: json }
-})
+var dir = path.join(__dirname, 'data')
+var files = fs.readdirSync(dir)
+var groups = files.reduce(function (acc, file) {
+  var ext = path.extname(file)
+  if (ext !== '.json') {
+    return acc
+  }
+  var charset
+  if (file === 'atom-latin1.json') {
+    charset = 'ISO-8859-1'
+  }
+  var jsonFile = path.join(dir, file)
+  var xmlFile = path.join(dir, file.split(ext)[0] + '.xml')
+
+  var xml = fs.readFileSync(xmlFile)
+  var json = JSON.parse(fs.readFileSync(jsonFile))
+
+  var group = { name: file, xml: xml, data: json, charset: charset }
+
+  acc.push(group)
+  return acc
+}, [])
 
 test('plain mode', function (t) {
   var i = 0
-  function run (set) {
-    if (!set) {
-      t.is(i, names.length)
+  function run (group) {
+    if (!group) {
+      t.is(i, groups.length)
       return t.end()
     }
-    var entries = set.data.entries
-    var feed = set.data.feed
-    var xml = set.xml
+    var entries = group.data.entries
+    var feed = group.data.feed
+    var xml = group.xml
     var wanted = entries.map(function (entry) {
       return ['data', entry]
     })
@@ -36,25 +50,26 @@ test('plain mode', function (t) {
       eventMode: false,
       objectMode: false,
       encoding: 'utf8',
+      charset: group.charset,
       t: t
     }, function (er) {
       t.ok(!er)
-      run(sets[++i])
+      run(groups[++i])
     })
   }
-  run(sets[i])
+  run(groups[i])
 })
 
 test('object mode', function (t) {
   var i = 0
-  function run (set) {
-    if (!set) {
-      t.is(i, names.length)
+  function run (group) {
+    if (!group) {
+      t.is(i, groups.length)
       return t.end()
     }
-    var entries = set.data.entries
-    var feed = set.data.feed
-    var xml = set.xml
+    var entries = group.data.entries
+    var feed = group.data.feed
+    var xml = group.xml
     var wanted = entries.map(function (entry) {
       return ['data', pickup.entry(entry)]
     })
@@ -67,25 +82,26 @@ test('object mode', function (t) {
       wanted: wanted,
       eventMode: false,
       objectMode: true,
+      charset: group.charset,
       t: t
     }, function (er) {
       t.ok(!er)
-      run(sets[++i])
+      run(groups[++i])
     })
   }
-  run(sets[i])
+  run(groups[i])
 })
 
 test('event mode', function (t) {
   var i = 0
-  function run (set) {
-    if (!set) {
-      t.is(i, names.length)
+  function run (group) {
+    if (!group) {
+      t.is(i, groups.length)
       return t.end()
     }
-    var feed = set.data.feed
-    var entries = set.data.entries
-    var xml = set.xml
+    var feed = group.data.feed
+    var entries = group.data.entries
+    var xml = group.xml
     var wanted = entries.map(function (entry) {
       return ['entry', entry]
     })
@@ -96,11 +112,38 @@ test('event mode', function (t) {
     parse({
       xml: xml,
       wanted: wanted,
+      charset: group.charset,
       t: t
     }, function (er) {
-      t.ok(!er)
-      run(sets[++i])
+      t.ok(!er, 'should not error')
+      run(groups[++i])
     })
   }
-  run(sets[i])
+  run(groups[i])
+})
+
+test('event mode (concurrently)', function (t) {
+  var i = groups.length
+  function cb (er) {
+    t.ok(!er, 'should not error')
+    if (--i === 0) { t.end() }
+  }
+  groups.forEach(function (group) {
+    var feed = group.data.feed
+    var entries = group.data.entries
+    var xml = group.xml
+    var wanted = entries.map(function (entry) {
+      return ['entry', entry]
+    })
+    wanted.push(['feed', feed])
+    wanted.push(['readable'])
+    wanted.push(['finish'])
+    wanted.push(['end'])
+    parse({
+      xml: xml,
+      wanted: wanted,
+      charset: group.charset,
+      t: t
+    }, cb)
+  })
 })

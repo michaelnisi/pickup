@@ -31,30 +31,61 @@ function Opts (trim, normalize, position) {
   this.normalize = normalize
   this.position = position
 }
+
 var saxOpts = new Opts(true, true, false)
+
+function encodingFromString (str) {
+  if (str.match(/utf-8/i)) {
+    return 'utf8'
+  } else if (str.match(/iso-8859-1/i)) {
+    return 'binary'
+  }
+  return 'utf8'
+}
+
+function encodingFromOpts (opts) {
+  var str = opts ? opts.charset : null
+  if (typeof str !== 'string') return null
+  return encodingFromString(str)
+}
 
 util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
   stream.Transform.call(this, opts)
+
   if (!Pickup.openHandlers) {
     Pickup.openHandlers = new OpenHandlers(Pickup.prototype)
     Pickup.closeHandlers = new CloseHandlers(Pickup.prototype)
   }
 
-  this.decoder = new StringDecoder('utf8')
+  this.encoding = encodingFromOpts(opts)
+  this._decoder = null
+
+  var me = this
+
+  Object.defineProperty(this, 'decoder', {
+    get: function () {
+      if (!me._decoder) {
+        me._decoder = new StringDecoder(me.encoding)
+      }
+      return me._decoder
+    }
+  })
+
   this.eventMode = opts && opts.eventMode
   this.map = null
   this.parser = sax.parser(true, saxOpts)
   this.state = new State()
 
-  var me = this
   var parser = this.parser
+
   parser.ontext = function (t) {
     var current = me.current()
     var map = me.map
     var state = me.state
     var name = me.state.name
+
     if (!current || !map) return
 
     var key = map[name]
@@ -64,9 +95,11 @@ function Pickup (opts) {
 
     current[key] = t
   }
+
   parser.oncdata = function (d) {
     parser.ontext(d)
   }
+
   function handle (name, handlers) {
     if (handlers.hasOwnProperty(name)) {
       handlers[name].apply(me)
@@ -92,6 +125,7 @@ function Pickup (opts) {
       }
     }
   }
+
   parser.onclosetag = function (name) {
     handle(name, Pickup.closeHandlers)
     me.state.name = null
@@ -151,24 +185,63 @@ Pickup.prototype.imageclose = function () {
 }
 
 function free (parser) {
-  ['ontext', 'oncdata', 'onopentag', 'onclosetag']
-  .forEach(function (p) {
-    parser[p] = null
-  })
+  delete parser.oncdata
+  delete parser.onclosetag
+  delete parser.onopentag
+  delete parser.ontext
 }
 
 Pickup.prototype._flush = function (cb) {
   free(this.parser)
   this.parser.close()
-  this.parser = null
-  this.decoder = null
+
+  this._decoder = null
+
+  this.encoding = null
   this.map = null
+  this.parser = null
+
   this.state.deinit()
   this.state = null
+
   cb()
 }
 
+function cribEncoding (str) {
+  var enc = str.split('encoding')[1]
+  var def = 'utf8'
+  if (!enc) return def
+  if (enc.trim()[0] === '=') {
+    return encodingFromString(enc)
+  }
+  return def
+}
+
+// TODO: Support UTF-16
+
+// TODO: Find/write a module that detects character encodings
+// https://www.w3.org/TR/REC-xml/#sec-guessing
+
+// OK! Here is how it should work. In the most common use case, we receive the
+// encoding via the Content-Type HTTP header and pass it to our constructor. If we
+// we don't know the encoding upfront, our parser has to use the BOM, so it can
+// reliably read the encoding tag. If no BOM is available use ASCII to read the tag.// If this fails, assume UTF-8.
+
 Pickup.prototype._transform = function (chunk, enc, cb) {
+  if (!this._decoder) {
+    if (!this.encoding) {
+      // This, of course, fails--yielding 'utf8'--if the first chunk is too
+      // short to contain the encoding tag.
+      var t = chunk.toString('ascii', 0, 128)
+      this.encoding = cribEncoding(t)
+    }
+    this.emit('encoding', this.encoding)
+  }
+  // TODO: Validate encoding
+  //
+  // Would be nice if we had a cheap way to compare alleged and actual encoding,
+  // so we could eventually throw or emit an error.
+  //
   var str = this.decoder.write(chunk)
   var er = this.parser.write(str).error
   this.parser.error = null
@@ -250,6 +323,7 @@ function feed (obj) {
 }
 
 if (process.env.NODE_TEST) {
+  exports.cribEncoding = cribEncoding
   exports.entry = entry
   exports.feed = feed
   exports.EVENTS = [

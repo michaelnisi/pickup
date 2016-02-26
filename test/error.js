@@ -9,6 +9,7 @@ test('whitespace', function (t) {
   var wanted = [
     ['error', new Error('Non-whitespace before first tag.')],
     ['readable'],
+    ['finish'],
     ['end']
   ]
   parse({ t: t, xml: xml, wanted: wanted, size: Infinity }, function (er) {

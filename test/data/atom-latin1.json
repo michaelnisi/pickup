@@ -1,0 +1,19 @@
+{
+  "feed": {
+    "title": "Example Feed",
+    "subtitle": "A subtitle.",
+    "link": "http://example.org/",
+    "id": "urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6",
+    "updated": "2003-12-13T18:30:02Z"
+  },
+  "entries": [
+    {
+      "author": "johndoe@example.com",
+      "id": "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a",
+      "link": "http://example.org/2003/12/13/atom03.html",
+      "summary": "Some text.",
+      "title": "Atöm-Pöwered Röböts Run Amök",
+      "updated": "2003-12-13T18:30:02Z"
+    }
+  ]
+}

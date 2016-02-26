@@ -8,14 +8,19 @@ var util = require('util')
 function nop () {}
 
 var debug = (function () {
-  return parseInt(process.env.NODE_DEBUG, 10) === 1 ?
-    function (o) {
-      console.error('** parse: %s', util.inspect(o))
-    } : nop
+  return parseInt(process.env.NODE_DEBUG, 10) === 1
+  ? function (o) {
+    console.error('** parse: %s', util.inspect(o))
+  } : nop
 }())
 
 function defaults (opts) {
-  if (opts.eventMode === undefined) opts.eventMode = true
+  if (opts.eventMode === undefined) {
+    opts.eventMode = true
+  }
+  if (opts.charset === undefined) {
+    opts.charset = Math.round(Math.random()) > 0.5 ? 'utf8' : null
+  }
   return opts
 }
 
@@ -30,7 +35,7 @@ function parse (opts, cb) {
     stream.on(ev, function (found) {
       debug({ wanted: wanted[e], found: [ev, found] })
       var obj = wanted[e]
-      t.ok(obj, 'should not emit more events than expected')
+      t.ok(obj, 'should not emit unexpected event: ' + ev)
       var name = obj[0]
       t.is(ev, name, 'should be expected event name')
       var data = obj[1]
@@ -45,7 +50,6 @@ function parse (opts, cb) {
         t.deepEqual(json, data, 'should be expected data')
       } else if (ev === 'end') {
         t.is(e + 1, wanted.length, 'should emit all')
-        t.is(stream.decoder, null, 'should release decoder')
         t.is(stream.map, null, 'should release map')
         t.is(stream.parser, null, 'should release parser')
         t.is(stream.state, null, 'should release state')
