@@ -76,7 +76,7 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 - `eventMode` [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) defaults to `false`, if `true` readable state buffers are not filled and no `'data'`, but `'feed'` and `'entry'` events are emitted.
 
-- `charset` `'UTF-8' | 'ISO-8859-1'` An optional string to specify the encoding of input data. In the common use case you received this string in the headers of your HTTP response before you began parsing. If you, not so commonly, cannot provide the encoding upfront, **pickup** tries to detect the encoding, and eventually defaults to `'UTF-8'`. Now you're wondering about this string's format, I hear you. The `charset` option is corresponding to the optional `charset` MIME type parameter found in  `Content-Type` HTTP headers. It's OK to pass any string, **pickup** will fall back on `'UTF-8'` when confused.
+- `charset` `'UTF-8' | 'ISO-8859-1'` An optional string to specify the encoding of input data. In the common use case you received this string in the headers of your HTTP response before you began parsing. If you, not so commonly, cannot provide the encoding upfront, **pickup** tries to detect the encoding, and eventually defaults to `'UTF-8'`. The `charset` option is corresponding to the optional `charset` MIME type parameter found in  `Content-Type` HTTP headers. It's OK to pass any string, **pickup** will fall back on `'UTF-8'` when confused.
 
 ### str()
 
