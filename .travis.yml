@@ -7,6 +7,7 @@ node_js:
   - "4"
   - "5"
 branches:
+  only:
     - master
   except:
     - /^v[0-9]/
