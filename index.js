@@ -91,7 +91,9 @@ function Pickup (opts) {
     var key = map[name]
     if (state.image && name === 'url') key = 'image'
 
-    if (key === undefined || current[key] !== undefined) return
+    var isSet = current[key] !== undefined
+    var isSummary = key === 'summary' && name === 'summary' || name === 'itunes:summary'
+    if (key === undefined || (isSet && !isSummary)) return
 
     current[key] = t
   }
