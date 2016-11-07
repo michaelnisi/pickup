@@ -9,7 +9,7 @@
   },
   "scripts": {
     "pretest": "standard",
-    "test": "NODE_TEST=1 tap -b test/*.js"
+    "test": "NODE_TEST=1 tap -b --cov test/*.js"
   },
   "bin": {
     "pickup": "bin/cli.js"

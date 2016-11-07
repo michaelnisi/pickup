@@ -1,9 +1,9 @@
+[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup)
+[![Coverage Status](https://coveralls.io/repos/github/michaelnisi/pickup/badge.svg?branch=master)](https://coveralls.io/github/michaelnisi/pickup?branch=master)
 
 # pickup - transform feeds
 
 The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html) (including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions) and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML to newline separated JSON strings or objects.
-
-[![Build Status](https://secure.travis-ci.org/michaelnisi/pickup.svg)](http://travis-ci.org/michaelnisi/pickup)
 
 ## Usage
 
