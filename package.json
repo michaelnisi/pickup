@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -44,7 +44,7 @@
     "tap": "^5.6.0"
   },
   "engines": {
-    "node": ">=0.10"
+    "node": ">=0.11"
   },
   "author": "Michael Nisi <michael.nisi@gmail.com> (http://michaelnisi.com/)",
   "license": "MIT"
