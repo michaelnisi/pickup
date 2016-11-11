@@ -1,11 +1,13 @@
+'use strict'
+
 // encoding - test encoding detection
 
-var test = require('tap').test
-var pickup = require('../')
+const test = require('tap').test
+const pickup = require('../')
 
-test('guess encoding', function (t) {
-  var f = pickup.cribEncoding
-  var found = [
+test('guess encoding', (t) => {
+  const f = pickup.cribEncoding
+  const found = [
     f(''),
     f('<?xml?>'),
     f('<?xml encoding="UTF-8"?>'),
@@ -13,7 +15,7 @@ test('guess encoding', function (t) {
     f('<?xml encoding="ISO-8859-1"?>'),
     f('<?xml encoding="iso-8859-1"?>')
   ]
-  var wanted = [
+  const wanted = [
     'utf8',
     'utf8',
     'utf8',
@@ -22,28 +24,28 @@ test('guess encoding', function (t) {
     'binary'
   ]
   t.plan(wanted.length)
-  wanted.forEach(function (it, i) {
+  wanted.forEach((it, i) => {
     t.is(found[i], it)
   })
 })
 
-test('set encoding', function (t) {
+test('set encoding', (t) => {
   function go (objs) {
-    var obj = objs.shift()
+    const obj = objs.shift()
     if (!obj) return
-    var parser = pickup({ charset: obj.charset })
-    parser.on('readable', function () {
+    const parser = pickup({ charset: obj.charset })
+    parser.on('readable', () => {
       while (parser.read()) {}
     })
-    parser.on('encoding', function (enc) {
+    parser.on('encoding', (enc) => {
       t.is(enc, obj.encoding, 'should emit encoding')
     })
-    parser.on('end', function () {
+    parser.on('end', () => {
       go(objs)
     })
     parser.end(obj.xml)
   }
-  var tests = [
+  const tests = [
     { xml: '<?xml?><feed></feed>', encoding: 'utf8' },
     { xml: '<?xml encoding="*"?><feed></feed>', encoding: 'utf8' },
     { xml: '<?xml encoding="UTF-8"?><feed></feed>', encoding: 'utf8' },

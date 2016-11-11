@@ -1,55 +1,55 @@
 // perf - Measure time
 
-var pickup = require('../')
-var fs = require('fs')
-var path = require('path')
+const pickup = require('../')
+const fs = require('fs')
+const path = require('path')
 
 module.exports.run = run
 
-var dir = path.dirname(module.filename)
-var file = path.join(dir, 'df.xml')
+const dir = path.dirname(module.filename)
+const file = path.join(dir, 'df.xml')
 
 function _run (n, cb, times) {
-  var time = process.hrtime()
-  var reader = fs.createReadStream(file)
-  var parser = pickup({ objectMode: true })
-  parser.on('finish', function () {
+  const time = process.hrtime()
+  const reader = fs.createReadStream(file)
+  const parser = pickup({ objectMode: true })
+  parser.on('finish', () => {
     if (n--) {
-      var ns = process.hrtime(time)
-      var ms = (ns[0] * 1e9 + ns[1]) / 1e6
+      const ns = process.hrtime(time)
+      const ms = (ns[0] * 1e9 + ns[1]) / 1e6
       times.push(ms)
       _run(n, cb, times)
     } else {
-      var r = times.reduce(function (a, b) {
+      const r = times.reduce((a, b) => {
         return a + b
       })
-      var avg = r / times.length
-      var sorted = times.sort(function (a, b) {
+      const avg = r / times.length
+      const sorted = times.sort((a, b) => {
         return a - b
       })
-      var l = sorted.length
-      var med = sorted[Math.round(l / 2)]
-      var min = sorted[0]
-      var max = sorted[l - 1]
+      const l = sorted.length
+      const med = sorted[Math.round(l / 2)]
+      const min = sorted[0]
+      const max = sorted[l - 1]
       cb(null, { med: med, min: min, max: max, avg: avg })
     }
   })
-  var ok = true
+  let ok = true
   function write () {
     if (!ok) return
-    var chunk
+    let chunk
     while ((chunk = reader.read()) !== null) {
       ok = parser.write(chunk)
     }
     if (!ok) {
-      parser.once('drain', function () {
+      parser.once('drain', () => {
         ok = true
         write()
       })
     }
   }
   reader.on('readable', write)
-  reader.once('end', function () {
+  reader.once('end', () => {
     reader.removeListener('readable', write)
     parser.end()
   })
@@ -61,8 +61,8 @@ function run (n, cb) {
 
 if (require.main === module) {
   console.log('One moment, please.')
-  run(100, function (er, z) {
-    Object.getOwnPropertyNames(z).forEach(function (name) {
+  run(100, (er, z) => {
+    Object.getOwnPropertyNames(z).forEach((name) => {
       z[name] = z[name].toFixed(2)
     })
     console.log(

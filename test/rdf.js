@@ -1,16 +1,18 @@
+'use strict'
+
 // parse crazy rdf from way back when
 
-var parse = require('./lib/parse')
-var pickup = require('../')
-var test = require('tap').test
-var fs = require('fs')
-var path = require('path')
+const parse = require('./lib/parse')
+const pickup = require('../')
+const test = require('tap').test
+const fs = require('fs')
+const path = require('path')
 
-var p = path.join(__dirname, 'data', 'rdf.xml')
-var xml = fs.readFileSync(p)
+const p = path.join(__dirname, 'data', 'rdf.xml')
+const xml = fs.readFileSync(p)
 
-test('object mode', function (t) {
-  var wanted = [
+test('object mode', (t) => {
+  const wanted = [
     ['data', pickup.entry({ title: 'Space Invaders' })],
     ['data', pickup.feed({ title: 'smartos-discuss' })],
     ['readable'],
@@ -23,21 +25,21 @@ test('object mode', function (t) {
     objectMode: true,
     xml: xml,
     wanted: wanted
-  }, function (er) {
+  }, (er) => {
     t.ok(!er)
     t.end()
   })
 })
 
-test('event mode', function (t) {
-  var wanted = [
+test('event mode', (t) => {
+  const wanted = [
     ['entry', pickup.entry({ title: 'Space Invaders' })],
     ['feed', pickup.feed({ title: 'smartos-discuss' })],
     ['readable'],
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })

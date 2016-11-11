@@ -1,10 +1,10 @@
 // proxy - HTTP proxy server
 
-var http = require('http')
-var pickup = require('../')
+const http = require('http')
+const pickup = require('../')
 
-http.createServer(function (req, res) {
-  http.get('http:/'.concat(req.url), function (feed) {
+http.createServer((req, res) => {
+  http.get('http:/'.concat(req.url), (feed) => {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)

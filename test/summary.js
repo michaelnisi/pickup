@@ -1,17 +1,19 @@
+'use strict'
+
 // summary overrides description
 
-var parse = require('./lib/parse')
-var pickup = require('../')
-var test = require('tap').test
+const parse = require('./lib/parse')
+const pickup = require('../')
+const test = require('tap').test
 
-test('rss', function (t) {
-  var xml = [
+test('rss', (t) => {
+  const xml = [
     '<rss><channel>',
     '<item><description>abc</description><itunes:summary>def</itunes:summary></item>',
     '<item><itunes:summary>def</itunes:summary><description>abc</description></item>',
     '</channel></rss>'
   ].join()
-  var wanted = [
+  const wanted = [
     ['entry', pickup.entry({ summary: 'def' })],
     ['entry', pickup.entry({ summary: 'def' })],
     ['feed', {}],
@@ -19,20 +21,20 @@ test('rss', function (t) {
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })
 })
 
-test('atom', function (t) {
-  var xml = [
+test('atom', (t) => {
+  const xml = [
     '<feed>',
     '<entry><description>abc</description><summary>def</summary></entry>',
     '<entry><summary>def</summary><description>abc</description></entry>',
     '</feed>'
   ].join()
-  var wanted = [
+  const wanted = [
     ['entry', pickup.entry({ summary: 'def' })],
     ['entry', pickup.entry({ summary: 'def' })],
     ['feed', {}],
@@ -40,7 +42,7 @@ test('atom', function (t) {
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })

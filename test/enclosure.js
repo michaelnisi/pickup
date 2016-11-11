@@ -1,15 +1,17 @@
+'use strict'
+
 // parse <enclosure />
 
-var fs = require('fs')
-var pickup = require('../')
-var parse = require('./lib/parse')
-var test = require('tap').test
-var path = require('path')
+const fs = require('fs')
+const pickup = require('../')
+const parse = require('./lib/parse')
+const test = require('tap').test
+const path = require('path')
 
 test('enclosure', function (t) {
-  var p = path.join(__dirname, 'data', 'enclosure.xml')
-  var xml = fs.readFileSync(p)
-  var wanted = [
+  const p = path.join(__dirname, 'data', 'enclosure.xml')
+  const xml = fs.readFileSync(p)
+  const wanted = [
     ['entry', pickup.entry({
       enclosure: { url: 'abc', type: undefined, length: undefined }
     })],

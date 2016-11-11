@@ -1,3 +1,5 @@
+'use strict'
+
 var attribute = require('../lib/attribute')
 var test = require('tap').test
 

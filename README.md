@@ -3,7 +3,7 @@
 
 # pickup - transform feeds
 
-The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html) (including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions) and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML to newline separated JSON strings or objects.
+The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html), including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions, and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML to newline separated JSON strings or objects.
 
 ## Usage
 
@@ -18,11 +18,11 @@ $ npm install -g json
 Now you can pipe **pickup** to **json**:
 
 ```
-$ export URL=troubled.pro/rss.xml
+$ export URL=www.newyorker.com/feed/posts
 $ curl -sS $URL | pickup | json -g
 ```
 
-Or, for example, to stream the titles only:
+Or, for example, to filter the titles:
 
 ```
 $ curl -sS $URL | pickup | json -ga title
@@ -30,10 +30,10 @@ $ curl -sS $URL | pickup | json -ga title
 
 ### Library
 
-#### Transform from stdin to stdout
+#### Transforming from stdin to stdout
 
 ```js
-var pickup = require('pickup')
+const pickup = require('pickup')
 
 process.stdin
   .pipe(pickup())
@@ -49,11 +49,11 @@ $ curl -sS $URL | node example/stdin.js | json -g
 #### Proxy server
 
 ```js
-var http = require('http')
-var pickup = require('pickup')
+const http = require('http')
+const pickup = require('pickup')
 
-http.createServer(function (req, res) {
-  http.get('http:/'.concat(req.url), function (feed) {
+http.createServer((req, res) => {
+  http.get('http:/'.concat(req.url), (feed) => {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)
@@ -63,7 +63,7 @@ To try the proxy server:
 
 ```
 $ node example/proxy.js &
-$ curl -sS http://localhost:8080/$URL | json -g
+$ curl -sS http://localhost:8080/$URL | json -ga title
 ```
 
 ## Types
@@ -81,8 +81,6 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 - `eventMode` [`Boolean`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) defaults to `false`, if `true` readable state buffers are not filled and no `'data'`, but `'feed'` and `'entry'` events are emitted.
 
 - `charset` `str()` | `'UTF-8'` | `'ISO-8859-1'` An optional string to specify the encoding of input data. In the common use case you received this string in the headers of your HTTP response before you began parsing. If you, not so commonly, cannot provide the encoding upfront, **pickup** tries to detect the encoding, and eventually defaults to `'UTF-8'`. The `charset` option is corresponding to the optional `charset` MIME type parameter found in  `Content-Type` HTTP headers. It's OK to pass any string, **pickup** will fall back on `'UTF-8'` when confused.
-
-This object is optional, ergo it can be `null` or `undefined`. Duh!
 
 ### feed()
 
@@ -142,7 +140,7 @@ pickup(opts())
 
 ## Installation
 
-With [npm](https://npmjs.org/package/pickup) do:
+With [npm](https://npmjs.org/package/pickup), do:
 
 ```
 $ npm install pickup
@@ -160,4 +158,4 @@ Please create an issue if you encounter a feed that **pickup** fails to parse.
 
 ## License
 
-[MIT License](https://raw.github.com/michaelnisi/pickup/master/LICENSE)
+[MIT license](https://raw.github.com/michaelnisi/pickup/master/LICENSE)

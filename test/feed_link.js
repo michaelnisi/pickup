@@ -1,17 +1,19 @@
+'use strict'
+
 // feed_link - pick correct URI
 
 // The point here is to make sure we pick the URI of the site,
 // not that of the feed or any other alternatives.
 
-var fs = require('fs')
-var parse = require('./lib/parse')
-var test = require('tap').test
-var path = require('path')
+const fs = require('fs')
+const parse = require('./lib/parse')
+const test = require('tap').test
+const path = require('path')
 
-test('the new yorker', function (t) {
-  var p = path.join(__dirname, 'data', 'newyorker.xml')
-  var xml = fs.readFileSync(p)
-  var wanted = [
+test('the new yorker', (t) => {
+  const p = path.join(__dirname, 'data', 'newyorker.xml')
+  const xml = fs.readFileSync(p)
+  const wanted = [
     ['feed', {
       link: 'http://www.newyorker.com/',
       title: 'The New Yorker: Blogs'
@@ -20,16 +22,16 @@ test('the new yorker', function (t) {
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })
 })
 
-test('the talk show', function (t) {
-  var p = path.join(__dirname, 'data', 'thetalkshow.xml')
-  var xml = fs.readFileSync(p)
-  var wanted = [
+test('the talk show', (t) => {
+  const p = path.join(__dirname, 'data', 'thetalkshow.xml')
+  const xml = fs.readFileSync(p)
+  const wanted = [
     ['feed', {
       link: 'http://daringfireball.net/thetalkshow',
       title: 'The Talk Show With John Gruber'
@@ -38,7 +40,7 @@ test('the talk show', function (t) {
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })

@@ -1,18 +1,13 @@
+'use strict'
+
 // parse - parse xml and test events
 
 module.exports = parse
 
-var pickup = require('../../')
-var util = require('util')
+const pickup = require('../../')
+const util = require('util')
 
-function nop () {}
-
-var debug = (function () {
-  return parseInt(process.env.NODE_DEBUG, 10) === 1
-  ? function (o) {
-    console.error('** parse: %s', util.inspect(o))
-  } : nop
-}())
+const debug = util.debuglog('pickup')
 
 function defaults (opts) {
   if (opts.eventMode === undefined) {
@@ -26,19 +21,19 @@ function defaults (opts) {
 
 function parse (opts, cb) {
   opts = defaults(opts)
-  var xml = opts.xml
-  var wanted = opts.wanted
-  var t = opts.t
-  var stream = pickup(opts)
-  var e = 0
-  pickup.EVENTS.forEach(function (ev) {
-    stream.on(ev, function (found) {
+  const xml = opts.xml
+  const wanted = opts.wanted
+  const t = opts.t
+  const stream = pickup(opts)
+  let e = 0
+  pickup.EVENTS.forEach((ev) => {
+    stream.on(ev, (found) => {
       debug({ wanted: wanted[e], found: [ev, found] })
-      var obj = wanted[e]
+      const obj = wanted[e]
       t.ok(obj, 'should not emit unexpected event: ' + ev)
-      var name = obj[0]
+      const name = obj[0]
       t.is(ev, name, 'should be expected event name')
-      var data = obj[1]
+      const data = obj[1]
       if (ev === 'error') {
         t.same(found, data, 'should be expected error')
       } else if (ev === 'entry') {
@@ -46,7 +41,7 @@ function parse (opts, cb) {
       } else if (ev === 'feed') {
         t.deepEqual(found, pickup.feed(data), 'should be expected feed')
       } else if (ev === 'data' && typeof found === 'string') {
-        var json = JSON.parse(found)
+        const json = JSON.parse(found)
         t.deepEqual(json, data, 'should be expected data')
       } else if (ev === 'end') {
         t.is(e + 1, wanted.length, 'should emit all')
@@ -61,12 +56,12 @@ function parse (opts, cb) {
     })
   })
   function write () {
-    var start = 0
-    var end = 0
-    var ok = true
-    var slice
+    let start = 0
+    let end = 0
+    let ok = true
+    let slice
     do {
-      var size = start + Math.ceil(Math.random() * (xml.length - start))
+      const size = start + Math.ceil(Math.random() * (xml.length - start))
       end = opts.size || size
       slice = xml.slice(start, Math.min(end, xml.length))
       ok = stream.write(slice)

@@ -1,4 +1,4 @@
-var pickup = require('../')
+const pickup = require('../')
 
 process.stdin
   .pipe(pickup())

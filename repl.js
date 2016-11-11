@@ -2,14 +2,14 @@
 
 // repl - explore pickup
 
-var Transform = require('stream').Transform
-var fs = require('fs')
-var http = require('http')
-var pickup = require('./')
-var repl = require('repl')
-var util = require('util')
+const Transform = require('stream').Transform
+const fs = require('fs')
+const http = require('http')
+const pickup = require('./')
+const repl = require('repl')
+const util = require('util')
 
-var ctx = repl.start({
+const ctx = repl.start({
   prompt: 'pickup> ',
   ignoreUndefined: true,
   input: process.stdin,
@@ -32,11 +32,10 @@ function UrlStream (opts) {
 }
 
 UrlStream.prototype._transform = function (chunk, enc, cb) {
-  var me = this
-  http.get(chunk, function (res) {
-    var parser = pickup({ objectMode: true })
-    parser.on('data', function (chunk) {
-      me.push(chunk)
+  http.get(chunk, (res) => {
+    const parser = pickup({ objectMode: true })
+    parser.on('data', (chunk) => {
+      this.push(chunk)
     })
     parser.on('finish', cb)
     res.pipe(parser)
@@ -44,13 +43,13 @@ UrlStream.prototype._transform = function (chunk, enc, cb) {
 }
 
 function get (url) {
-  var stream = new UrlStream({ objectMode: true })
+  const stream = new UrlStream({ objectMode: true })
   stream.end(url)
   return stream
 }
 
 function read (stream, prop) {
-  var obj
+  let obj
   while ((obj = stream.read()) !== null) {
     console.log(util.inspect(
       prop ? obj[prop] : obj, { colors: true }))

@@ -1,7 +1,7 @@
 {
   "name": "pickup",
-  "version": "4.0.0",
-  "description": "transform RSS or Atom XML to JSON",
+  "version": "5.0.0",
+  "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
     "example": "example",
@@ -36,16 +36,16 @@
   },
   "homepage": "https://github.com/michaelnisi/pickup",
   "dependencies": {
-    "readable-stream": "^2.0.5",
-    "sax": "^1.1.5"
+    "readable-stream": "^2.1.5",
+    "sax": "^1.2.1"
   },
   "devDependencies": {
-    "standard": "^6.0.7",
-    "tap": "^5.6.0"
+    "standard": "^8.5.0",
+    "tap": "^8.0.0"
   },
   "engines": {
-    "node": ">=0.11"
+    "node": ">=4"
   },
-  "author": "Michael Nisi <michael.nisi@gmail.com> (http://michaelnisi.com/)",
+  "author": "Michael Nisi <michael.nisi@gmail.com> (http://troubled.pro)",
   "license": "MIT"
 }

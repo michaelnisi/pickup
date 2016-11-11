@@ -1,17 +1,19 @@
+'use strict'
+
 // parse feed image
 
-var parse = require('./lib/parse')
-var test = require('tap').test
+const parse = require('./lib/parse')
+const test = require('tap').test
 
-test('image', function (t) {
-  var xml = [
+test('image', (t) => {
+  const xml = [
     '<rss><channel>',
     '<itunes:image href="abc" />',
     '<media:thumbnail url="def" />',
     '<image><url>ghi</url></image>',
     '</channel></rss>'
   ].join()
-  var wanted = [
+  const wanted = [
     ['feed', {
       image: 'abc'
     }],
@@ -19,7 +21,7 @@ test('image', function (t) {
     ['finish'],
     ['end']
   ]
-  parse({ t: t, xml: xml, wanted: wanted }, function (er) {
+  parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
   })
