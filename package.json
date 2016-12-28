@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "pretest": "standard",
-    "test": "NODE_TEST=1 tap -b --cov test/*.js"
+    "test": "tap test/*.js --cov"
   },
   "bin": {
     "pickup": "bin/cli.js"

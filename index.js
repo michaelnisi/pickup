@@ -232,6 +232,7 @@ function Entry (
   author
 , enclosure
 , duration
+, feed
 , id
 , image
 , link
@@ -242,6 +243,7 @@ function Entry (
   this.author = author
   this.enclosure = enclosure
   this.duration = duration
+  this.feed = feed
   this.id = id
   this.image = image
   this.link = link
@@ -302,7 +304,7 @@ function feed (obj) {
   return extend(new Feed(), obj)
 }
 
-if (process.env.NODE_TEST) {
+if (process.mainModule.filename.match(/test/) !== null) {
   exports.cribEncoding = cribEncoding
   exports.entry = entry
   exports.feed = feed

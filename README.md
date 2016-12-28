@@ -108,6 +108,7 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 - `author` `str()`
 - `enclosure` `enclosure()` or `undefined`
 - `duration` `str()`
+- `feed` `str()` You might slot the entry’s feed URL here.
 - `id` `str()`
 - `image` `str()`
 - `link` `str()`
