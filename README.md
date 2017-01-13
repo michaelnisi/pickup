@@ -82,6 +82,10 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 - `charset` `str()` | `'UTF-8'` | `'ISO-8859-1'` An optional string to specify the encoding of input data. In the common use case you received this string in the headers of your HTTP response before you began parsing. If you, not so commonly, cannot provide the encoding upfront, **pickup** tries to detect the encoding, and eventually defaults to `'UTF-8'`. The `charset` option is corresponding to the optional `charset` MIME type parameter found in  `Content-Type` HTTP headers. It's OK to pass any string, **pickup** will fall back on `'UTF-8'` when confused.
 
+### url()
+
+An `undefined` property, not populated by the parser, to identify feeds and entries in upstream systems, without prompting V8 to create new [hidden classes](https://github.com/v8/v8/wiki/Design%20Elements#fast-property-access).
+
 ### feed()
 
 - `author` `str()`
@@ -90,12 +94,14 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 - `image` `str()`
 - `language` `str()`
 - `link` `str()`
+- `originalURL` `url()`
 - `payment` `str()`
 - `subtitle` `str()`
 - `summary` `str()`
 - `title` `str()`
 - `ttl` `str()`
 - `updated` `str()`
+- `url` `url()`
 
 ### enclosure()
 
@@ -106,16 +112,17 @@ The options [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 ### entry()
 
 - `author` `str()`
-- `enclosure` `enclosure()` or `undefined`
 - `duration` `str()`
-- `feed` `str()` You might slot the entry’s feed URL here.
+- `enclosure` `enclosure()` or `undefined`
 - `id` `str()`
 - `image` `str()`
 - `link` `str()`
+- `originalURL` `url()`
 - `subtitle` `str()`
 - `summary` `str()`
 - `title` `str()`
 - `updated` `str()`
+- `url` `url()`
 
 ### Event:'feed'
 

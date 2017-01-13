@@ -230,27 +230,30 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
 
 function Entry (
   author
-, enclosure
 , duration
-, feed
+, enclosure
 , id
 , image
 , link
+, originalURL
 , subtitle
 , summary
 , title
-, updated) {
+, updated
+, url) {
   this.author = author
-  this.enclosure = enclosure
   this.duration = duration
+  this.enclosure = enclosure
   this.feed = feed
   this.id = id
   this.image = image
   this.link = link
+  this.originalURL = originalURL
   this.subtitle = subtitle
   this.summary = summary
   this.title = title
   this.updated = updated
+  this.url = url
 }
 
 function Feed (
@@ -260,24 +263,28 @@ function Feed (
 , image
 , language
 , link
+, originalURL
 , payment
 , subtitle
 , summary
 , title
 , ttl
-, updated) {
+, updated
+, url) {
   this.author = author
   this.copyright = copyright
   this.id = id
   this.image = image
   this.language = language
   this.link = link
+  this.originalURL = originalURL
   this.payment = payment
   this.subtitle = subtitle
   this.summary = summary
   this.title = title
   this.ttl = ttl
   this.updated = updated
+  this.url = url
 }
 
 function State (entry, feed, image, name) {
