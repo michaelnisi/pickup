@@ -180,10 +180,10 @@ Pickup.prototype.imageclose = function () {
 }
 
 function free (parser) {
-  delete parser.oncdata
-  delete parser.onclosetag
-  delete parser.onopentag
-  delete parser.ontext
+  parser.oncdata = null
+  parser.onclosetag = null
+  parser.onopentag = null
+  parser.ontext = null
 }
 
 Pickup.prototype._flush = function (cb) {
