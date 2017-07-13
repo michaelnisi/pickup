@@ -20,6 +20,7 @@ function _run (n, cb, times) {
       times.push(ms)
       _run(n, cb, times)
     } else {
+      times.shift() // skip initial open() and read()
       const r = times.reduce((a, b) => {
         return a + b
       })

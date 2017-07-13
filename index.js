@@ -302,7 +302,7 @@ State.prototype.deinit = function () {
 }
 
 function extend (origin, add) {
-  return util._extend(origin, add || Object.create(null))
+  return Object.assign(origin, add || Object.create(null))
 }
 function entry (obj) {
   return extend(new Entry(), obj)

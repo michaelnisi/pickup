@@ -10,12 +10,14 @@ test('guess encoding', (t) => {
   const found = [
     f(''),
     f('<?xml?>'),
+    f('<?xml encoding>'),
     f('<?xml encoding="UTF-8"?>'),
     f('<?xml encoding="utf-8"?>'),
     f('<?xml encoding="ISO-8859-1"?>'),
     f('<?xml encoding="iso-8859-1"?>')
   ]
   const wanted = [
+    'utf8',
     'utf8',
     'utf8',
     'utf8',
