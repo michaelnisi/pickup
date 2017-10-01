@@ -6,6 +6,7 @@ exports = module.exports = Pickup
 
 const StringDecoder = require('string_decoder').StringDecoder
 const attribute = require('./lib/attribute')
+const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('sax')
@@ -136,10 +137,14 @@ Pickup.prototype.objectMode = function () {
 }
 
 Pickup.prototype.feedopen = function () {
+  const feed = this.state.feed
+  if (feed) { debug('nested feed: ', feed) }
   this.state.feed = new Feed()
 }
 
 Pickup.prototype.entryopen = function () {
+  const entry = this.state.entry
+  if (entry) { debug('nested entry: ', entry) }
   this.state.entry = new Entry()
 }
 
@@ -149,6 +154,8 @@ Pickup.prototype.imageopen = function () {
 
 Pickup.prototype.entryclose = function () {
   const entry = this.state.entry
+  if (!entry) { return }
+
   if (!this.eventMode) {
     if (this.objectMode()) {
       this.push(entry)
@@ -163,6 +170,8 @@ Pickup.prototype.entryclose = function () {
 
 Pickup.prototype.feedclose = function () {
   const feed = this.state.feed
+  if (!feed) { return }
+
   if (!this.eventMode) {
     if (this.objectMode()) {
       this.push(feed)
