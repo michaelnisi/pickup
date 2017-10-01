@@ -3,7 +3,7 @@
 // nested - test nested items
 
 const parse = require('./lib/parse')
-const pickup = require('pickup')
+const pickup = require('../')
 const test = require('tap').test
 
 test('nested item', (t) => {
