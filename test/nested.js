@@ -16,7 +16,7 @@ test('nested item', (t) => {
     ['end']
   ]
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
-    if (er) throw er
+    t.ok(!er)
     t.end()
   })
 })
@@ -31,7 +31,7 @@ test('nested feed', (t) => {
     ['end']
   ]
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
-    if (er) throw er
+    t.ok(!er)
     t.end()
   })
 })
