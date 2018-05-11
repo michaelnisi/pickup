@@ -31,7 +31,7 @@ test('atom', (t) => {
   const xml = [
     '<feed>',
     '<entry><description>abc</description><summary>def</summary></entry>',
-    '<entry><summary>def</summary><description>abc</description></entry>',
+    '<entry><summary>def</summary><description>abc</description><content:encoded>def</content:encoded></entry>',
     '</feed>'
   ].join()
   const wanted = [

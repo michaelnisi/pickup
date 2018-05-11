@@ -89,7 +89,7 @@ function Pickup (opts) {
 
     if (isSet) {
       if (key === 'summary') {
-        if (name !== 'content:encoded' || t.length > 4096) {
+        if (!mappings.preferredSummary.has(name) || t.length > 4096) {
           return
         }
       }
