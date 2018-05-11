@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -39,8 +39,8 @@
     "sax": "^1.2.4"
   },
   "devDependencies": {
-    "standard": "^10.0.2",
-    "tap": "^10.7.0"
+    "standard": "^11.0.1",
+    "tap": "^11.1.5"
   },
   "engines": {
     "node": ">=4"
