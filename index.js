@@ -52,6 +52,13 @@ function encodingFromOpts (opts) {
 
 const saxOpts = new Opts(true, true, false)
 
+const preferredSummaryNames = new Set([
+  'content',
+  'content:encoded',
+  'itunes:summary',
+  'summary'
+])
+
 util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
@@ -89,7 +96,7 @@ function Pickup (opts) {
 
     if (isSet) {
       if (key === 'summary') {
-        if (!mappings.preferredSummary.has(name) || t.length > 4096) {
+        if (!preferredSummaryNames.has(name) || t.length > 4096) {
           return
         }
       }
