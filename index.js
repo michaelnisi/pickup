@@ -35,8 +35,6 @@ function Opts (trim, normalize, position) {
   this.position = position
 }
 
-const saxOpts = new Opts(true, true, false)
-
 function encodingFromString (str) {
   if (str.match(/utf-8/i)) {
     return 'utf8'
@@ -51,6 +49,8 @@ function encodingFromOpts (opts) {
   if (typeof str !== 'string') return null
   return encodingFromString(str)
 }
+
+const saxOpts = new Opts(true, true, false)
 
 util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
@@ -81,13 +81,19 @@ function Pickup (opts) {
     if (!current || !map) return
 
     let key = map.get(name)
+    if (key === undefined) return
+
     if (state.image && name === 'url') key = 'image'
 
     const isSet = current[key] !== undefined
-    const isSummary = key === 'summary' && (
-      name === 'summary' || name === 'itunes:summary'
-    )
-    if (key === undefined || (isSet && !isSummary)) return
+
+    if (isSet) {
+      if (key === 'summary') {
+        if (name !== 'content:encoded' || t.length > 4096) {
+          return
+        }
+      }
+    }
 
     current[key] = t
   }
