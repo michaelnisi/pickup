@@ -105,9 +105,9 @@ An `undefined` property, not populated by the parser, to identify feeds and entr
 
 ### enclosure()
 
-- `href` `str()`
 - `length` `str()`
 - `type` `str()`
+- `url` `str()`
 
 ### entry()
 
