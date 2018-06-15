@@ -5,15 +5,18 @@
 const Transform = require('stream').Transform
 const fs = require('fs')
 const http = require('http')
+const https = require('https')
 const pickup = require('./')
 const repl = require('repl')
+const url = require('url')
 const util = require('util')
 
 const ctx = repl.start({
-  prompt: 'pickup> ',
   ignoreUndefined: true,
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
+  prompt: 'pickup> ',
+  useColors: true
 }).context
 
 ctx.file = file
@@ -21,37 +24,28 @@ ctx.get = get
 ctx.read = read
 
 function file (path) {
-  return fs.createReadStream(path).pipe(
-    pickup({ objectMode: true }))
+  return fs.createReadStream(path).pipe(pickup({ objectMode: true }))
 }
 
-util.inherits(UrlStream, Transform)
-function UrlStream (opts) {
-  if (!(this instanceof UrlStream)) return new UrlStream(opts)
-  Transform.call(this, opts)
-}
+function get (uri) {
+  const urlObj = url.parse(uri)
+  const mod = urlObj.protocol === 'http:' ? http : https
 
-UrlStream.prototype._transform = function (chunk, enc, cb) {
-  http.get(chunk, (res) => {
-    const parser = pickup({ objectMode: true })
-    parser.on('data', (chunk) => {
-      this.push(chunk)
-    })
-    parser.on('finish', cb)
+  const parser = pickup({ objectMode: true })
+
+  mod.get(urlObj, (res) => {
     res.pipe(parser)
   })
-}
 
-function get (url) {
-  const stream = new UrlStream({ objectMode: true })
-  stream.end(url)
-  return stream
+  return parser
 }
 
 function read (stream, prop) {
-  let obj
-  while ((obj = stream.read()) !== null) {
-    console.log(util.inspect(
-      prop ? obj[prop] : obj, { colors: true }))
-  }
+  stream.on('readable', () => {
+    const obj = stream.read()
+    if (obj === null) {
+      return
+    }
+    console.log(util.inspect(prop ? obj[prop] : obj, { colors: true }))
+  })
 }
