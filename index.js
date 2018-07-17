@@ -52,13 +52,6 @@ function encodingFromOpts (opts) {
 
 const saxOpts = new Opts(true, true, false)
 
-const preferredSummaryNames = new Set([
-  'content',
-  'content:encoded',
-  'itunes:summary',
-  'summary'
-])
-
 util.inherits(Pickup, stream.Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
@@ -94,12 +87,21 @@ function Pickup (opts) {
 
     const isSet = current[key] !== undefined
 
+    // First wins, except 'content:encoded' summary of reasonable length.
+
     if (isSet) {
-      if (key === 'summary') {
-        if (!preferredSummaryNames.has(name) || t.length > 4096) {
-          return
+      const shouldOverride = () => {
+        if (key === 'summary') {
+          return name === 'content:encoded' && t.length < 4096
         }
+        return false
       }
+
+      if (!shouldOverride()) {
+        return
+      }
+
+      debug('overriding %s with %s', key, name)
     }
 
     current[key] = t
