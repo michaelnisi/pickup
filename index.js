@@ -87,23 +87,16 @@ function Pickup (opts) {
 
     const isSet = current[key] !== undefined
 
-    // First wins, except 'content:encoded' summary of reasonable length.
-
     if (isSet) {
-      const shouldOverride = () => {
-        if (key === 'summary') {
-          return name === 'content:encoded' && t.length < 4096
-        }
-        return false
-      }
-
-      if (!shouldOverride()) {
+      // First wins, except 'content:encoded' summary of reasonable length…
+      if (key === 'summary' && (name !== 'content:encoded' || t.length > 4096)) {
+        return
+      // …and pubDate.
+      } else if (key === 'updated' && name !== 'pubDate') {
         return
       }
-
       debug('overriding %s with %s', key, name)
     }
-
     current[key] = t
   }
 
