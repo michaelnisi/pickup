@@ -84,26 +84,30 @@ function Pickup (opts) {
     if (key === undefined) return
 
     if (state.image && name === 'url') key = 'image'
-
+    
     const isSet = current[key] !== undefined
 
-    // First wins, except 'content:encoded' summary of reasonable length.
-
     if (isSet) {
-      const shouldOverride = () => {
-        if (key === 'summary') {
+      if (key === 'summary') {
+        // First wins, except 'content:encoded' summary of reasonable length.
+        const shouldSummaryOverride = () => {
           return name === 'content:encoded' && t.length < 4096
         }
-        return false
+        if (!shouldSummaryOverride()) {
+          return
+        }
       }
-
-      if (!shouldOverride()) {
-        return
+      if (key === 'updated') {
+        // pubDate overrides lastBuildDate.
+        const shouldUpdatedOverride = () => {
+          return name === 'pubDate'
+        }
+        if (!shouldUpdatedOverride()) {
+          return
+        }
       }
-
       debug('overriding %s with %s', key, name)
     }
-
     current[key] = t
   }
 
