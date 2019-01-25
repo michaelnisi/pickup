@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "6.0.1",
+  "version": "7.0.0",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
