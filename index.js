@@ -77,6 +77,7 @@ function Pickup (opts) {
     const map = this.map
     const state = this.state
     const name = this.state.name
+    const prev = this.state.prev
 
     if (!current || !map) return
 
@@ -89,10 +90,9 @@ function Pickup (opts) {
 
     if (isSet) {
       // First wins, except 'content:encoded' summary of reasonable length…
-      if (key === 'summary' && (name !== 'content:encoded' || t.length > 4096)) {
+      if (key === 'summary' && !(name === 'content:encoded' && t.length < 4096)) {
         return
-      // …and pubDate.
-      } else if (key === 'updated' && name !== 'pubDate') {
+      } else if (Array.from(map.keys()).indexOf(name) > Array.from(map.keys()).indexOf(prev)) {
         return
       }
       debug('overriding %s with %s', key, name)
@@ -132,6 +132,7 @@ function Pickup (opts) {
 
   parser.onclosetag = (name) => {
     handle(name, Pickup.closeHandlers)
+    this.state.prev = this.state.name
     this.state.name = null
   }
 }
@@ -304,11 +305,12 @@ function Feed (
   this.url = url
 }
 
-function State (entry, feed, image, name) {
+function State (entry, feed, image, name, prev) {
   this.entry = entry
   this.feed = feed
   this.image = image
   this.name = name
+  this.prev = prev
 }
 
 State.prototype.deinit = function () {
@@ -316,6 +318,7 @@ State.prototype.deinit = function () {
   this.feed = null
   this.image = false
   this.name = undefined // String()
+  this.prev = undefined // String()
 }
 
 function extend (origin, add) {
