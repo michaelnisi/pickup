@@ -69,18 +69,6 @@ State.prototype.key = function () {
   return this.map.get(this.name)
 }
 
-State.prototype.takesPrecedence = function (key) {
-  for (var [k, value] of this.map) {
-    if (value === key && this.keys.indexOf(this.name) < this.keys.indexOf(k)) {
-      return true
-    }
-  }
-
-  debug('overriding %s with %s', this.name, k)
-
-  return false
-}
-
 const saxOpts = new Opts(true, true, false)
 
 util.inherits(Pickup, stream.Transform)
@@ -119,7 +107,7 @@ function Pickup (opts) {
     if (isSet) {
       const time = process.hrtime()
 
-      if (!state.takesPrecedence(key)) {
+      if (!mappings.precedence.has(state.name)) {
         const ns = process.hrtime(time)
         const ms = (ns[0] * 1e9 + ns[1]) / 1e6
         debug('took: %s', ms)
@@ -143,14 +131,19 @@ function Pickup (opts) {
   }
   parser.onopentag = (node) => {
     const name = node.name
+
     this.state.setName(name)
     handle(name, Pickup.openHandlers)
+
     const current = this.current()
+
     if (current) {
-      const key = this.state.map.get(name)
+      const key = this.state.key(name)
+
       if (key) {
         const attributes = node.attributes
         const keys = Object.keys(attributes)
+
         if (keys.length) {
           const kv = attribute(key, attributes, current)
           if (kv) {
