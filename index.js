@@ -50,6 +50,37 @@ function encodingFromOpts (opts) {
   return encodingFromString(str)
 }
 
+function State (entry, feed, image, name) {
+  this.entry = entry
+  this.feed = feed
+  this.image = image
+  this.keys = null
+  this.map = null
+  this.name = name
+}
+
+State.prototype.setName = function (name) {
+  this.name = name
+  this.map = mappings[name] || this.map
+  this.keys = this.map ? Array.from(this.map.keys()) : []
+}
+
+State.prototype.key = function () {
+  return this.map.get(this.name)
+}
+
+State.prototype.takesPrecedence = function (key) {
+  for (var [k, value] of this.map) {
+    if (value === key && this.keys.indexOf(this.name) < this.keys.indexOf(k)) {
+      return true
+    }
+  }
+
+  debug('overriding %s with %s', this.name, k)
+
+  return false
+}
+
 const saxOpts = new Opts(true, true, false)
 
 util.inherits(Pickup, stream.Transform)
@@ -66,7 +97,6 @@ function Pickup (opts) {
   this.decoder = new StringDecoder(this.encoding)
 
   this.eventMode = opts && opts.eventMode
-  this.map = null
   this.parser = sax.parser(true, saxOpts)
   this.state = new State()
 
@@ -74,29 +104,31 @@ function Pickup (opts) {
 
   parser.ontext = (t) => {
     const current = this.current()
-    const map = this.map
     const state = this.state
-    const name = this.state.name
-    const prev = this.state.prev
 
-    if (!current || !map) return
+    if (!current || !state.map) return
 
-    let key = map.get(name)
+    const key = state.key()
+
     if (key === undefined) return
 
-    if (state.image && name === 'url') key = 'image'
+    if (state.image && state.name === 'url') key = 'image'
 
     const isSet = current[key] !== undefined
 
     if (isSet) {
-      // First wins, except 'content:encoded' summary of reasonable length…
-      if (key === 'summary' && !(name === 'content:encoded' && t.length < 4096)) {
+      const time = process.hrtime()
+
+      if (!state.takesPrecedence(key)) {
+        const ns = process.hrtime(time)
+        const ms = (ns[0] * 1e9 + ns[1]) / 1e6
+        debug('took: %s', ms)
         return
-      } else if (Array.from(map.keys()).indexOf(name) > Array.from(map.keys()).indexOf(prev)) {
+      } else if (state.name === 'content:encoded' && t.length > 4096) {
         return
       }
-      debug('overriding %s with %s', key, name)
     }
+
     current[key] = t
   }
 
@@ -111,12 +143,11 @@ function Pickup (opts) {
   }
   parser.onopentag = (node) => {
     const name = node.name
-    this.state.name = name
-    this.map = mappings[name] || this.map
+    this.state.setName(name)
     handle(name, Pickup.openHandlers)
     const current = this.current()
     if (current) {
-      const key = this.map.get(name)
+      const key = this.state.map.get(name)
       if (key) {
         const attributes = node.attributes
         const keys = Object.keys(attributes)
@@ -132,8 +163,7 @@ function Pickup (opts) {
 
   parser.onclosetag = (name) => {
     handle(name, Pickup.closeHandlers)
-    this.state.prev = this.state.name
-    this.state.name = null
+    this.state.setName()
   }
 }
 
@@ -211,10 +241,8 @@ Pickup.prototype._flush = function (cb) {
   this._decoder = null
 
   this.encoding = null
-  this.map = null
   this.parser = null
 
-  this.state.deinit()
   this.state = null
 
   cb()
@@ -303,22 +331,6 @@ function Feed (
   this.ttl = ttl
   this.updated = updated
   this.url = url
-}
-
-function State (entry, feed, image, name, prev) {
-  this.entry = entry
-  this.feed = feed
-  this.image = image
-  this.name = name
-  this.prev = prev
-}
-
-State.prototype.deinit = function () {
-  this.entry = null
-  this.feed = null
-  this.image = false
-  this.name = undefined // String()
-  this.prev = undefined // String()
 }
 
 function extend (origin, add) {
