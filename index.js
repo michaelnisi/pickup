@@ -6,7 +6,7 @@ exports = module.exports = Pickup
 
 const StringDecoder = require('string_decoder').StringDecoder
 const attribute = require('./lib/attribute')
-const debug = require('util').debuglog('pickup')
+// const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('sax')
@@ -14,18 +14,19 @@ const stream = require('readable-stream')
 const util = require('util')
 
 function Entry (
-  author
-, duration
-, enclosure
-, id
-, image
-, link
-, originalURL
-, subtitle
-, summary
-, title
-, updated
-, url) {
+  author,
+  duration,
+  enclosure,
+  id,
+  image,
+  link,
+  originalURL,
+  subtitle,
+  summary,
+  title,
+  updated,
+  url
+) {
   this.author = author
   this.duration = duration
   this.enclosure = enclosure
@@ -42,20 +43,21 @@ function Entry (
 }
 
 function Feed (
-  author
-, copyright
-, id
-, image
-, language
-, link
-, originalURL
-, payment
-, subtitle
-, summary
-, title
-, ttl
-, updated
-, url) {
+  author,
+  copyright,
+  id,
+  image,
+  language,
+  link,
+  originalURL,
+  payment,
+  subtitle,
+  summary,
+  title,
+  ttl,
+  updated,
+  url
+) {
   this.author = author
   this.copyright = copyright
   this.id = id
@@ -88,10 +90,6 @@ State.prototype.setName = function (name) {
 
 State.prototype.key = function () {
   return this.map.get(this.name)
-}
-
-State.prototype.current = function () {
-  return this.entry || this.feed
 }
 
 State.prototype.takesPrecedence = function () {
@@ -166,13 +164,10 @@ function Pickup (opts) {
 
   parser.ontext = (t) => {
     const state = this.state
-
-    const current = state.current()
-
+    const current = state.entry || state.feed
     if (!current || !state.map) return
 
-    const key = state.key()
-
+    let key = state.key()
     if (key === undefined) return
 
     if (state.image && state.name === 'url') key = 'image'
@@ -206,7 +201,7 @@ function Pickup (opts) {
     this.state.setName(name)
     handle(name, Pickup.openHandlers)
 
-    const current = this.state.current()
+    const current = this.state.entry || this.state.feed
 
     if (current) {
       const key = this.state.key(name)

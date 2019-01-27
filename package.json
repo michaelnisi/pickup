@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -8,6 +8,7 @@
     "test": "test"
   },
   "scripts": {
+    "pretest": "standard",
     "test": "tap test/*.js -j4 --cov"
   },
   "bin": {
