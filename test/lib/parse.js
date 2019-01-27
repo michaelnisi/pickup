@@ -45,7 +45,6 @@ function parse (opts, cb) {
         t.deepEqual(json, data, 'should be expected data')
       } else if (ev === 'end') {
         t.is(e + 1, wanted.length, 'should emit all')
-        t.is(stream.map, undefined, 'should release map')
         t.is(stream.parser, null, 'should release parser')
         t.is(stream.state, null, 'should release state')
         cb()
