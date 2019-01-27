@@ -13,43 +13,6 @@ const sax = require('sax')
 const stream = require('readable-stream')
 const util = require('util')
 
-function OpenHandlers (t) {
-  this.channel = t.feedopen
-  this.feed = t.feedopen
-  this.item = t.entryopen
-  this.entry = t.entryopen
-  this.image = t.imageopen
-}
-
-function CloseHandlers (t) {
-  this.channel = t.feedclose
-  this.feed = t.feedclose
-  this.item = t.entryclose
-  this.entry = t.entryclose
-  this.image = t.imageclose
-}
-
-function Opts (trim, normalize, position) {
-  this.trim = trim
-  this.normalize = normalize
-  this.position = position
-}
-
-function encodingFromString (str) {
-  if (str.match(/utf-8/i)) {
-    return 'utf8'
-  } else if (str.match(/iso-8859-1/i)) {
-    return 'binary'
-  }
-  return 'utf8'
-}
-
-function encodingFromOpts (opts) {
-  const str = opts ? opts.charset : null
-  if (typeof str !== 'string') return null
-  return encodingFromString(str)
-}
-
 function Entry (
   author
 , duration
@@ -109,12 +72,13 @@ function Feed (
   this.url = url
 }
 
-function State (entry, feed, image, map, name) {
+function State (entry, feed, image, map, name, precedence) {
   this.entry = entry
   this.feed = feed
   this.image = image
   this.map = map
   this.name = name
+  this.precedence = precedence || new Set(['content:encoded', 'pubDate'])
 }
 
 State.prototype.setName = function (name) {
@@ -128,6 +92,47 @@ State.prototype.key = function () {
 
 State.prototype.current = function () {
   return this.entry || this.feed
+}
+
+State.prototype.takesPrecedence = function () {
+  return this.precedence.has(this.name)
+}
+
+function OpenHandlers (t) {
+  this.channel = t.feedopen
+  this.feed = t.feedopen
+  this.item = t.entryopen
+  this.entry = t.entryopen
+  this.image = t.imageopen
+}
+
+function CloseHandlers (t) {
+  this.channel = t.feedclose
+  this.feed = t.feedclose
+  this.item = t.entryclose
+  this.entry = t.entryclose
+  this.image = t.imageclose
+}
+
+function Opts (trim, normalize, position) {
+  this.trim = trim
+  this.normalize = normalize
+  this.position = position
+}
+
+function encodingFromString (str) {
+  if (str.match(/utf-8/i)) {
+    return 'utf8'
+  } else if (str.match(/iso-8859-1/i)) {
+    return 'binary'
+  }
+  return 'utf8'
+}
+
+function encodingFromOpts (opts) {
+  const str = opts ? opts.charset : null
+  if (typeof str !== 'string') return null
+  return encodingFromString(str)
 }
 
 const saxOpts = new Opts(true, true, false)
@@ -147,6 +152,7 @@ function Pickup (opts) {
 
   this.eventMode = opts && opts.eventMode
   this.parser = sax.parser(true, saxOpts)
+
   this.state = new State()
 
   const parser = this.parser
@@ -167,7 +173,7 @@ function Pickup (opts) {
     const isSet = current[key] !== undefined
 
     if (isSet) {
-      if (!mappings.precedence.has(state.name)) {
+      if (!state.takesPrecedence()) {
         return
       } else if (state.name === 'content:encoded' && t.length > 4096) {
         return
