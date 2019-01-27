@@ -109,17 +109,17 @@ function Feed (
   this.url = url
 }
 
-function State (entry, feed, image, name, map) {
+function State (entry, feed, image, map, name) {
   this.entry = entry
   this.feed = feed
   this.image = image
-  this.name = name
   this.map = map
+  this.name = name
 }
 
 State.prototype.setName = function (name) {
-  this.name = name
   this.map = mappings[name] || this.map
+  this.name = name
 }
 
 State.prototype.key = function () {
