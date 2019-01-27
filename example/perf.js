@@ -70,6 +70,6 @@ if (require.main === module) {
       'Range: %d - %d ms\n' +
       'Median: %d ms\n' +
       'Average: %d ms'
-    , z.min, z.max, z.med, z.avg)
+      , z.min, z.max, z.med, z.avg)
   })
 }

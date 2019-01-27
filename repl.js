@@ -2,7 +2,6 @@
 
 // repl - explore pickup
 
-const Transform = require('stream').Transform
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
