@@ -78,7 +78,7 @@ function State (entry, feed, image, map, name, precedence) {
   this.image = image
   this.map = map
   this.name = name
-  this.precedence = precedence || new Set(['content:encoded', 'pubDate'])
+  this.precedence = precedence
 }
 
 State.prototype.setName = function (name) {
@@ -153,7 +153,14 @@ function Pickup (opts) {
   this.eventMode = opts && opts.eventMode
   this.parser = sax.parser(true, saxOpts)
 
-  this.state = new State()
+  this.state = new State(
+    null,
+    null,
+    false,
+    new Map(),
+    '',
+    new Set(['content:encoded', 'pubDate'])
+  )
 
   const parser = this.parser
 
