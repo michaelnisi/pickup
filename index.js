@@ -5,18 +5,20 @@
 exports = module.exports = Pickup
 
 const StringDecoder = require('string_decoder').StringDecoder
+// const assert = require('assert')
 const attribute = require('./lib/attribute')
-// const debug = require('util').debuglog('pickup')
+const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('saxes')
-const stream = require('readable-stream')
+const stream = require('stream')
 const util = require('util')
 
 function Entry (
   author,
   duration,
   enclosure,
+  feed,
   id,
   image,
   link,
@@ -181,6 +183,8 @@ function Pickup (opts) {
   }
 
   parser.onerror = (er) => {
+    debug('error: %s', er)
+
     this.emit('error', er)
   }
 
@@ -241,6 +245,8 @@ Pickup.prototype.entryclose = function () {
   const entry = this.state.entry
   if (!entry) return
 
+  debug('entry: %o', entry)
+
   if (!this.eventMode) {
     if (this.objectMode()) {
       this.push(entry)
@@ -257,6 +263,8 @@ Pickup.prototype.entryclose = function () {
 Pickup.prototype.feedclose = function () {
   const feed = this.state.feed
   if (!feed) return
+
+  debug('feed: %O', feed)
 
   if (!this.eventMode) {
     if (this.objectMode()) {
@@ -328,24 +336,23 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
   cb()
 }
 
-// Testing
-
-function extend (origin, add) {
-  return Object.assign(origin, add || Object.create(null))
-}
-
-function entry (obj) {
-  return extend(new Entry(), obj)
-}
-
-function feed (obj) {
-  return extend(new Feed(), obj)
-}
+// Extending surface area for testing.
 
 if (process.mainModule.filename.match(/test/) !== null) {
+  exports.extend = function (origin, add) {
+    return Object.assign(origin, add || Object.create(null))
+  }
+
+  exports.entry = function (obj) {
+    return exports.extend(new Entry(), obj)
+  }
+
+  exports.feed = function (obj) {
+    return exports.extend(new Feed(), obj)
+  }
+
   exports.cribEncoding = cribEncoding
-  exports.entry = entry
-  exports.feed = feed
+
   exports.EVENTS = [
     'data',
     'drain',
