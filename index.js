@@ -4,19 +4,20 @@
 
 exports = module.exports = Pickup
 
-const StringDecoder = require('string_decoder').StringDecoder
 const attribute = require('./lib/attribute')
-// const debug = require('util').debuglog('pickup')
+const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
-const sax = require('sax')
-const stream = require('readable-stream')
+const sax = require('saxes')
 const util = require('util')
+const { StringDecoder } = require('string_decoder')
+const { Transform } = require('readable-stream')
 
 function Entry (
   author,
   duration,
   enclosure,
+  feed,
   id,
   image,
   link,
@@ -112,12 +113,6 @@ function CloseHandlers (t) {
   this.image = t.imageclose
 }
 
-function Opts (trim, normalize, position) {
-  this.trim = trim
-  this.normalize = normalize
-  this.position = position
-}
-
 function encodingFromString (str) {
   if (str.match(/utf-8/i)) {
     return 'utf8'
@@ -133,12 +128,10 @@ function encodingFromOpts (opts) {
   return encodingFromString(str)
 }
 
-const saxOpts = new Opts(true, true, false)
-
-util.inherits(Pickup, stream.Transform)
+util.inherits(Pickup, Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
-  stream.Transform.call(this, opts)
+  Transform.call(this, opts)
 
   if (!Pickup.openHandlers) {
     Pickup.openHandlers = new OpenHandlers(Pickup.prototype)
@@ -149,7 +142,6 @@ function Pickup (opts) {
   this.decoder = new StringDecoder(this.encoding)
 
   this.eventMode = opts && opts.eventMode
-  this.parser = sax.parser(true, saxOpts)
 
   this.state = new State(
     null,
@@ -160,7 +152,7 @@ function Pickup (opts) {
     new Set(['content:encoded', 'pubDate'])
   )
 
-  const parser = this.parser
+  const parser = new sax.SaxesParser(opts.parser)
 
   parser.ontext = (t) => {
     const state = this.state
@@ -189,6 +181,12 @@ function Pickup (opts) {
     parser.ontext(d)
   }
 
+  parser.onerror = (er) => {
+    debug('error: %s', er)
+
+    this.emit('error', er)
+  }
+
   const handle = (name, handlers) => {
     if (handlers.hasOwnProperty(name)) {
       handlers[name].apply(this)
@@ -196,22 +194,19 @@ function Pickup (opts) {
   }
 
   parser.onopentag = (node) => {
-    const name = node.name
-
-    this.state.setName(name)
-    handle(name, Pickup.openHandlers)
+    this.state.setName(node.name)
+    handle(node.name, Pickup.openHandlers)
 
     const current = this.state.entry || this.state.feed
 
     if (current) {
-      const key = this.state.key(name)
+      const key = this.state.key(node.name)
 
       if (key) {
-        const attributes = node.attributes
-        const keys = Object.keys(attributes)
+        const keys = Object.keys(node.attributes)
 
         if (keys.length) {
-          const kv = attribute(key, attributes, current)
+          const kv = attribute(key, node.attributes, current)
 
           if (kv) {
             current[kv[0]] = kv[1]
@@ -221,10 +216,12 @@ function Pickup (opts) {
     }
   }
 
-  parser.onclosetag = (name) => {
-    handle(name, Pickup.closeHandlers)
+  parser.onclosetag = (node) => {
+    handle(node.name, Pickup.closeHandlers)
     this.state.setName()
   }
+
+  this.parser = parser
 }
 
 Pickup.prototype.objectMode = function () {
@@ -247,6 +244,8 @@ Pickup.prototype.entryclose = function () {
   const entry = this.state.entry
   if (!entry) return
 
+  debug('entry: %o', entry)
+
   if (!this.eventMode) {
     if (this.objectMode()) {
       this.push(entry)
@@ -263,6 +262,8 @@ Pickup.prototype.entryclose = function () {
 Pickup.prototype.feedclose = function () {
   const feed = this.state.feed
   if (!feed) return
+
+  debug('feed: %O', feed)
 
   if (!this.eventMode) {
     if (this.objectMode()) {
@@ -289,8 +290,8 @@ function free (parser) {
 }
 
 Pickup.prototype._flush = function (cb) {
-  free(this.parser)
   this.parser.close()
+  free(this.parser)
 
   this._decoder = null
 
@@ -328,31 +329,29 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
   }
 
   const str = this.decoder.write(chunk)
-  const er = this.parser.write(str).error
 
-  this.parser.error = null
+  this.parser.write(str)
 
-  cb(er)
+  cb()
 }
 
-// Testing
-
-function extend (origin, add) {
-  return Object.assign(origin, add || Object.create(null))
-}
-
-function entry (obj) {
-  return extend(new Entry(), obj)
-}
-
-function feed (obj) {
-  return extend(new Feed(), obj)
-}
+// Extending surface area for testing.
 
 if (process.mainModule.filename.match(/test/) !== null) {
+  exports.extend = function (origin, add) {
+    return Object.assign(origin, add || Object.create(null))
+  }
+
+  exports.entry = function (obj) {
+    return exports.extend(new Entry(), obj)
+  }
+
+  exports.feed = function (obj) {
+    return exports.extend(new Feed(), obj)
+  }
+
   exports.cribEncoding = cribEncoding
-  exports.entry = entry
-  exports.feed = feed
+
   exports.EVENTS = [
     'data',
     'drain',
