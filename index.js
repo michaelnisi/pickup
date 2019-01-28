@@ -256,6 +256,7 @@ Pickup.prototype.entryclose = function () {
   } else {
     this.emit('entry', entry)
   }
+
   this.state.entry = null
 }
 
@@ -272,6 +273,7 @@ Pickup.prototype.feedclose = function () {
   } else {
     this.emit('feed', feed)
   }
+
   this.state.feed = null
 }
 
@@ -318,8 +320,10 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
       // This, of course, fails--yielding 'utf8'--if the first chunk is too
       // short to contain the encoding tag.
       const t = chunk.toString('ascii', 0, 128)
+
       this.encoding = cribEncoding(t)
     }
+
     this.emit('encoding', this.encoding)
   }
 
@@ -327,6 +331,7 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
   const er = this.parser.write(str).error
 
   this.parser.error = null
+
   cb(er)
 }
 
