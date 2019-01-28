@@ -92,10 +92,6 @@ State.prototype.key = function () {
   return this.map.get(this.name)
 }
 
-State.prototype.current = function () {
-  return this.entry || this.feed
-}
-
 State.prototype.takesPrecedence = function () {
   return this.precedence.has(this.name)
 }
@@ -168,7 +164,7 @@ function Pickup (opts) {
 
   parser.ontext = (t) => {
     const state = this.state
-    const current = state.current()
+    const current = state.entry || state.feed
     if (!current || !state.map) return
 
     let key = state.key()
@@ -205,7 +201,7 @@ function Pickup (opts) {
     this.state.setName(name)
     handle(name, Pickup.openHandlers)
 
-    const current = this.state.current()
+    const current = this.state.entry || this.state.feed
 
     if (current) {
       const key = this.state.key(name)
