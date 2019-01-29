@@ -4,15 +4,14 @@
 
 exports = module.exports = Pickup
 
-const StringDecoder = require('string_decoder').StringDecoder
-// const assert = require('assert')
 const attribute = require('./lib/attribute')
 const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('saxes')
-const stream = require('readable-stream')
 const util = require('util')
+const { StringDecoder } = require('string_decoder')
+const { Transform } = require('readable-stream')
 
 function Entry (
   author,
@@ -129,10 +128,10 @@ function encodingFromOpts (opts) {
   return encodingFromString(str)
 }
 
-util.inherits(Pickup, stream.Transform)
+util.inherits(Pickup, Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
-  stream.Transform.call(this, opts)
+  Transform.call(this, opts)
 
   if (!Pickup.openHandlers) {
     Pickup.openHandlers = new OpenHandlers(Pickup.prototype)
