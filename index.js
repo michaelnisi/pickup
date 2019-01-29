@@ -11,7 +11,7 @@ const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('saxes')
-const stream = require('stream')
+const stream = require('readable-stream')
 const util = require('util')
 
 function Entry (

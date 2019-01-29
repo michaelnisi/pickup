@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -40,11 +40,11 @@
     "saxes": "^3.1.6"
   },
   "devDependencies": {
-    "standard": "^11.0.1",
-    "tap": "^12.0.1"
+    "standard": "^12.0.1",
+    "tap": "^12.4.0"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "author": "Michael Nisi <michael.nisi@gmail.com> (https://troubled.pro)",
   "license": "MIT"
