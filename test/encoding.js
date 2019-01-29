@@ -2,8 +2,8 @@
 
 // encoding - test encoding detection
 
-const test = require('tap').test
 const pickup = require('../')
+const { test } = require('tap')
 
 test('guess encoding', (t) => {
   const f = pickup.cribEncoding

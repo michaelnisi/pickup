@@ -4,9 +4,9 @@
 
 const parse = require('./lib/parse')
 const pickup = require('../')
-const test = require('tap').test
 const fs = require('fs')
 const path = require('path')
+const { test } = require('tap')
 
 const p = path.join(__dirname, 'data', 'rdf.xml')
 const xml = fs.readFileSync(p)
@@ -19,6 +19,7 @@ test('object mode', (t) => {
     ['finish'],
     ['end']
   ]
+
   parse({
     t: t,
     eventMode: false,
@@ -39,6 +40,7 @@ test('event mode', (t) => {
     ['finish'],
     ['end']
   ]
+
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
