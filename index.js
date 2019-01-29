@@ -17,7 +17,6 @@ function Entry (
   author,
   duration,
   enclosure,
-  feed,
   id,
   image,
   link,
@@ -31,7 +30,6 @@ function Entry (
   this.author = author
   this.duration = duration
   this.enclosure = enclosure
-  this.feed = feed
   this.id = id
   this.image = image
   this.link = link
