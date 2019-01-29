@@ -7,12 +7,13 @@
 
 const fs = require('fs')
 const parse = require('./lib/parse')
-const test = require('tap').test
 const path = require('path')
+const { test } = require('tap')
 
 test('the new yorker', (t) => {
   const p = path.join(__dirname, 'data', 'newyorker.xml')
   const xml = fs.readFileSync(p)
+
   const wanted = [
     ['feed', {
       link: 'http://www.newyorker.com/',
@@ -22,6 +23,7 @@ test('the new yorker', (t) => {
     ['finish'],
     ['end']
   ]
+
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()
@@ -31,6 +33,7 @@ test('the new yorker', (t) => {
 test('the talk show', (t) => {
   const p = path.join(__dirname, 'data', 'thetalkshow.xml')
   const xml = fs.readFileSync(p)
+
   const wanted = [
     ['feed', {
       link: 'http://daringfireball.net/thetalkshow',
@@ -40,6 +43,7 @@ test('the talk show', (t) => {
     ['finish'],
     ['end']
   ]
+
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()

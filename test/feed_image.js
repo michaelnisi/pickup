@@ -3,7 +3,7 @@
 // parse feed image
 
 const parse = require('./lib/parse')
-const test = require('tap').test
+const { test } = require('tap')
 
 test('image', (t) => {
   const xml = [

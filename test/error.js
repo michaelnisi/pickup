@@ -2,8 +2,8 @@
 
 // We are not really interested in the errors, but we must end correctly.
 
-const test = require('tap').test
 const parse = require('./lib/parse')
+const { test } = require('tap')
 
 test('whitespace', (t) => {
   const xml = 'wtf'
