@@ -333,6 +333,12 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
   cb()
 }
 
+// Exports
+
+exports.Pickup = Pickup
+exports.Feed = Feed
+exports.Entry = Entry
+
 // Extending surface area for testing.
 
 if (process.mainModule.filename.match(/test/) !== null) {

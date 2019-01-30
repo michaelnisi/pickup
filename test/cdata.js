@@ -17,7 +17,6 @@ test('media-thumbnail', (t) => {
   const wanted = [
     ['entry', pickup.entry({ summary: '<sender>John Smith</sender>' })],
     ['feed', {}],
-    ['readable'],
     ['finish'],
     ['end']
   ]

@@ -13,14 +13,15 @@ test('image', (t) => {
     '<image><url>ghi</url></image>',
     '</channel></rss>'
   ].join()
+
   const wanted = [
     ['feed', {
       image: 'abc'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]
+
   parse({ t: t, xml: xml, wanted: wanted }, (er) => {
     t.ok(!er)
     t.end()

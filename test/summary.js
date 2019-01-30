@@ -18,7 +18,6 @@ test('rss', (t) => {
     ['entry', pickup.entry({ summary: 'def' })],
     ['entry', pickup.entry({ summary: 'def' })],
     ['feed', {}],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -41,7 +40,6 @@ test('atom', (t) => {
     ['entry', pickup.entry({ summary: 'def' })],
     ['entry', pickup.entry({ summary: 'def' })],
     ['feed', {}],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -62,7 +60,6 @@ test('exceeding length', (t) => {
   const wanted = [
     ['entry', pickup.entry({ summary: 'shorter' })],
     ['feed', {}],
-    ['readable'],
     ['finish'],
     ['end']
   ]

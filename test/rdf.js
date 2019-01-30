@@ -15,7 +15,6 @@ test('object mode', (t) => {
   const wanted = [
     ['data', pickup.entry({ title: 'Space Invaders' })],
     ['data', pickup.feed({ title: 'smartos-discuss' })],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -36,7 +35,6 @@ test('event mode', (t) => {
   const wanted = [
     ['entry', pickup.entry({ title: 'Space Invaders' })],
     ['feed', pickup.feed({ title: 'smartos-discuss' })],
-    ['readable'],
     ['finish'],
     ['end']
   ]

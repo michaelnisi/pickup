@@ -12,7 +12,6 @@ test('nested item', (t) => {
   const wanted = [
     ['entry', pickup.entry()],
     ['feed', pickup.feed()],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -29,7 +28,6 @@ test('nested feed', (t) => {
   const wanted = [
     ['feed', pickup.feed()],
     ['entry', pickup.entry()],
-    ['readable'],
     ['finish'],
     ['end']
   ]

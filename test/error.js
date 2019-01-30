@@ -11,7 +11,6 @@ test('whitespace', (t) => {
   const wanted = [
     ['error', new Error('Non-whitespace before first tag.')],
     ['error', new Error('undefined:1:3: document must contain a root element.')],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -27,7 +26,6 @@ test('gibberish', (t) => {
 
   const wanted = [
     ['error', new Error('undefined:1:5: unclosed tag: wtf')],
-    ['readable'],
     ['finish'],
     ['end']
   ]

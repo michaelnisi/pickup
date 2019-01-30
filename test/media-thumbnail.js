@@ -15,7 +15,6 @@ test('media-thumbnail', (t) => {
   const wanted = [
     ['entry', pickup.entry({ image: 'abc' })],
     ['feed', {}],
-    ['readable'],
     ['finish'],
     ['end']
   ]

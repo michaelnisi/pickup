@@ -17,7 +17,6 @@ test('enclosure', (t) => {
       enclosure: { url: 'abc', type: undefined, length: undefined }
     })],
     ['feed'],
-    ['readable'],
     ['finish'],
     ['end']
   ]

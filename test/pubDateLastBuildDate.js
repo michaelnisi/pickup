@@ -16,7 +16,6 @@ test('updated populated by lastBuildDate', (t) => {
     ['feed', {
       updated: '2018-12-27T23:29:49+0000'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -39,7 +38,6 @@ test('pubDate overrides lastBuildDate', (t) => {
     ['feed', {
       updated: '2018-12-27T23:29:50+0000'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -62,7 +60,6 @@ test('pubDate overrides lastBuildDate in any order', (t) => {
     ['feed', {
       updated: '2018-12-27T23:29:50+0000'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]

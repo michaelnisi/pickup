@@ -1,6 +1,6 @@
 {
   "name": "pickup",
-  "version": "7.1.0",
+  "version": "8.0.0",
   "description": "Transform RSS or Atom XML to JSON",
   "main": "index.js",
   "directories": {
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/michaelnisi/pickup",
   "dependencies": {
-    "readable-stream": "^2.3.6",
+    "readable-stream": "^3.1.1",
     "saxes": "^3.1.6"
   },
   "devDependencies": {

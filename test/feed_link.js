@@ -19,7 +19,6 @@ test('the new yorker', (t) => {
       link: 'http://www.newyorker.com/',
       title: 'The New Yorker: Blogs'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]
@@ -39,7 +38,6 @@ test('the talk show', (t) => {
       link: 'http://daringfireball.net/thetalkshow',
       title: 'The Talk Show With John Gruber'
     }],
-    ['readable'],
     ['finish'],
     ['end']
   ]
