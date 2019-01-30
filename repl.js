@@ -11,13 +11,15 @@ const util = require('util')
 
 const { Pickup, Feed, Entry } = require('./')
 
-const ctx = repl.start({
+const server = repl.start({
   ignoreUndefined: true,
   input: process.stdin,
   output: process.stdout,
   prompt: 'pickup> ',
   useColors: true
-}).context
+})
+
+const ctx = server.context
 
 ctx.file = file
 ctx.get = get
@@ -50,5 +52,10 @@ function read (parser, type, key) {
 
     if (type instanceof Object && !(obj instanceof type)) return
     console.log(util.inspect(key ? obj[key] : obj, { colors: true }))
+  })
+
+  parser.once('end', () => {
+    console.log('ok')
+    server.displayPrompt()
   })
 }

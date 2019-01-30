@@ -28,6 +28,28 @@ Or, for example, to filter the titles:
 $ curl -sS $URL | pickup | json -ga title
 ```
 
+### REPL
+
+Pickup comes with a simple REPL for exploring.
+
+```
+% ./repl.js
+pickup> let x = get('https://www.newyorker.com/feed/posts')
+pickup> read(x, Entry, 'title')
+pickup> 'An Asylum Seeker’s Quest to Get Her Toddler Back'
+'At N.H.L.’s All-Star Weekend, Female Players Prove Their Excellence, but NBC Can’t Keep Up'
+'Cliff Sims Is Proud to Have Served Trump'
+'The Slimmed-Down and Soothing New “Conan”'
+'Donald Trump’s Chance to Bring Peace to Afghanistan and End America’s Longest War'
+'The First Days of Disco'
+'How Various Government Agencies Celebrated the End of the Shutdown'
+'Why We Care (and Don’t Care) About the New Rules of Golf'
+'Howard Schultz Against the Hecklers'
+'Daily Cartoon: Tuesday, January 29th'
+ok
+pickup>
+```
+
 ### Library
 
 #### Transforming from stdin to stdout
