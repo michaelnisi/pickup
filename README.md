@@ -90,10 +90,11 @@ $ curl -sS $URL | node example/stdin.js | json -g
 
 ```js
 const http = require('http')
-const pickup = require('pickup')
+const https = require('https')
+const pickup = require('../')
 
 http.createServer((req, res) => {
-  http.get('http:/'.concat(req.url), (feed) => {
+  https.get('https:/'.concat(req.url), (feed) => {
     feed.pipe(pickup()).pipe(res)
   })
 }).listen(8080)
@@ -103,7 +104,7 @@ To try the proxy server:
 
 ```
 $ node example/proxy.js &
-$ curl -sS http://localhost:8080/$URL | json -ga title
+$ curl -sS http://localhost:8080/www.newyorker.com/feed/posts | json -ga title
 ```
 
 ## Types
