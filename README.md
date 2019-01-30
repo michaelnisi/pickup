@@ -3,7 +3,7 @@
 
 # pickup - transform feeds
 
-The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream from [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html), including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions, and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML to newline separated JSON strings or objects.
+The **pickup** [Node](http://nodejs.org/) package transforms XML feeds to JSON or objects. Exporting a [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream, it parses [RSS 2.0](http://cyber.law.harvard.edu/rss/rss.html), including [iTunes](https://www.apple.com/itunes/podcasts/specs.html) namespace extensions, and [Atom 1.0](http://atomenabled.org/developers/syndication/) formatted XML, producing newline separated JSON strings or objects.
 
 ## Usage
 
@@ -20,21 +20,19 @@ The Standard Input example is more or less the CLI binary of **pickup**, `./bin/
 npm i -g pickup
 ```
 
-This should let you pipe [curl](https://curl.haxx.se) like this:
+Piping data to **pickup**, you can now, for example, parse feeds from the network using [curl](https://curl.haxx.se) on the command-line.
 
 ```
 $ curl -sS $URL | pickup
-
 ```
 
-For convenient JSON massaging on the command-line, I use **[json](https://github.com/trentm/json)**, available on [npm](https://www.npmjs.com).
-
+For convenient JSON massaging, I use [json](https://github.com/trentm/json), available on [npm](https://www.npmjs.com).
 
 ```
 $ npm install -g json
 ```
 
-Now you can extend your pipe and get correct formatting…
+Now you can extend your pipe for correct formatting…
 
 ```
 $ curl -sS $URL | pickup | json -g
@@ -48,7 +46,7 @@ $ curl -sS $URL | node pickup | json -ga title
 
 ### REPL
 
-Another way of playing with **pickup** is its tiny REPL shell.
+Another way of playing with **pickup** is its simple REPL.
 
 ```
 % ./repl.js
@@ -68,9 +66,13 @@ ok
 pickup>
 ```
 
+Look at `./repl.js` to see what it can do. Not much, but enough for exploring exotic feeds.
+
 ### Library
 
 #### Transforming from stdin to stdout
+
+Here’s the Standard Input example from before again.
 
 ```js
 const pickup = require('pickup')
