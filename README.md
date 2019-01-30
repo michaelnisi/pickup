@@ -11,7 +11,7 @@ The **pickup** [Node](http://nodejs.org/) package transforms XML feeds to JSON o
 
 ```
 $ export URL=https://www.newyorker.com/feed/posts
-$ curl -sS $URL | node example/stdin.js
+$ curl -sS $URL | node ./example/stdin.js
 ```
 
 The Standard Input example is more or less the CLI binary of **pickup**, `./bin/cli.js`, which you can install globally if you want to.
@@ -19,6 +19,8 @@ The Standard Input example is more or less the CLI binary of **pickup**, `./bin/
 ```
 npm i -g pickup
 ```
+
+💡 *You can use `pickup`, `node ./example/stdin.js`, or `node ./bin/cli.js` in these examples.*
 
 Piping data to **pickup**, you can now, for example, parse feeds from the network using [curl](https://curl.haxx.se) on the command-line.
 
@@ -41,7 +43,7 @@ $ curl -sS $URL | pickup | json -g
 …and handy filtering.
 
 ```
-$ curl -sS $URL | node pickup | json -ga title
+$ curl -sS $URL | pickup | json -ga title
 ```
 
 ### REPL
