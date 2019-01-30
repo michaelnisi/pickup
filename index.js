@@ -150,7 +150,7 @@ function Pickup (opts) {
     new Set(['content:encoded', 'pubDate'])
   )
 
-  const parser = new sax.SaxesParser(opts.parser)
+  const parser = new sax.SaxesParser(opts ? opts.parser : null)
 
   parser.ontext = (t) => {
     const state = this.state

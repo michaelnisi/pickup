@@ -9,28 +9,46 @@ The **pickup** [Node](http://nodejs.org/) package provides a [Transform](http://
 
 ### Command-line
 
-If you haven't yet, first install **[json](https://github.com/trentm/json)**—a command for working with JSON on the command-line:
+```
+$ export URL=https://www.newyorker.com/feed/posts
+$ curl -sS $URL | node example/stdin.js
+```
+
+The Standard Input example is more or less the CLI binary of **pickup**, `./bin/cli.js`, which you can install globally if you want to.
+
+```
+npm i -g pickup
+```
+
+This should let you pipe [curl](https://curl.haxx.se) like this:
+
+```
+$ curl -sS $URL | pickup
+
+```
+
+For convenient JSON massaging on the command-line, I use **[json](https://github.com/trentm/json)**, available on [npm](https://www.npmjs.com).
+
 
 ```
 $ npm install -g json
 ```
 
-Now you can pipe **pickup** to **json**:
+Now you can extend your pipe and get correct formatting…
 
 ```
-$ export URL=www.newyorker.com/feed/posts
 $ curl -sS $URL | pickup | json -g
 ```
 
-Or, for example, to filter the titles:
+…and handy filtering.
 
 ```
-$ curl -sS $URL | pickup | json -ga title
+$ curl -sS $URL | node pickup | json -ga title
 ```
 
 ### REPL
 
-Pickup comes with a simple REPL for exploring.
+Another way of playing with **pickup** is its tiny REPL shell.
 
 ```
 % ./repl.js
