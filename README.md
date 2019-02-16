@@ -51,7 +51,7 @@ $ curl -sS $URL | pickup | json -ga title
 Another way of playing with **pickup** is its simple REPL.
 
 ```
-% ./repl.js
+$ ./repl.js
 pickup> let x = get('https://www.newyorker.com/feed/posts')
 pickup> read(x, Entry, 'title')
 pickup> 'An Asylum Seeker’s Quest to Get Her Toddler Back'
