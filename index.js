@@ -154,13 +154,13 @@ function Pickup (opts) {
 
   parser.ontext = (text) => {
     const t = text.trim()
-    const state = this.state
 
     if (t.length === 0) {
-      debug('%s: discarding text: whitespace', state.name)
+      debug('discarding text: whitespace')
       return
     }
 
+    const state = this.state
     const current = state.entry || state.feed
 
     if (!current || !state.map) return
