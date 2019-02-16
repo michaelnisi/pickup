@@ -11,7 +11,7 @@ test('media-thumbnail', (t) => {
     `<rss><channel>
        <item>
          <description><![CDATA[<sender>John Smith</sender>]]></description>
-       </item>'
+       </item>
     </channel></rss>`
 
   const wanted = [
@@ -34,7 +34,7 @@ test('whitespace', (t) => {
          <content:encoded>
            <![CDATA[spacetime is four dimensional]]>
          </content:encoded>
-       </item>'
+       </item>
     </channel></rss>`
 
   const wanted = [
