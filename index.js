@@ -152,8 +152,15 @@ function Pickup (opts) {
 
   const parser = new sax.SaxesParser(opts ? opts.parser : null)
 
-  parser.ontext = (t) => {
+  parser.ontext = (text) => {
+    const t = text.trim()
     const state = this.state
+
+    if (t.length === 0) {
+      debug('%s: discarding text: whitespace', state.name)
+      return
+    }
+
     const current = state.entry || state.feed
 
     if (!current || !state.map) return
@@ -165,13 +172,6 @@ function Pickup (opts) {
     if (state.image && state.name === 'url') key = 'image'
 
     const isSet = current[key] !== undefined
-
-    const trimmed = t.trim()
-
-    if (trimmed.length === 0) {
-      debug('%s: discarding text: whitespace', state.name)
-      return
-    }
 
     if (isSet) {
       if (!state.takesPrecedence()) {
