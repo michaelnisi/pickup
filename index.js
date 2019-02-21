@@ -5,13 +5,14 @@
 exports = module.exports = Pickup
 
 const attribute = require('./lib/attribute')
-const debug = require('util').debuglog('pickup')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('saxes')
-const util = require('util')
+const { debuglog, inherits } = require('util')
 const { StringDecoder } = require('string_decoder')
 const { Transform } = require('readable-stream')
+
+const debug = debuglog('pickup')
 
 function Entry (
   author,
@@ -126,7 +127,6 @@ function encodingFromOpts (opts) {
   return encodingFromString(str)
 }
 
-util.inherits(Pickup, Transform)
 function Pickup (opts) {
   if (!(this instanceof Pickup)) return new Pickup(opts)
   Transform.call(this, opts)
@@ -152,12 +152,21 @@ function Pickup (opts) {
 
   const parser = new sax.SaxesParser(opts ? opts.parser : null)
 
-  parser.ontext = (t) => {
+  parser.ontext = (text) => {
+    const t = text.trim()
+
+    if (t.length === 0) {
+      debug('discarding text: whitespace')
+      return
+    }
+
     const state = this.state
     const current = state.entry || state.feed
+
     if (!current || !state.map) return
 
     let key = state.key()
+
     if (key === undefined) return
 
     if (state.image && state.name === 'url') key = 'image'
@@ -168,16 +177,20 @@ function Pickup (opts) {
       if (!state.takesPrecedence()) {
         return
       } else if (state.name === 'content:encoded' && t.length > 4096) {
+        debug('%s: discarding text: too long', state.name)
         return
       }
+
+      debug('%s: taking precedence: ( %s, %s )', state.name, key, t)
     }
 
     current[key] = t
   }
 
-  parser.oncdata = (d) => {
-    parser.ontext(d)
-  }
+  // Not differentiating between cdata and text, whichever comes first wins.
+  // This might be a mistake, but I don’t see a clear-cut alternative.
+
+  parser.oncdata = parser.ontext
 
   parser.onerror = (er) => {
     debug('error: %s', er)
@@ -222,6 +235,8 @@ function Pickup (opts) {
   this.parser = parser
 }
 
+inherits(Pickup, Transform)
+
 Pickup.prototype.objectMode = function () {
   return this._readableState.objectMode
 }
@@ -240,9 +255,8 @@ Pickup.prototype.imageopen = function () {
 
 Pickup.prototype.entryclose = function () {
   const entry = this.state.entry
-  if (!entry) return
 
-  debug('entry: %o', entry)
+  if (!entry) return
 
   if (!this.eventMode) {
     if (this.objectMode()) {
@@ -259,9 +273,8 @@ Pickup.prototype.entryclose = function () {
 
 Pickup.prototype.feedclose = function () {
   const feed = this.state.feed
-  if (!feed) return
 
-  debug('feed: %O', feed)
+  if (!feed) return
 
   if (!this.eventMode) {
     if (this.objectMode()) {
@@ -288,6 +301,7 @@ function free (parser) {
 }
 
 Pickup.prototype._flush = function (cb) {
+  debug('flushing')
   this.parser.close()
   free(this.parser)
 
@@ -304,6 +318,7 @@ Pickup.prototype._flush = function (cb) {
 function cribEncoding (str) {
   const enc = str.split('encoding')[1]
   const def = 'utf8'
+
   if (!enc) return def
 
   if (enc.trim()[0] === '=') {
@@ -339,7 +354,7 @@ exports.Pickup = Pickup
 exports.Feed = Feed
 exports.Entry = Entry
 
-// Extending surface area for testing.
+// Extending surface area when testing.
 
 if (process.mainModule.filename.match(/test/) !== null) {
   exports.extend = function (origin, add) {
