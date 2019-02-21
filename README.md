@@ -48,7 +48,7 @@ $ curl -sS $URL | pickup | json -ga title
 
 ### REPL
 
-Another way of playing with **pickup** is its simple REPL.
+Being a library user of this module, my preferred interface for exploring, and testing while working on it, is its REPL.
 
 ```
 $ ./repl.js
