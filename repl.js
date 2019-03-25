@@ -8,6 +8,7 @@ const https = require('https')
 const repl = require('repl')
 const url = require('url')
 const { Pickup, Feed, Entry } = require('./')
+const { clear, log, dir } = require('console')
 const { inspect } = require('util')
 const { pipeline, Writable } = require('readable-stream')
 
@@ -65,27 +66,24 @@ function read (parser, type, key, limit = Infinity) {
         return cb()
       }
 
-      console.log(inspect(key ? obj[key] : obj, { colors: true }))
+      dir(key ? obj[key] : obj, { colors: true })
+
       count++
 
       cb()
     },
     objectMode: true
   }), er => {
-    console.log(er || 'ok')
+    log(er || 'ok')
     server.displayPrompt()
   })
 }
 
-function clear () {
-  process.stdout.write('\u001B[2J\u001B[0;0f')
-}
+const { context } = server
 
-const ctx = server.context
-
-ctx.Entry = Entry
-ctx.Feed = Feed
-ctx.clear = clear
-ctx.file = file
-ctx.get = get
-ctx.read = read
+context.Entry = Entry
+context.Feed = Feed
+context.clear = clear
+context.file = file
+context.get = get
+context.read = read
