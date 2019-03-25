@@ -9,7 +9,6 @@ const repl = require('repl')
 const url = require('url')
 const { Pickup, Feed, Entry } = require('./')
 const { clear, log, dir } = require('console')
-const { inspect } = require('util')
 const { pipeline, Writable } = require('readable-stream')
 
 const server = repl.start({
@@ -79,7 +78,7 @@ function read (parser, type, key, limit = Infinity) {
   })
 }
 
-const { context } = server
+const { context } = server
 
 context.Entry = Entry
 context.Feed = Feed
