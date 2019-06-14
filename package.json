@@ -8,8 +8,11 @@
     "test": "test"
   },
   "scripts": {
-    "pretest": "standard",
-    "test": "tap test/*.js -j4 --cov"
+    "postpublish": "git push origin --all; git push origin --tags",
+    "postversion": "npm publish",
+    "pretest": "standard --fix",
+    "preversion": "npm test",
+    "test": "tap test/*.js -b -j4 --cov"
   },
   "bin": {
     "pickup": "bin/cli.js"
@@ -41,10 +44,10 @@
   },
   "devDependencies": {
     "standard": "^12.0.1",
-    "tap": "^12.4.0"
+    "tap": "^14.2.2"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "author": "Michael Nisi <michael.nisi@gmail.com> (https://troubled.pro)",
   "license": "MIT"
