@@ -12,7 +12,7 @@
     "postversion": "npm publish",
     "pretest": "standard --fix",
     "preversion": "npm test",
-    "test": "tap test/*.js -b -j4 --cov"
+    "test": "tap test/*.js -b -j4 --100 --cov"
   },
   "bin": {
     "pickup": "bin/cli.js"

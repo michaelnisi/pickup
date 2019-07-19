@@ -8,71 +8,12 @@ const attribute = require('./lib/attribute')
 const mappings = require('./lib/mappings')
 const os = require('os')
 const sax = require('saxes')
-const { debuglog, inherits } = require('util')
+const { Entry, Feed } = require('./lib/items')
 const { StringDecoder } = require('string_decoder')
 const { Transform } = require('readable-stream')
+const { debuglog, inherits } = require('util')
 
 const debug = debuglog('pickup')
-
-function Entry (
-  author,
-  duration,
-  enclosure,
-  id,
-  image,
-  link,
-  originalURL,
-  subtitle,
-  summary,
-  title,
-  updated,
-  url
-) {
-  this.author = author
-  this.duration = duration
-  this.enclosure = enclosure
-  this.id = id
-  this.image = image
-  this.link = link
-  this.originalURL = originalURL
-  this.subtitle = subtitle
-  this.summary = summary
-  this.title = title
-  this.updated = updated
-  this.url = url
-}
-
-function Feed (
-  author,
-  copyright,
-  id,
-  image,
-  language,
-  link,
-  originalURL,
-  payment,
-  subtitle,
-  summary,
-  title,
-  ttl,
-  updated,
-  url
-) {
-  this.author = author
-  this.copyright = copyright
-  this.id = id
-  this.image = image
-  this.language = language
-  this.link = link
-  this.originalURL = originalURL
-  this.payment = payment
-  this.subtitle = subtitle
-  this.summary = summary
-  this.title = title
-  this.ttl = ttl
-  this.updated = updated
-  this.url = url
-}
 
 function State (entry, feed, image, map, name, precedence) {
   this.entry = entry
@@ -296,22 +237,30 @@ Pickup.prototype.imageclose = function () {
 function free (parser) {
   parser.oncdata = null
   parser.onclosetag = null
+  parser.onerror = null
   parser.onopentag = null
+  parser.onready = null
   parser.ontext = null
 }
 
-Pickup.prototype._flush = function (cb) {
-  debug('flushing')
+Pickup.prototype.invalidate = function () {
+  debug('invalidating')
   this.parser.close()
   free(this.parser)
 
   this._decoder = null
-
   this.encoding = null
   this.parser = null
-
   this.state = null
+}
 
+Pickup.prototype._destroy = function (er, cb) {
+  this.invalidate()
+  Transform.prototype._destroy.call(this, er, cb)
+}
+
+Pickup.prototype._final = function (cb) {
+  this.invalidate()
   cb()
 }
 
@@ -342,6 +291,15 @@ Pickup.prototype._transform = function (chunk, enc, cb) {
   }
 
   const str = this.decoder.write(chunk)
+
+  if (this.parser.closed) {
+    this.parser.onready = () => {
+      this.parser.write(str)
+      cb()
+    }
+
+    return
+  }
 
   this.parser.write(str)
 
