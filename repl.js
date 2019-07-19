@@ -6,8 +6,8 @@ const fs = require('fs')
 const http = require('http')
 const https = require('https')
 const repl = require('repl')
-const url = require('url')
 const { Pickup, Feed, Entry } = require('./')
+const { URL } = require('url')
 const { clear, log, dir } = require('console')
 const { pipeline, Writable } = require('readable-stream')
 
@@ -26,7 +26,7 @@ function file (path) {
 }
 
 function get (uri) {
-  const urlObj = url.parse(uri)
+  const urlObj = new URL(uri)
   const mod = urlObj.protocol === 'http:' ? http : https
 
   const parser = new Pickup({ objectMode: true })

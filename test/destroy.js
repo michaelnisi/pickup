@@ -6,7 +6,7 @@ const { test } = require('tap')
 test('rss', t => {
   const p = pickup()
 
-  let errors = []
+  const errors = []
 
   p.on('error', er => {
     errors.push(er)

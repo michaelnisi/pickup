@@ -140,7 +140,7 @@ function Pickup (opts) {
   }
 
   const handle = (name, handlers) => {
-    if (handlers.hasOwnProperty(name)) {
+    if (Object.prototype.hasOwnProperty.call(handlers, name)) {
       handlers[name].apply(this)
     }
   }

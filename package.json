@@ -12,7 +12,7 @@
     "postversion": "npm publish",
     "pretest": "standard --fix",
     "preversion": "npm test",
-    "test": "tap test/*.js -b -j4 --100 --cov"
+    "test": "tap test/*.js -b -j4 --cov"
   },
   "bin": {
     "pickup": "bin/cli.js"
@@ -39,16 +39,16 @@
   },
   "homepage": "https://github.com/michaelnisi/pickup",
   "dependencies": {
-    "readable-stream": "^3.1.1",
-    "saxes": "^3.1.6"
+    "saxes": "^3.1.11",
+    "readable-stream": "^3.1.1"
   },
   "devDependencies": {
-    "standard": "^12.0.1",
-    "tap": "^14.2.2"
+    "standard": "^13.0.2",
+    "tap": "^14.4.2"
   },
   "engines": {
     "node": ">=8"
   },
-  "author": "Michael Nisi <michael.nisi@gmail.com> (https://troubled.pro)",
+  "author": "Michael Nisi (https://troubled.pro)",
   "license": "MIT"
 }
