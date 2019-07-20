@@ -314,7 +314,7 @@ exports.Entry = Entry
 
 // Extending surface area when testing.
 
-if (process.mainModule.filename.match(/test/) !== null) {
+if (process.mainModule && process.mainModule.filename.match(/test/) !== null) {
   exports.extend = function (origin, add) {
     return Object.assign(origin, add || Object.create(null))
   }
